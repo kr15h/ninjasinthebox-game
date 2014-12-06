@@ -117,6 +117,8 @@ func main() {
 			TRACE.Println("socket.io: disconnect")
 		})
 		so.On("adduser", Adduser)
+		so.On("logon", Logon)
+
 	})
 	server.On("error", func(so socketio.Socket, err error) {
 		ERROR.Println("socket.io->error:", err)
