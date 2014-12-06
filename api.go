@@ -35,7 +35,7 @@ func Logon(msg string) {
 	redisDB := RedisPool.Get()
 	defer redisDB.Close()
 
-	jsonSpace, err := redis.String(redisDB.Do("GET", spaceID))
+	jsonSpace, err := redis.Bytes(redisDB.Do("GET", spaceID))
 	if err != nil {
 
 		TRACE.Println("socket.io->Logon: newSpace", err)
@@ -51,13 +51,13 @@ func Logon(msg string) {
 		if err != nil {
 			ERROR.Println("socket.io->Logon json.Marshal error: ", err)
 		}
-		_, err = redisDB.Do("SET", spaceID, string(jsonSpace))
+		_, err = redisDB.Do("SET", spaceID, jsonSpace)
 		if err != nil {
 			ERROR.Println("socket.io->Logon RedisDB SET error: ", err)
 		}
 
 	} else {
-		err = json.Unmarshal([]byte(jsonSpace), &space)
+		err = json.Unmarshal(jsonSpace, &space)
 		if err != nil {
 			ERROR.Println("socket.io->Logon json.Unmarshal error: ", err)
 		}
