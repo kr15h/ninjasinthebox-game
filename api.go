@@ -80,6 +80,15 @@ func Logon(msg string) {
 	// if ip is unknow add it to the space
 	if !known {
 		TRACE.Println("socket.io->Logon unknown LocalIP", localIP, "is added")
+
+		player := Player{
+			LocalIP:  localIP,
+			UserName: "JonDoe",
+		}
+
+		space.Space = append(space.Space, player)
+
+		TRACE.Println("socket.io->Logon added", space)
 	}
 }
 
