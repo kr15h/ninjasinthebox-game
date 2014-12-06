@@ -115,7 +115,7 @@ func main() {
 	}
 
 	server.On("connection", func(so socketio.Socket) {
-		TRACE.Println("socket.io: connection")
+		TRACE.Println("socket.io: connection", so.Id())
 		so.On("chat message", func(msg string) {
 			TRACE.Println("socket.io->emit:", so.Emit("chat message", msg))
 			so.BroadcastTo("chat", "chat message", msg)
@@ -129,7 +129,7 @@ func main() {
 
 	})
 	server.On("error", func(so socketio.Socket, err error) {
-		ERROR.Println("socket.io->error:", err)
+		ERROR.Println("socket.io->error:", so.Id(), so.Request(), err)
 	})
 
 	http.Handle("/socket.io/", server)
