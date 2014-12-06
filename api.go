@@ -28,16 +28,18 @@ func Logon(msg string) {
 	var space Space
 
 	ipNumbers := strings.Split(msg, " ")
-	helpers.TRACE.Println("socket.io: Logon", ipNumbers)
+	helpers.TRACE.Println("socket.io->Logon: IP", ipNumbers)
 
 	spaceID := md5.Sum([]byte(ipNumbers[1]))
-	helpers.TRACE.Println("socket.io: Logon", spaceID)
+	helpers.TRACE.Println("socket.io->Logon: SpaceID", spaceID)
 
 	redisDB := RedisPool.Get()
 	defer redisDB.Close()
 
 	jsonSpace, err := redis.Bytes(redisDB.Do("GET", spaceID))
 	if err != nil {
+
+		TRACE.Println("socket.io->Logon: newSpace", err)
 		space = Space{
 			subnet: []Player{
 				{
@@ -48,9 +50,13 @@ func Logon(msg string) {
 		}
 		jsonSpace, err := json.Marshal(space)
 		if err != nil {
-			ERROR.Println("socket.io->Logon error: ", err)
+			ERROR.Println("socket.io->Logon JsonMarshal error: ", err)
 		}
-		redisDB.Do("SET", "spaceID", jsonSpace)
+		_, err = redisDB.Do("SET", "spaceID", jsonSpace)
+		if err != nil {
+			ERROR.Println("socket.io->Logon Redis Set error: ", err)
+		}
+
 	} else {
 		err = json.Unmarshal(jsonSpace, &space)
 		if err != nil {
