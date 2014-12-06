@@ -1,15 +1,26 @@
 /* for blockly */
-  var map = null;
-  var player = null;
-  function moveForward() {
-    map.moveObject(player);
-  }
-  function turnLeft() {
-    player.turn('left');
-  }
-  function turnRight() {
-    player.turn('right');
-  }
+var map = null;
+var player = null;
+function move(code) {
+    var index = 0;
+    var lines = code.split('\n');
+    /* execute line by line */
+    var interval = setInterval(tick, 500);
+    function tick() {
+        if (index == lines.length) clearInterval(interval);
+        eval(lines[index++]);
+    }
+}
+function moveForward() {
+  map.moveObject(player);
+}
+function turnLeft() {
+  player.turn('left');
+}
+function turnRight() {
+  player.turn('right');
+}
+
 (function () {
   'use strict';
 
@@ -191,6 +202,10 @@
     player = new Object("player");
     player.createHtml();
     map.addObject(player, 0, 0);
+    
+    var player2 = new Object("player");
+    player2.createHtml();
+    map.addObject(player2, 1, 1);
 
     $(window).resize(function() {
       map.calcSize();
