@@ -5,6 +5,7 @@ import (
 	"crypto/md5"
 	"encoding/json"
 	"github.com/garyburd/redigo/redis"
+	"github.com/googollee/go-socket.io"
 	"strings"
 )
 
@@ -56,4 +57,11 @@ func Logon(msg string) {
 		ERROR.Println("socket.io->Logon error: ", err)
 	}
 	TRACE.Println("socket.io: ", space)
+}
+
+func JoinGame(so socketio.Socket, msg string) {
+
+	helpers.TRACE.Println("socket.io: Join", msg)
+
+	so.Emit("channel", "abcde")
 }

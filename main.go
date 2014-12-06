@@ -126,6 +126,7 @@ func main() {
 		})
 		so.On("adduser", Adduser)
 		so.On("logon", Logon)
+		so.On("joinGame", JoinGame)
 
 	})
 	server.On("error", func(so socketio.Socket, err error) {
