@@ -210,10 +210,12 @@ function turnRight() {
     if (typeof(obj) !== 'undefined') {
         /* collision with an object occured */
         /* check what type of object it is */
-        alert("collision with [" + obj.type + "] occured");
         /* collision is only ok with coins */
         if (obj.type === "coin") {
             /* collect the coin */
+            alert("ruble yay!");
+            delete this.objects[x][y];
+            $('td').eq((this.cols * y) + x).empty();
         } else {
             /* ?..? */
             return;
@@ -221,7 +223,6 @@ function turnRight() {
     }
     /* clear the previouse table cell and object matrix slot */
     delete this.objects[object.x][object.y];
-    $('td').eq((this.cols * object.y) + object.x).empty();
     /* move to new table cell and matrix cell */
     object.x = x;
     object.y = y;
@@ -245,9 +246,9 @@ function turnRight() {
     if (this.type === "player") {
         this.imgSrc = 'media/ninja.png';
     } else if (this.type === "wall") {
-        this.imgSrc = 'media/wall.png';
+        this.imgSrc = 'media/button.png';
     } else if (this.type === "coin") {
-        this.imgSrc = 'media/coin.png';
+        this.imgSrc = 'media/sprites.png';
     } else if (this.type === "boss") {
         this.imgSrc = 'media/boss.png';
     }
@@ -288,10 +289,22 @@ function turnRight() {
       player = new Object("player");
       player.createHtml();
       map.addObject(player, 0, 0);
-    
-      var player2 = new Object("player");
-      player2.createHtml();
-      map.addObject(player2, 1, 1);
+  
+      var wall = new Object("wall");
+      wall.createHtml();
+      map.addObject(wall, 0, 1);
+  
+      var wall2 = new Object("wall");
+      wall2.createHtml();
+      map.addObject(wall2, 2, 2);
+  
+      var wall3 = new Object("wall");
+      wall3.createHtml();
+      map.addObject(wall3, 2, 0);
+  
+      var coin = new Object("coin");
+      coin.createHtml();
+      map.addObject(coin, 1, 1);
 
       // We add window on resize handler only
       // when the map has been created
