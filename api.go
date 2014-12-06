@@ -2,6 +2,7 @@ package main
 
 import (
 	"./helpers"
+	"code.google.com/p/go-uuid/uuid"
 	"encoding/json"
 	"github.com/garyburd/redigo/redis"
 	"github.com/googollee/go-socket.io"
@@ -9,6 +10,7 @@ import (
 )
 
 type Space struct {
+	Channel string
 	SpaceID string
 	Space   []Player
 }
@@ -44,6 +46,7 @@ func Logon(so socketio.Socket, msg string) {
 		known = true
 		TRACE.Println("socket.io->Logon: newSpace", err)
 		space = Space{
+			Channel: uuid.New(),
 			SpaceID: spaceID,
 			Space: []Player{
 				{
