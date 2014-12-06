@@ -28,7 +28,7 @@ function turnRight() {
     this.rows = rows || 10;
     this.cols = cols || 10;
     this.container = {};
-    this.mapData = '';
+    this.mapData = [];
 
     /* create the objects matrix */
     this.objects = [];
@@ -49,7 +49,7 @@ function turnRight() {
   };
 
   // Returns map data as javascript array object
-  Map.prototype.interpretMapData = function(mapData) {
+  Map.prototype.parseMapData = function(mapData) {
 
     // Create a multi-dimensional array out of map data csv
     // 1. split rows by using \n as delimiter
@@ -68,7 +68,6 @@ function turnRight() {
       alert('Error - invalid CSV row delimiter');
       return false;
     }
-    console.log(rows[0]);
 
     // 2. split each row into cols
     var numCols = 0;
@@ -91,7 +90,7 @@ function turnRight() {
 
       } else {
 
-        console.log('Row ' + rowIter + ' not valid');
+        //console.log('Row ' + rowIter + ' not valid');
         
         // Remove this row
         rows.splice(rowIter, 1);
@@ -121,8 +120,8 @@ function turnRight() {
       dataType: "text",
       success: function (data) {
         console.log('Successfully loaded map');
-        that.mapData = data;
-        that.interpretMapData(that.mapData);
+        that.mapData = that.parseMapData(data);
+        //console.log(that.mapData);
       },
       error: function(jqxhr, status, error) {
         console.log('Error loading map: ' + status + ', ' + error);
