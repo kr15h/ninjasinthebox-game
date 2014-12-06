@@ -12,9 +12,10 @@
       socket.on('connect', function(){
       // call the server-side function 'adduser' and send one parameter (value of prompt)
       socket.emit('logon', "10.0.0.12" + " " + "10.987.23.12");
+      socket.join('chat');
       });
       
-      socket.on('space', function(data){
+      Socket.on('space', function(data){
       alert("spaces become");
       console.log(data);
       $('#space').empty();
