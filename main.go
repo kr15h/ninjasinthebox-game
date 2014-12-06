@@ -107,8 +107,8 @@ func main() {
 		so.On("disconnection", func() {
 			TRACE.Println("socket.io: disconnect")
 		})
-		so.On("adduser", func() {
-			TRACE.Println("socket.io: adduser")
+		so.On("adduser", func(msg string) {
+			TRACE.Println("socket.io: adduser", msg)
 		})
 	})
 	server.On("error", func(so socketio.Socket, err error) {
