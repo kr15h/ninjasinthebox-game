@@ -51,7 +51,7 @@ func Logon(msg string) {
 		if err != nil {
 			ERROR.Println("socket.io->Logon json.Marshal error: ", err)
 		}
-		_, err = redisDB.Do("SET", "spaceID", jsonSpace)
+		_, err = redisDB.Do("SET", spaceID, jsonSpace)
 		if err != nil {
 			ERROR.Println("socket.io->Logon RedisDB SET error: ", err)
 		}
