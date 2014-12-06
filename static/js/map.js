@@ -48,8 +48,64 @@ function turnRight() {
     }
   };
 
+  // Returns map data as javascript array object
   Map.prototype.interpretMapData = function(mapData) {
-    console.log(mapData);
+
+    // Create a multi-dimensional array out of map data csv
+    // 1. split rows by using \n as delimiter
+    var rows = mapData.split('\n');
+    if (rows.length <= 1) {
+      rows = mapData.split('\r');
+    }
+    if (rows.length <= 1) {
+      rows = mapData.split('\n\r');
+    }
+    if (rows.length <= 1) {
+      rows = mapData.split('\r\n');
+    } 
+    if (rows.length <= 1) {
+      // Total fail, WTF???
+      alert('Error - invalid CSV row delimiter');
+      return false;
+    }
+    console.log(rows[0]);
+
+    // 2. split each row into cols
+    var numCols = 0;
+    for (var rowIter = 0; rowIter < rows.length; rowIter++) {
+      var cols = rows[rowIter].split(',');
+
+      // Set numCols if first row
+      if (rowIter === 0) {
+        numCols = cols.length;
+      }
+
+      if (numCols > 0 && cols.length === numCols) {
+
+        // Remove first and last column
+        cols.splice(0, 1);
+        cols.splice(-1, 1);
+
+        // Reasign current row to array object
+        rows[rowIter] = cols;
+
+      } else {
+
+        console.log('Row ' + rowIter + ' not valid');
+        
+        // Remove this row
+        rows.splice(rowIter, 1);
+
+      }
+
+    } // for rows
+
+    // Remove first and last rows
+    rows.splice(0, 1);
+    rows.splice(-1, 1);
+
+    return rows;
+
   };
 
   Map.prototype.loadMap = function(fileUrl) {
