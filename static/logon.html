@@ -15,7 +15,7 @@
       socket.join('chat');
       });
       
-      Socket.on('space', function(data){
+      socket.on('space', function(data){
       alert("spaces become");
       console.log(data);
       $('#space').empty();
