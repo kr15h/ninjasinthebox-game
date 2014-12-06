@@ -4,6 +4,7 @@ import (
 	"./api/websocket"
 	"./helpers"
 	"flag"
+	"github.com/garyburd/redigo/redis"
 	"github.com/googollee/go-socket.io"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/pat"
@@ -85,6 +86,22 @@ func init() {
 
 }
 func main() {
+	// database connection
+	db, err := redis.Dial("tcp", cfg.Database.Port)
+	if err != nil {
+		ERROR.Println("redisDB:", err)
+	}
+	defer db.Close()
+
+	//set
+	db.Do("SET", "message1", "Hello World")
+
+	//get
+	world, err := redis.String(db.Do("GET", "message1"))
+	if err != nil {
+		TRACE.Println("key not found")
+	}
+	INFO.Println(world)
 
 	// http API
 	router := pat.New()
