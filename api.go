@@ -9,12 +9,12 @@ import (
 )
 
 type Space struct {
-	subnet []Player
+	Subnet []Player
 }
 
 type Player struct {
-	localIP  string
-	userName string
+	LocalIP  string
+	UserName string
 }
 
 func Adduser(msg string) {
@@ -40,10 +40,10 @@ func Logon(msg string) {
 
 		TRACE.Println("socket.io->Logon: newSpace", err)
 		space = Space{
-			subnet: []Player{
+			Subnet: []Player{
 				{
-					localIP:  ipNumbers[0],
-					userName: "JonDoe",
+					LocalIP:  ipNumbers[0],
+					UserName: "JonDoe",
 				},
 			},
 		}
