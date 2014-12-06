@@ -87,6 +87,14 @@ func Logon(msg string) {
 		}
 
 		space.Space = append(space.Space, player)
+		jsonSpace, err := json.Marshal(space)
+		if err != nil {
+			ERROR.Println("socket.io->Logon json.Marshal error: ", err)
+		}
+		_, err = redisDB.Do("SET", spaceID, jsonSpace)
+		if err != nil {
+			ERROR.Println("socket.io->Logon RedisDB SET error: ", err)
+		}
 
 		TRACE.Println("socket.io->Logon added", space)
 	}
