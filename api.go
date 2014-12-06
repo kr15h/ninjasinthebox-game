@@ -62,7 +62,8 @@ func Logon(msg string) {
 			ERROR.Println("socket.io->Logon json.Unmarshal error: ", err)
 		}
 	}
-	TRACE.Println("socket.io: ", space)
+
+	TRACE.Println("socket.io->Logon Result: ", space)
 }
 
 func JoinGame(so socketio.Socket, msg string) {
