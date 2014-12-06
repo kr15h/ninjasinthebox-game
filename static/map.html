@@ -1,13 +1,17 @@
 <!doctype html>
 <html dir='ltr'>
 <head>
-
 	<title>Ninjas in the Box - Map Test</title>
 	<meta charset="utf-8">
 
 	<!-- Head JS includes - Modernizr and normalize CSS is cool -->
-	<script src="js/modernizr.min.js"></script>
+	<!-- JavaScript includes -->
 	<script src='js/blockly.js'></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+	<script src="js/modernizr.min.js"></script>
+
+	<script src="js/map.js"></script>
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 	<style>
 	.rotate90 {
@@ -49,21 +53,69 @@
 		width: 100%;
 		height: auto;
 	}
-
 	#blockly-container .collapse-btn {
 		width: 100%;
 	}
+	#headers {
+        color: white;
+        height: 40px;
+        background-color: #7665a0;
+    }
+    #headers #toolbox-header {
+        width: 172px;
+        border-right: 1px solid gray;
+    }
+    #headers #workspace-header {
+    }
+    #headers .blockly-header {
+        height: 40px;
+        text-align: center;
+        overflow-x: hidden;
+        white-space: nowrap;
+    }
+    #headers div {
+        margin-right: -4px;
+        display: inline-block;
+    }
+    #headers #show-code-header {
+        cursor: pointer;
+        border-left: 1px solid gray;
+    }
+    #headers .blockly-header span {
+        color: white;
+        line-height: 40px;
+    }
+    #blockly {
+        height: 170px;
+    }
+    .run26 {
+        width: 26px;
+        height: 26px;
+        background: url("media/shared-sprites-26x26.png") 0px 0px;
+    }
+    button.blocklyLaunch {
+        width: 172px;
+        height: 40px;
+        color: white;
+        font-size: large;
+        text-align: left;
+        padding-top: 3px;
+        border-radius: 4px;
+        display: inline-block;
+        border: 1px solid #7665a0;
+        background-color: #7665a0;
+    }
+    button.blocklyLaunch div {
+        float: right;
+        padding-right: 50px;
+    }
 	</style>
 
 </head>
 
 <body>
-
-
-
 	<!-- Global wrapper -->
 	<div class="wrapper container-fluid">
-
 		<div id="blockly-container">
 
 			<div id="blockly-stuff" class="collapse in">
@@ -107,82 +159,6 @@
 		
 
 	</div><!-- /wrapper -->
-
-	<!-- JavaScript includes -->
-	<script src="js/jquery.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<script src="js/map.js"></script>
-
-	<style>
-        #headers {
-            color: white;
-            height: 40px;
-            background-color: #7665a0;
-        }
-        #headers #toolbox-header {
-            width: 172px;
-            border-right: 1px solid gray;
-        }
-        #headers #workspace-header {
-        }
-        #headers .blockly-header {
-            height: 40px;
-            text-align: center;
-            overflow-x: hidden;
-            white-space: nowrap;
-        }
-        #headers div {
-            margin-right: -4px;
-            display: inline-block;
-        }
-        #headers #show-code-header {
-            cursor: pointer;
-            border-left: 1px solid gray;
-        }
-        #headers .blockly-header span {
-            color: white;
-            line-height: 40px;
-        }
-        #blockly {
-            height: 170px;
-        }
-        .rotate90 {
-            transform: rotate(90deg);
-            -webkit-transform: rotate(90deg);
-            -ms-transform: rotate(90deg);
-        }
-        .rotate180 {
-            transform: rotate(180deg);
-            -webkit-transform: rotate(180deg);
-            -ms-transform: rotate(180deg);
-        }
-        .rotate270 {
-            transform: rotate(270deg);
-            -webkit-transform: rotate(270deg);
-            -ms-transform: rotate(270deg);
-        }
-        .run26 {
-            width: 26px;
-            height: 26px;
-            background: url("media/shared-sprites-26x26.png") 0px 0px;
-        }
-        button.blocklyLaunch {
-            width: 172px;
-            height: 40px;
-            color: white;
-            font-size: large;
-            text-align: left;
-            padding-top: 3px;
-            border-radius: 4px;
-            display: inline-block;
-            border: 1px solid #7665a0;
-            background-color: #7665a0;
-        }
-        button.blocklyLaunch div {
-            float: right;
-            padding-right: 50px;
-        }
-    </style>
     <script>
         Blockly.Blocks.maze_move = {
             // Block for moving forward/backward
@@ -235,6 +211,5 @@
         });
         //]]>
     </script>
-
 </body>
 </html>
