@@ -102,8 +102,8 @@ func Logon(so socketio.Socket, msg string) {
 		TRACE.Println("socket.io->Logon added", space)
 	}
 
-	TRACE.Println("socket.io->Logon Emit Answer", space)
-	so.Emit("space", space)
+	TRACE.Println("socket.io->Logon Emit Answer with Id", so.Id(), space)
+	so.BroadcastTo(so.Id(), "space", space)
 }
 
 func JoinGame(so socketio.Socket, msg string) {
