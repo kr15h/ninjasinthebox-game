@@ -16,6 +16,7 @@
 
       // on space update space stuff
       socket.on('space', function(data){
+      alert("spaces become");
       $('#space').empty();
       $.each(data, function(key, value) {
       $('#space').append('<div>' + key + '</div>');
