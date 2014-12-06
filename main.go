@@ -1,7 +1,6 @@
 package main
 
 import (
-	"./api/websocket"
 	"./helpers"
 	"flag"
 	"github.com/garyburd/redigo/redis"
@@ -19,6 +18,8 @@ import (
 // GLOBALS
 //
 var cfg *helpers.Config
+var RedisDB redis.Conn
+
 var (
 	/*
 	  Usage: TRACE.Println(Error Type)
@@ -85,25 +86,14 @@ func init() {
 		}
 	}
 
-}
-func main() {
 	// database connection
-	db, err := redis.Dial("tcp", strings.Join([]string{":", cfg.Database.Port}, ""))
+	RedisDB, err := redis.Dial("tcp", strings.Join([]string{":", cfg.Database.Port}, ""))
 	if err != nil {
 		ERROR.Println("redisDB:", err)
 	}
-	defer db.Close()
-
-	//set
-	db.Do("SET", "message1", "Hello World")
-
-	//get
-	world, err := redis.String(db.Do("GET", "message1"))
-	if err != nil {
-		TRACE.Println("key not found")
-	}
-	INFO.Println(world)
-
+	defer RedisDB.Close()
+}
+func main() {
 	// http API
 	router := pat.New()
 
@@ -126,7 +116,7 @@ func main() {
 		so.On("disconnection", func() {
 			TRACE.Println("socket.io: disconnect")
 		})
-		so.On("adduser", websocket.Adduser)
+		so.On("adduser", Adduser)
 	})
 	server.On("error", func(so socketio.Socket, err error) {
 		ERROR.Println("socket.io->error:", err)

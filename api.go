@@ -1,7 +1,7 @@
-package websocket
+package main
 
 import (
-	"../../helpers"
+	"./helpers"
 	"strings"
 )
 
