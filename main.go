@@ -117,7 +117,6 @@ func main() {
 	server.On("connection", func(so socketio.Socket) {
 		TRACE.Println("socket.io: connection", so.Id())
 		so.On("chat message", func(msg string) {
-			so.Join("chat")
 			TRACE.Println("socket.io->emit:", so.Emit("chat message", msg))
 			so.BroadcastTo("chat", "chat message", msg)
 		})
