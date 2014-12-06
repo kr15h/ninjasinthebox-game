@@ -103,6 +103,7 @@ func Logon(so socketio.Socket, msg string) {
 	}
 
 	TRACE.Println("socket.io->Logon Emit Answer with Id", so.Id(), space)
+	so.Emit("space", space)
 	so.BroadcastTo(so.Id(), "space", space)
 }
 
