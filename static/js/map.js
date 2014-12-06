@@ -11,8 +11,8 @@
     player.turn('right');
   }
 (function () {
-
   'use strict';
+
   function Map(rows, cols) {
     this.rows = rows || 10;
     this.cols = cols || 10;
@@ -138,8 +138,8 @@
 
   // Player class
   function Object(type) {
-    this.x;
-    this.y;
+    this.x = 0;
+    this.y = 0;
     this.coins = 0;
     this.type = type;
     this.rotation = 0;
