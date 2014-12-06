@@ -51,10 +51,11 @@ func Logon(msg string) {
 			ERROR.Println("socket.io->Logon error: ", err)
 		}
 		redisDB.Do("SET", "spaceID", jsonSpace)
-	}
-	err = json.Unmarshal(jsonSpace, &space)
-	if err != nil {
-		ERROR.Println("socket.io->Logon error: ", err)
+	} else {
+		err = json.Unmarshal(jsonSpace, &space)
+		if err != nil {
+			ERROR.Println("socket.io->Logon error: ", err)
+		}
 	}
 	TRACE.Println("socket.io: ", space)
 }
