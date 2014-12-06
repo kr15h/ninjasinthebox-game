@@ -23,7 +23,7 @@ func Adduser(msg string) {
 
 }
 
-func Logon(msg string, so socketio.Socket) {
+func Logon(so socketio.Socket, msg string) {
 
 	var space Space
 	var known bool = false
@@ -99,7 +99,7 @@ func Logon(msg string, so socketio.Socket) {
 		TRACE.Println("socket.io->Logon added", space)
 	}
 
-	so.Emit("space", space)
+	so.Emit("updatechat", space)
 }
 
 func JoinGame(so socketio.Socket, msg string) {
