@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"runtime"
 	"strings"
 )
 
@@ -18,7 +19,7 @@ import (
 // GLOBALS
 //
 var cfg *helpers.Config
-var RedisDB redis.Conn
+var RedisPool redis.Pool
 
 var (
 	/*
@@ -87,11 +88,18 @@ func init() {
 	}
 
 	// database connection
-	RedisDB, err := redis.Dial("tcp", strings.Join([]string{":", cfg.Database.Port}, ""))
-	if err != nil {
-		ERROR.Println("redisDB:", err)
+	runtime.GOMAXPROCS(runtime.NumCPU())
+	RedisPool = redis.Pool{
+		MaxIdle:   50,
+		MaxActive: 500, // max number of connections
+		Dial: func() (redis.Conn, error) {
+			c, err := redis.Dial("tcp", strings.Join([]string{":", cfg.Database.Port}, ""))
+			if err != nil {
+				panic(err.Error())
+			}
+			return c, err
+		},
 	}
-	defer RedisDB.Close()
 }
 func main() {
 	// http API
