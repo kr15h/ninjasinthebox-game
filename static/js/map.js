@@ -32,9 +32,9 @@ function turnRight() {
 
     /* parse map constants */
     this.COIN = '$';
-    this.EMPTY = 'x';
+    this.EMPTY = '0';
     this.BOSS = 'B';
-    this.WALL = '0';
+    this.WALL = 'x';
 
     /* create the objects matrix */
     this.objects = [];
@@ -127,6 +127,13 @@ function turnRight() {
       success: function (data) {
         console.log('Successfully loaded map');
         that.mapData = that.parseMapData(data);
+
+        // repopulate map objects storage array
+        that.objects.length = 0;
+        for(var i = 0; i < that.mapData.length; i++) {
+          that.objects[i] = new Array(that.mapData[i].length);
+        }
+
         //console.log(that.mapData);
         onSuccess();
       },
@@ -144,9 +151,12 @@ function turnRight() {
     var tableHtml = '';
     tableHtml += '<table>';
 
-    for (var rowsIter = 0; rowsIter < this.rows; rowsIter++) {
+    var rowsIter;
+    var colsIter;
+    
+    for (rowsIter = 0; rowsIter < this.rows; rowsIter++) {
       tableHtml += '<tr>';
-      for (var colsIter = 0; colsIter < this.cols; colsIter++) {
+      for (colsIter = 0; colsIter < this.cols; colsIter++) {
         tableHtml += '<td></td>';
       }
       tableHtml += '</tr>';
@@ -156,6 +166,32 @@ function turnRight() {
     this.container.empty();
     this.container.append(tableHtml);
     this.calcSize();
+
+    for (rowsIter = 0; rowsIter < this.mapData.length; rowsIter++) {
+      for (colsIter = 0; colsIter < this.mapData[0].length; colsIter++) {
+        
+        var mapCell = this.mapData[rowsIter][colsIter];
+        //console.log('mapCell val: ' + mapCell + ', colsIter: ' + colsIter + ', rowsIter: ' + rowsIter);
+
+        if (mapCell === this.WALL) {
+
+          var wall = new Object("wall");
+          wall.createHtml();
+          this.addObject(wall, colsIter, rowsIter);
+
+        } else if (mapCell === this.COIN) {
+
+          var coin = new Object("coin");
+          coin.createHtml();
+          this.addObject(coin, colsIter, rowsIter);
+
+        } else if (mapCell === this.BOSS) {
+
+          // TODO: Add boss object
+
+        }
+      }
+    }
   };
 
   Map.prototype.calcSize = function() {
@@ -281,6 +317,8 @@ function turnRight() {
     map = new Map();
     map.setup($('#map-container'));
 
+    // TODO: show loader
+
     // Async map loading... Provide anonymous callback func
     map.loadMap('maps/Level_1.csv', function(){
       
@@ -289,22 +327,6 @@ function turnRight() {
       player = new Object("player");
       player.createHtml();
       map.addObject(player, 0, 0);
-  
-      var wall = new Object("wall");
-      wall.createHtml();
-      map.addObject(wall, 0, 1);
-  
-      var wall2 = new Object("wall");
-      wall2.createHtml();
-      map.addObject(wall2, 2, 2);
-  
-      var wall3 = new Object("wall");
-      wall3.createHtml();
-      map.addObject(wall3, 2, 0);
-  
-      var coin = new Object("coin");
-      coin.createHtml();
-      map.addObject(coin, 1, 1);
 
       // We add window on resize handler only
       // when the map has been created
