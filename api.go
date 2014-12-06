@@ -2,7 +2,6 @@ package main
 
 import (
 	"./helpers"
-	"crypto/md5"
 	"encoding/json"
 	"github.com/garyburd/redigo/redis"
 	"github.com/googollee/go-socket.io"
@@ -30,7 +29,7 @@ func Logon(msg string) {
 	ipNumbers := strings.Split(msg, " ")
 	helpers.TRACE.Println("socket.io->Logon: IP", ipNumbers)
 
-	spaceID := md5.Sum([]byte(ipNumbers[1]))
+	spaceID := ipNumbers[1]
 	helpers.TRACE.Println("socket.io->Logon: SpaceID", spaceID)
 
 	redisDB := RedisPool.Get()
@@ -50,17 +49,17 @@ func Logon(msg string) {
 		}
 		jsonSpace, err := json.Marshal(space)
 		if err != nil {
-			ERROR.Println("socket.io->Logon JsonMarshal error: ", err)
+			ERROR.Println("socket.io->Logon json.Marshal error: ", err)
 		}
 		_, err = redisDB.Do("SET", "spaceID", jsonSpace)
 		if err != nil {
-			ERROR.Println("socket.io->Logon Redis Set error: ", err)
+			ERROR.Println("socket.io->Logon RedisDB SET error: ", err)
 		}
 
 	} else {
 		err = json.Unmarshal(jsonSpace, &space)
 		if err != nil {
-			ERROR.Println("socket.io->Logon error: ", err)
+			ERROR.Println("socket.io->Logon json.Unmarshal error: ", err)
 		}
 	}
 	TRACE.Println("socket.io: ", space)
