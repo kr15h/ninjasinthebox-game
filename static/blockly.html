@@ -26,7 +26,6 @@
         <div>Run</div>
         <img src="media/1x1.gif" class="run26">
     </button>
-    <div id="players"></div>
     <style>
         #headers {
             color: white;
@@ -147,55 +146,17 @@
                 '<block type="maze_turn"><title name="DIR">turnLeft</title></block>' +
                 '<block type="maze_turn"><title name="DIR">turnRight</title></block></xml>',
         });
-        function player(x, y, container, img) {
-            this.x = y;
-            this.y = y;
-            this.img = img;
-            this.step = 50;
-            this.coins = 0;
-            this.rotation = 0;
-            document.getElementById(container).innerHTML = '<img src="'+img+'" id="player" width="100px">';
-            this.move = function(dir) {
-                if (this.rotation == 0) {
-                    if (dir === "backward") this.y += this.step;
-                    else this.y -= this.step;
-                } else if (this.rotation == 90) {
-                    if (dir === "backward") this.x -= this.step;
-                    else this.x += this.step;
-                } else if (this.rotation == 180) {
-                    if (dir === "backward") this.y -= this.step;
-                    else this.y += this.step;
-                } else {
-                    if (dir === "backward") this.x += this.step;
-                    else this.x -= this.step;
-                }
-                document.getElementById("player").style.marginTop = this.y+"px";
-                document.getElementById("player").style.marginLeft = this.x+"px";
-            };
-            this.turn = function(dir) {
-                if (dir === "left") {
-                    this.rotation -= 90;
-                    if (this.rotation < 0) this.rotation = 270;
-                } else {
-                    this.rotation += 90;
-                    if (this.rotation > 270) this.rotation = 0;
-                }
-                
-                document.getElementById("player").className = "rotate"+this.rotation;
-            };
-        }
-        var ninja = new player(0, 0, "players", "media/ninja.png");
         function moveForward() {
-            ninja.move("forward");
+            player.move("forward");
         }
         function moveBackward() {
-            ninja.move("backward");
+            player.move("backward");
         }
         function turnLeft() {
-            ninja.turn("left");
+            player.move("left");
         }
         function turnRight() {
-            ninja.turn("right");
+            player.move("right");
         }
         //]]>
     </script>

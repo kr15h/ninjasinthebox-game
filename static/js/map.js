@@ -1,11 +1,12 @@
 // Map class
 
-function Map() {
-	this.cols = 10;
-	this.rows = 10;
+function Map(rows, cols) {
+    this.rows = rows || 10;
+	this.cols = cols ||  10;
 	this.container = {};
 
 	this.walls = [];
+    this.coins = [];
 	this.players = [];
 }
 
@@ -23,7 +24,6 @@ Map.prototype.loadMap = function(fileUrl) {
 };
 
 Map.prototype.createHtml = function(cols, rows) {
-
 	if (arguments.length) {
 		this.cols = cols;
 		this.rows = rows;
@@ -55,47 +55,119 @@ Map.prototype.calcSize = function() {
 	$('td').css('height', String(cellHeight) + 'px');
 };
 
+Map.prototype.addWall = function(wall, x, y) {
+    if (y > this.rows || x > this.cols || y < 0 || x < 0) {
+        console.log("Map.addWall(): No such cell in grid.");
+        return;
+    }
+    this.walls.push(wall);
+    var element = $('td').eq((this.cols * y) + x);
+    element.append(wall.element);
+};
+
+Map.prototype.addCoin = function(coin, x, y) {
+    if (y > this.rows || x > this.cols || y < 0 || x < 0) {
+        console.log("Map.addPlayer(): No such cell in grid.");
+        return;
+    }
+    this.coins.push(coin);
+    var element = $('td').eq((this.cols * y) + x);
+    element.append(coin.element);
+};
+
+Map.prototype.addPlayer = function(player, x, y) {
+    if (y > this.rows || x > this.cols || y < 0 || x < 0) {
+        console.log("Map.addPlayer(): No such cell in grid.");
+        return;
+    }
+    player.x = x;
+    player.y = y;
+    this.players.push(player);
+    var element = $('td').eq((this.cols * y) + x);
+    element.append(player.element);
+};
+
+Map.prototype.movePlayer = function(player, dir) {
+    /* check for collision with items */
+    var x = player.x, y = player.y;
+    if (dir === "up") {
+        y -= 1;
+    } else if (dir === "left") {
+        x -= 1;
+    } else if (dir === "right") {
+        x += 1;
+    } else {
+        y += 1;
+    }
+    $('td').eq((this.cols * player.y) + player.x).empty();
+    var element = $('td').eq((this.cols * y) + x);
+    element.append(player.element);
+};
 
 // Player class
 
-function Player() {
-	this.container = {};
-	this.imgSrc = 'media/ninja.png';
+function Player(imgSrc) {
+    this.x;
+    this.y;
+    this.coins = 0;
+    this.rotation = 0;
+    this.imgSrc = imgSrc || 'media/ninja.png';
+    this.element = this.createHtml();
 }
-
-Player.prototype.setup = function(jQueryContainerObject) {
-	if (arguments.length) {
-		this.container = jQueryContainerObject;
-	} else {
-		console.log('Player.setup(): please specify container object');
-	}
-};
 
 Player.prototype.createHtml = function() {
-	var playerHtml = '<img src="' + this.imgSrc + '" alt="Player">'
-	console.log(this.container);
-	this.container.empty();
-	this.container.append(playerHtml);
-}
+    var element = document.createElement('img');
+    element.src = this.imgSrc;
+    element.alt = "Player";
+    console.log(element);
+    return element;
+};
+
+/*
+Player.prototype.move = function(dir) {
+    if (this.rotation == 0) {
+        if (dir === "backward") this.y += this.step;
+        else this.y -= this.step;
+    } else if (this.rotation == 90) {
+        if (dir === "backward") this.x -= this.step;
+        else this.x += this.step;
+    } else if (this.rotation == 180) {
+        if (dir === "backward") this.y -= this.step;
+        else this.y += this.step;
+    } else {
+        if (dir === "backward") this.x += this.step;
+        else this.x -= this.step;
+    }
+    document.getElementById("player").style.marginTop = this.y+"px";
+    document.getElementById("player").style.marginLeft = this.x+"px";
+};
+*/
+
+Player.prototype.turn = function(dir) {
+    if (dir === "left") {
+        this.rotation -= 90;
+        if (this.rotation < 0) this.rotation = 270;
+    } else {
+        this.rotation += 90;
+        if (this.rotation > 270) this.rotation = 0;
+    }
+    this.element.className = "rotate"+this.rotation;
+};
 
 
 // This test
 
 $(document).ready(function() {
-	
 	var map = new Map();
 	map.setup($('#map-container'));
 	map.loadMap("lorem.json");
 	map.createHtml();
 
 	var player = new Player();
-	var mapCell = $('td').eq(14);
-	player.setup(mapCell);
-	player.createHtml();
+	map.addPlayer(player, 1, 1);
+    map.movePlayer(player, "right");
 
 	$(window).resize(function() {
 		map.calcSize();
 	});
-
 });
-
