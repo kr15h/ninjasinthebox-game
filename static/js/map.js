@@ -49,6 +49,18 @@ function turnRight() {
 
   Map.prototype.loadMap = function(fileUrl) {
     console.log(fileUrl);
+
+    $.ajax({
+      url : "maps/Level_1.csv",
+      dataType: "text",
+      success: function (data) {
+        console.log('Successfully loaded map');
+        console.log(data);
+      },
+      error: function(jqxhr, status, error) {
+        console.log('Error loading map: ' + status + ', ' + error);
+      }
+    }); // ajax
   };
 
   Map.prototype.createHtml = function(cols, rows) {
