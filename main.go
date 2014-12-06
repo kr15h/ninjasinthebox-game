@@ -1,6 +1,7 @@
 package main
 
 import (
+	"./api/websocket"
 	"./helpers"
 	"flag"
 	"github.com/googollee/go-socket.io"
@@ -107,9 +108,7 @@ func main() {
 		so.On("disconnection", func() {
 			TRACE.Println("socket.io: disconnect")
 		})
-		so.On("adduser", func(msg string) {
-			TRACE.Println("socket.io: adduser", msg)
-		})
+		so.On("adduser", websocket.Adduser)
 	})
 	server.On("error", func(so socketio.Socket, err error) {
 		ERROR.Println("socket.io->error:", err)
