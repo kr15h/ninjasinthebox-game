@@ -1,8 +1,33 @@
-### Gameserver documentation
+## Gameserver documentation
 
 
-#### commit code
+###commit code
 
-please send me your ssh key to m.winkler@laydrop.com
 
-then commit to ssh://morriswinkler@morriswinkler.koding.io
+### websockets API
+
+
+
+logon	( frontend to backend )
+
+```	
+	logon localIP globalIP		----> localIP and globalIP format is 0.0.0.0 the two values are seperated by one space
+```	
+	
+space   ( returned by backend after logon)
+
+```
+	space jsonObj			-----> json formated 
+	
+		 space = Space{
+                        Channel: uuid.New(),
+                        SpaceID: spaceID,
+                        Space: []Player{
+                                {
+                                        LocalIP:  localIP,
+                                        UserName: "JonDoe",
+                                },
+                        },
+                }	
+```	
+	
