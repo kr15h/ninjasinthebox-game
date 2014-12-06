@@ -1,86 +1,105 @@
-// Map class
+/* for blockly */
+  var map = null;
+  var player = null;
+  function moveForward() {
+    map.moveObject(player);
+  }
+  function turnLeft() {
+    player.turn('left');
+  }
+  function turnRight() {
+    player.turn('right');
+  }
+(function () {
 
-function Map(rows, cols) {
+  'use strict';
+  function Map(rows, cols) {
     this.rows = rows || 10;
-	this.cols = cols || 10;
-	this.container = {};
+    this.cols = cols || 10;
+    this.container = {};
 
     /* create the objects matrix */
     this.objects = [];
     for(var i = 0; i < this.rows; i++) {
         this.objects[i] = new Array(this.cols);
     }
+    
     /* just for convenience */
     this.players = [];
-}
+  }
 
-Map.prototype.setup = function(jQueryContainerObject) {
-	if (arguments.length) {
-		this.container = jQueryContainerObject;
-	} else {
-		console.log('Map.setup(): No object specified.');
-	}
-};
+  Map.prototype.setup = function(jQueryContainerObject) {
+    if (arguments.length) {
+      this.container = jQueryContainerObject;
+    } else {
+      console.log('Map.setup(): No object specified.');
+    }
+  };
 
-Map.prototype.loadMap = function(fileUrl) {
-	console.log(fileUrl);
-};
+  Map.prototype.loadMap = function(fileUrl) {
+    console.log(fileUrl);
+  };
 
-Map.prototype.createHtml = function(cols, rows) {
-	if (arguments.length) {
-		this.cols = cols;
-		this.rows = rows;
-	}
-	var tableHtml = '';
-	tableHtml += '<table>';
+  Map.prototype.createHtml = function(cols, rows) {
+    
+    if (arguments.length) {
+      this.cols = cols;
+      this.rows = rows;
+    }
 
-	for (var rowsIter = 0; rowsIter < this.rows; rowsIter++) {
-		tableHtml += '<tr>';
-		for (var colsIter = 0; colsIter < this.cols; colsIter++) {
-			tableHtml += '<td></td>';
-		}
-		tableHtml += '</tr>';
-	}
+    var tableHtml = '';
+    tableHtml += '<table>';
 
-	tableHtml += '</table>';
+    for (var rowsIter = 0; rowsIter < this.rows; rowsIter++) {
+      tableHtml += '<tr>';
+      for (var colsIter = 0; colsIter < this.cols; colsIter++) {
+        tableHtml += '<td></td>';
+      }
+      tableHtml += '</tr>';
+    }
 
-	this.container.empty();
-	this.container.append(tableHtml);
+    tableHtml += '</table>';
+    this.container.empty();
+    this.container.append(tableHtml);
+    this.calcSize();
+  };
 
-	this.calcSize();
-};
+  Map.prototype.calcSize = function() {
+    var containerWidth = this.container.width();
+    var cellWidth = containerWidth / this.cols;
+    var cellHeight = Math.floor(cellWidth);
+    $('td').css('height', String(cellHeight) + 'px');
+  };
 
-Map.prototype.calcSize = function() {
-	var containerWidth = this.container.width();
-	var cellWidth = containerWidth / this.cols;
-	var cellHeight = Math.floor(cellWidth);
-	$('td').css('height', String(cellHeight) + 'px');
-};
+  Map.prototype.addObject = function(object, x, y) {
 
-Map.prototype.addObject = function(object, x, y) {
     if (y > this.rows || x > this.cols || y < 0 || x < 0) {
         console.log("Map.addPlayer(): No such cell in grid.");
         return;
     }
+
     object.x = x;
     object.y = y;
+
     /* add to object matrix */
     this.objects[x][y] = object;
+    
     /* when player, push also to players, for convenience */
     if (object.type === "player") this.players.push(object);
+    
     /* add to the specified table cell */
     var element = $('td').eq((this.cols * y) + x);
     element.append(object.element);
 };
 
-Map.prototype.moveObject = function(object) {
+  Map.prototype.moveObject = function(object) {
     /* see where the player needs to be moved */
     var x = object.x, y = object.y;
-    if (object.rotation == 0) {
+    if (object.rotation === 0) {
         y += 1;
-    } else if (object.rotation == 90) {
+    } else if (object.rotation === 90) {
         x -= 1;
-    } else if (object.roation == 180) {
+    } else if (object.rotation === 180) {
         y -= 1;
     } else {
         x += 1;
@@ -108,25 +127,26 @@ Map.prototype.moveObject = function(object) {
     }
     /* clear the previouse table cell and object matrix slot */
     delete this.objects[object.x][object.y];
-    //$('td').eq((this.cols * object.y) + object.x).empty();
+    $('td').eq((this.cols * object.y) + object.x).empty();
     /* move to new table cell and matrix cell */
+    object.x = x;
+    object.y = y;
     this.objects[x][y] = object;
     var element = $('td').eq((this.cols * y) + x);
     element.append(object.element);
-};
+  };
 
-// Player class
-
-function Object(type) {
+  // Player class
+  function Object(type) {
     this.x;
     this.y;
     this.coins = 0;
     this.type = type;
     this.rotation = 0;
     this.imgSrc = null;
-}
+  }
 
-Object.prototype.createHtml = function() {
+  Object.prototype.createHtml = function() {
     /* somewhere else would be better :) */
     if (this.type === "player") {
         this.imgSrc = 'media/ninja.png';
@@ -142,9 +162,9 @@ Object.prototype.createHtml = function() {
     element.alt = this.type;
     console.log(element);
     this.element = element;
-};
+  };
 
-Object.prototype.turn = function(dir) {
+  Object.prototype.turn = function(dir) {
     /* when player is turning left */
     if (dir === "left") {
         /* anti-clockwise rotation */
@@ -159,43 +179,33 @@ Object.prototype.turn = function(dir) {
     }
     /* add the rotation class */
     this.element.className = "rotate"+this.rotation;
-};
+  };
 
-// This test
-var map = null;
-var player = null;
-$(document).ready(function() {
-	map = new Map();
-	map.setup($('#map-container'));
-	map.loadMap("lorem.json");
-	map.createHtml(map.cols, map.rows);
+  // This test
+  $(document).ready(function() {
+    map = new Map();
+    map.setup($('#map-container'));
+    map.loadMap("lorem.json");
+    map.createHtml(map.cols, map.rows);
 
-	player = new Object("player");
+    player = new Object("player");
     player.createHtml();
-	map.addObject(player, 0, 0);
+    map.addObject(player, 0, 0);
 
-	/*$(window).resize(function() {
-		//map.calcSize();
-	});*/
+    $(window).resize(function() {
+      map.calcSize();
+    });
 
-	$('#blockly-stuff').on('show.bs.collapse', function () {
-		$('.blockly-icon-up').removeClass('hidden');
-		$('.blockly-icon-down').addClass('hidden');
-	});
+    $('#blockly-stuff').on('show.bs.collapse', function () {
+      console.log('on show');
+      $('.blockly-icon-up').removeClass('hidden');
+      $('.blockly-icon-down').addClass('hidden');
+    });
 
-	$('#blockly-stuff').on('hide.bs.collapse', function () {
-		$('.blockly-icon-down').removeClass('hidden');
-		$('.blockly-icon-up').addClass('hidden');
-	});
-});
-
-/* for blockly */
-function moveForward() {
-    map.moveObject(player);
-}
-function turnLeft() {
-    player.turn('left');
-}
-function turnRight() {
-    player.turn('right');
-}
+    $('#blockly-stuff').on('hide.bs.collapse', function () {
+      console.log('on hide');
+      $('.blockly-icon-down').removeClass('hidden');
+      $('.blockly-icon-up').addClass('hidden');
+    });
+  }); // document ready
+}()); // closure
