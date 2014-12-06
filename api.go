@@ -102,6 +102,7 @@ func Logon(so socketio.Socket, msg string) {
 		TRACE.Println("socket.io->Logon added", space)
 	}
 
+	TRACE.Println("socket.io->Logon Emit Answer", space)
 	so.Emit("updatechat", space)
 }
 
