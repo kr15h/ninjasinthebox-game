@@ -9,7 +9,8 @@ import (
 )
 
 type Space struct {
-	Subnet []Player
+	SpaceID string
+	Space   []Player
 }
 
 type Player struct {
@@ -40,7 +41,8 @@ func Logon(msg string) {
 
 		TRACE.Println("socket.io->Logon: newSpace", err)
 		space = Space{
-			Subnet: []Player{
+			SpaceID: spaceID,
+			Space: []Player{
 				{
 					LocalIP:  ipNumbers[0],
 					UserName: "JonDoe",
@@ -63,7 +65,10 @@ func Logon(msg string) {
 		}
 	}
 
-	TRACE.Println("socket.io->Logon Result: ", space)
+	for _, element := range space.Space {
+		TRACE.Println("socket.io->Logon known LocalIP", element.LocalIP, "in Space", spaceID)
+	}
+
 }
 
 func JoinGame(so socketio.Socket, msg string) {
