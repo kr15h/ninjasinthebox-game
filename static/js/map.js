@@ -101,7 +101,7 @@ function turnRight() {
     /* add to the specified table cell */
     var element = $('td').eq((this.cols * y) + x);
     element.append(object.element);
-};
+  };
 
   Map.prototype.moveObject = function(object) {
     /* see where the player needs to be moved */
