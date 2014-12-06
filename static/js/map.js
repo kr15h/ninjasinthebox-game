@@ -30,6 +30,12 @@ function turnRight() {
     this.container = {};
     this.mapData = [];
 
+    /* parse map constants */
+    this.COIN = '$';
+    this.EMPTY = 'x';
+    this.BOSS = 'B';
+    this.WALL = '0';
+
     /* create the objects matrix */
     this.objects = [];
     for(var i = 0; i < this.rows; i++) {
@@ -107,7 +113,7 @@ function turnRight() {
 
   };
 
-  Map.prototype.loadMap = function(fileUrl) {
+  Map.prototype.loadMap = function(fileUrl, onSuccess) {
     
     console.log(fileUrl);
 
@@ -116,12 +122,13 @@ function turnRight() {
     var that = this; 
 
     $.ajax({
-      url : "maps/Level_1.csv",
+      url : fileUrl,
       dataType: "text",
       success: function (data) {
         console.log('Successfully loaded map');
         that.mapData = that.parseMapData(data);
         //console.log(that.mapData);
+        onSuccess();
       },
       error: function(jqxhr, status, error) {
         console.log('Error loading map: ' + status + ', ' + error);
@@ -129,12 +136,10 @@ function turnRight() {
     }); // ajax
   };
 
-  Map.prototype.createHtml = function(cols, rows) {
+  Map.prototype.createHtml = function() {
     
-    if (arguments.length) {
-      this.cols = cols;
-      this.rows = rows;
-    }
+    this.cols = this.mapData[0].length;
+    this.rows = this.mapData.length;
 
     var tableHtml = '';
     tableHtml += '<table>';
@@ -274,19 +279,26 @@ function turnRight() {
   $(document).ready(function() {
     map = new Map();
     map.setup($('#map-container'));
-    map.loadMap("lorem.json");
-    map.createHtml(map.cols, map.rows);
 
-    player = new Object("player");
-    player.createHtml();
-    map.addObject(player, 0, 0);
+    // Async map loading... Provide anonymous callback func
+    map.loadMap('maps/Level_1.csv', function(){
+      
+      map.createHtml();
+
+      player = new Object("player");
+      player.createHtml();
+      map.addObject(player, 0, 0);
     
-    var player2 = new Object("player");
-    player2.createHtml();
-    map.addObject(player2, 1, 1);
+      var player2 = new Object("player");
+      player2.createHtml();
+      map.addObject(player2, 1, 1);
 
-    $(window).resize(function() {
-      map.calcSize();
+      // We add window on resize handler only
+      // when the map has been created
+      $(window).resize(function() {
+        map.calcSize();
+      });
+
     });
 
     $('#blockly-stuff').on('show.bs.collapse', function () {
