@@ -79,11 +79,11 @@ Map.prototype.moveObject = function(object) {
     if (object.rotation == 0) {
         y += 1;
     } else if (object.rotation == 90) {
-        x += 1;
+        x -= 1;
     } else if (object.roation == 180) {
         y -= 1;
     } else {
-        x -= 1;
+        x += 1;
     }
     /* check for map borders */
     if (x < 0 || y < 0 || x > this.cols - 1 || y > this.rows - 1) {
@@ -107,8 +107,8 @@ Map.prototype.moveObject = function(object) {
         }
     }
     /* clear the previouse table cell and object matrix slot */
-    this.objects[object.x][object.y] = 'undefined';
-    $('td').eq((this.cols * object.y) + object.x).empty();
+    delete this.objects[object.x][object.y];
+    //$('td').eq((this.cols * object.y) + object.x).empty();
     /* move to new table cell and matrix cell */
     this.objects[x][y] = object;
     var element = $('td').eq((this.cols * y) + x);
@@ -162,22 +162,21 @@ Object.prototype.turn = function(dir) {
 };
 
 // This test
-
+var map = null;
+var player = null;
 $(document).ready(function() {
-	var map = new Map();
+	map = new Map();
 	map.setup($('#map-container'));
 	map.loadMap("lorem.json");
 	map.createHtml(map.cols, map.rows);
 
-	var player = new Object("player");
+	player = new Object("player");
     player.createHtml();
 	map.addObject(player, 0, 0);
-    player.turn('right');
-    map.moveObject(player);
 
-	$(window).resize(function() {
-		map.calcSize();
-	});
+	/*$(window).resize(function() {
+		//map.calcSize();
+	});*/
 
 	$('#blockly-stuff').on('show.bs.collapse', function () {
 		$('.blockly-icon-up').removeClass('hidden');
@@ -188,5 +187,15 @@ $(document).ready(function() {
 		$('.blockly-icon-down').removeClass('hidden');
 		$('.blockly-icon-up').addClass('hidden');
 	});
-
 });
+
+/* for blockly */
+function moveForward() {
+    map.moveObject(player);
+}
+function turnLeft() {
+    player.turn('left');
+}
+function turnRight() {
+    player.turn('right');
+}
