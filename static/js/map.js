@@ -28,6 +28,7 @@ function turnRight() {
     this.rows = rows || 10;
     this.cols = cols || 10;
     this.container = {};
+    this.mapData = '';
 
     /* create the objects matrix */
     this.objects = [];
@@ -47,15 +48,25 @@ function turnRight() {
     }
   };
 
+  Map.prototype.interpretMapData = function(mapData) {
+    console.log(mapData);
+  };
+
   Map.prototype.loadMap = function(fileUrl) {
+    
     console.log(fileUrl);
+
+    // Hack to make this accessible from within 
+    // ajax success callback function
+    var that = this; 
 
     $.ajax({
       url : "maps/Level_1.csv",
       dataType: "text",
       success: function (data) {
         console.log('Successfully loaded map');
-        console.log(data);
+        that.mapData = data;
+        that.interpretMapData(that.mapData);
       },
       error: function(jqxhr, status, error) {
         console.log('Error loading map: ' + status + ', ' + error);
