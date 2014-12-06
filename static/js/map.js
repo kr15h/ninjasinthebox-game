@@ -249,7 +249,8 @@ function turnRight() {
         /* collision is only ok with coins */
         if (obj.type === "coin") {
             /* collect the coin */
-            alert("ruble yay!");
+            $("#blockly-container").append('<img src="http://i258.photobucket.com/albums/hh253/jimifunguzz/gangnam%20style/gangnam-style-explosion.gif">');
+            setTimeout(function(){ $("#blockly-container img").remove() }, 3000);
             delete this.objects[x][y];
             $('td').eq((this.cols * y) + x).empty();
         } else {
