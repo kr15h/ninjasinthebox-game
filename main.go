@@ -121,7 +121,7 @@ func main() {
 			so.BroadcastTo("chat", "chat message", msg)
 		})
 		so.On("disconnection", func() {
-			TRACE.Println("socket.io: disconnect")
+			TRACE.Println("socket.io: disconnect", so.Id(), so.Request())
 		})
 		so.On("adduser", Adduser)
 		so.On("logon", Logon)
