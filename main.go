@@ -85,7 +85,7 @@ func init() {
 
 func main() {
 	router := pat.New()
-	router.Add("GET", "/", http.FileServer(http.Dir("static")))
+	router.Add("GET", "/", http.FileServer(http.Dir(cfg.Webserver.Dir)))
 
 	// Register this pat with the default serve mux so that other packages
 	// may also be exported. (i.e. /debug/pprof[>)
