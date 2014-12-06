@@ -26,10 +26,12 @@ func Adduser(msg string) {
 func Logon(msg string) {
 
 	var space Space
+	var known bool = false
 
 	ipNumbers := strings.Split(msg, " ")
 	helpers.TRACE.Println("socket.io->Logon: IP", ipNumbers)
 
+	localIP := ipNumbers[0]
 	spaceID := ipNumbers[1]
 	helpers.TRACE.Println("socket.io->Logon: SpaceID", spaceID)
 
@@ -38,13 +40,14 @@ func Logon(msg string) {
 
 	jsonSpace, err := redis.Bytes(redisDB.Do("GET", spaceID))
 	if err != nil {
-
+		// so the user is in a new space we add him
+		known = true
 		TRACE.Println("socket.io->Logon: newSpace", err)
 		space = Space{
 			SpaceID: spaceID,
 			Space: []Player{
 				{
-					LocalIP:  ipNumbers[0],
+					LocalIP:  localIP,
 					UserName: "JonDoe",
 				},
 			},
@@ -59,16 +62,25 @@ func Logon(msg string) {
 		}
 
 	} else {
+		// else unmarshal the json object
 		err = json.Unmarshal(jsonSpace, &space)
 		if err != nil {
 			ERROR.Println("socket.io->Logon json.Unmarshal error: ", err)
 		}
 	}
 
+	// check if the user is known
 	for _, element := range space.Space {
-		TRACE.Println("socket.io->Logon known LocalIP", element.LocalIP, "in Space", spaceID)
+		if element.LocalIP == localIP {
+			known = true
+			TRACE.Println("socket.io->Logon known LocalIP", element.LocalIP, "in Space", spaceID)
+		}
 	}
 
+	// if ip is unknow add it to the space
+	if !known {
+		TRACE.Println("socket.io->Logon unknown LocalIP", localIP, "is added")
+	}
 }
 
 func JoinGame(so socketio.Socket, msg string) {
