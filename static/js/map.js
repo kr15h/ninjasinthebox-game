@@ -1,6 +1,6 @@
 (function () {
-
   'use strict';
+
   function Map(rows, cols) {
     this.rows = rows || 10;
     this.cols = cols || 10;
@@ -84,7 +84,7 @@
     
     /* see where the player needs to be moved */
     var x = object.x, y = object.y;
-    if (object.rotation == 0) {
+    if (object.rotation === 0) {
         y += 1;
     } else if (object.rotation == 90) {
         x += 1;
@@ -125,8 +125,8 @@
 
   // Player class
   function Object(type) {
-    this.x;
-    this.y;
+    this.x = 0;
+    this.y = 0;
     this.coins = 0;
     this.type = type;
     this.rotation = 0;
