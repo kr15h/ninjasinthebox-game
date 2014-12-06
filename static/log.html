@@ -1,19 +1,16 @@
-<!DOCTYPE html>
-<!-- Copyright (c) 2012 Daniel Richman; GNU GPL 3 -->
 <html>
-    <head>
-        <title>habitat parser log viewer</title>
-        <script type="text/javascript" src="js/jquery.min.js"></script>
-        <script type="text/javascript" src="js/logtail.js"></script>
-        <link href="logtail.css" rel="stylesheet" type="text/css">
-    </head>
-    <body>
-        <div id="header">
-            js-logtail.
-            <a href="./">Reversed</a> or
-            <a href="./?noreverse">chronological</a> view.
-            <a id="pause" href='#'>Pause</a>.
-        </div>
-        <pre id="data">Loading...</pre>
-    </body>
+<head>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script src="jquery.logviewer.js"></script>
+<script type="text/javascript">
+
+jQuery(document).bind("ready", function() {
+     jQuery('#logcontent').logViewer({logUrl: '/log/ninjasinthebox.log'});
+});
+</script>
+</head>
+<body>
+Live log:<br/>
+<textarea id="logcontent" autocomplete="off">
+</body>
 </html>
