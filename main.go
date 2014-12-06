@@ -3,6 +3,7 @@ package main
 import (
 	"./helpers"
 	"flag"
+	"github.com/garyburd/redigo/redis"
 	"github.com/googollee/go-socket.io"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/pat"
@@ -10,12 +11,16 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"runtime"
+	"strings"
 )
 
 //
 // GLOBALS
 //
 var cfg *helpers.Config
+var RedisPool redis.Pool
+
 var (
 	/*
 	  Usage: TRACE.Println(Error Type)
@@ -82,9 +87,21 @@ func init() {
 		}
 	}
 
+	// database connection
+	runtime.GOMAXPROCS(runtime.NumCPU())
+	RedisPool = redis.Pool{
+		MaxIdle:   50,
+		MaxActive: 500, // max number of connections
+		Dial: func() (redis.Conn, error) {
+			c, err := redis.Dial("tcp", strings.Join([]string{":", cfg.Database.Port}, ""))
+			if err != nil {
+				panic(err.Error())
+			}
+			return c, err
+		},
+	}
 }
 func main() {
-
 	// http API
 	router := pat.New()
 
@@ -107,9 +124,10 @@ func main() {
 		so.On("disconnection", func() {
 			TRACE.Println("socket.io: disconnect")
 		})
-		so.On("adduser", func(msg string) {
-			TRACE.Println("socket.io: adduser", msg)
-		})
+		so.On("adduser", Adduser)
+		so.On("logon", Logon)
+		so.On("joinGame", JoinGame)
+
 	})
 	server.On("error", func(so socketio.Socket, err error) {
 		ERROR.Println("socket.io->error:", err)
