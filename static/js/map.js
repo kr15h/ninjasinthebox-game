@@ -60,7 +60,7 @@ Map.prototype.calcSize = function() {
 
 function Player() {
 	this.container = {};
-	this.imgSrc = 'media/test.jpg';
+	this.imgSrc = 'media/ninja.png';
 }
 
 Player.prototype.setup = function(jQueryContainerObject) {
