@@ -178,4 +178,15 @@ $(document).ready(function() {
 	$(window).resize(function() {
 		map.calcSize();
 	});
+
+	$('#blockly-stuff').on('show.bs.collapse', function () {
+		$('.blockly-icon-up').removeClass('hidden');
+		$('.blockly-icon-down').addClass('hidden');
+	});
+
+	$('#blockly-stuff').on('hide.bs.collapse', function () {
+		$('.blockly-icon-down').removeClass('hidden');
+		$('.blockly-icon-up').addClass('hidden');
+	});
+
 });
