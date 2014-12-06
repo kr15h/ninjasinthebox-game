@@ -23,7 +23,7 @@ func Adduser(msg string) {
 
 }
 
-func Logon(msg string, so socketio.Socket) {
+func Logon(so socketio.Socket, msg string) {
 
 	var space Space
 	var known bool = false
