@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"strings"
 )
 
 //
@@ -87,7 +88,7 @@ func init() {
 }
 func main() {
 	// database connection
-	db, err := redis.Dial("tcp", cfg.Database.Port)
+	db, err := redis.Dial("tcp", strings.Join([]string{":", cfg.Database.Port}, ""))
 	if err != nil {
 		ERROR.Println("redisDB:", err)
 	}
