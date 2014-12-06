@@ -103,7 +103,7 @@ func Logon(so socketio.Socket, msg string) {
 	}
 
 	TRACE.Println("socket.io->Logon Emit Answer", space)
-	so.Emit("updatechat", space)
+	so.Emit("space", space)
 }
 
 func JoinGame(so socketio.Socket, msg string) {
