@@ -3,6 +3,7 @@
   <body>
 
     <script src="/js/socket.io.js"></script>
+    <script src="/js/logon.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
     <script>
       var socket = io.connect('http://morriswinkler.koding.io');
@@ -10,7 +11,7 @@
       // on connection to server, ask for user's name with an anonymous callback
       socket.on('connect', function(){
       // call the server-side function 'adduser' and send one parameter (value of prompt)
-      socket.emit('adduser', prompt("What's your name?"));
+      socket.emit('adduser', prompt("What's your name?"), getLocalIP);
       });
 
       // listener, whenever the server emits 'updatechat', this updates the chat body
