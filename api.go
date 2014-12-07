@@ -10,6 +10,10 @@ import (
 	"strings"
 )
 
+type JsonError struct {
+	Error string
+}
+
 type Space struct {
 	Channel string
 	SpaceIp string
@@ -114,7 +118,8 @@ func Logon(so socketio.Socket, msg string) {
 func HttpNewUser(w http.ResponseWriter, r *http.Request) {
 
 	var space Space
-	//var taken bool = false
+	var taken bool
+	var response interface{}
 	//var jsonSpace []byte
 
 	err := r.ParseForm()
@@ -143,19 +148,40 @@ func HttpNewUser(w http.ResponseWriter, r *http.Request) {
 				},
 			},
 		}
-		jsonSpace, err = json.Marshal(space)
+		response = space
+
+	} else {
+		// space exists
+		// else unmarshal the json object
+		err = json.Unmarshal(jsonSpace, &space)
 		if err != nil {
-			ERROR.Println("http-api->NewUser json.Marshal error: ", err)
-		}
-		_, err = redisDB.Do("SET", spaceIp, jsonSpace)
-		if err != nil {
-			ERROR.Println("http-api->NewUser RedisDB SET error: ", err)
+			ERROR.Println("http-api->NewUser json.Unmarshal error: ", err)
 		}
 
-		TRACE.Println("http-api->NewUser Answer", space)
-		w.Header().Set("Content-Type", "application/json")
-		w.Write(jsonSpace)
+		// check if username is taken
+		for _, element := range space.Space {
+			if element.UserName == userName {
+				taken = true
+				TRACE.Println("http-api->NewUser known userId", element.UserId, "in Space", spaceIp)
+			}
+		}
+		if taken {
+			response = JsonError{Error: "user exists"}
+		}
 	}
+
+	jsonSpace, err = json.Marshal(response)
+	if err != nil {
+		ERROR.Println("http-api->NewUser json.Marshal error: ", err)
+	}
+	_, err = redisDB.Do("SET", spaceIp, jsonSpace)
+	if err != nil {
+		ERROR.Println("http-api->NewUser RedisDB SET error: ", err)
+	}
+
+	TRACE.Println("http-api->NewUser Answer", space)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsonSpace)
 }
 
 func HttpLogon(w http.ResponseWriter, r *http.Request) {
