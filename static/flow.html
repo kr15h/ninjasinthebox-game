@@ -1,0 +1,76 @@
+<!doctype html>
+<html dir='ltr'>
+<head>
+
+	<title>Ninjas in the Box</title>
+	<meta charset="utf-8">
+
+	<!-- Head JS includes - Modernizr and normalize CSS is cool -->
+	<!-- JavaScript includes -->
+	<script src='js/blockly.js'></script>
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/modernizr.min.js"></script>
+	<script src="js/preloadimages.min.js"></script>
+
+	<script src="js/main.js"></script>
+	<script src="js/main-view.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/global.css">
+	<link rel="stylesheet" type="text/css" href="css/main-view.css">
+
+</head>
+
+<body>
+
+	<div id="game-views">
+			
+		<div id="main-view" class="view">
+			<div class="base-content">
+				<img class="title" src="media/main-view-title.svg" alt="Ninjas in the Box">
+				<img class="bg" src="media/main-view-bg.jpg" alt="Workers">
+				<div class="ninja">
+					<img src="media/main-view-ninja.svg" alt="Ninja, I'm a ninja too!">
+				<div>
+			</div><!-- /base-content of main view -->
+
+			<div class="modals">
+				
+			</div><!-- /modals of main-view -->
+		</div>
+
+		<div id="game-view" class="view">
+
+			<div class="base-content">
+				<div id="blockly-container">
+					<!-- blockly stuff goes here -->
+				</div><!-- /blockly-container -->
+
+				<div id="map-container">
+					<!-- JavaScript generated table goes here -->
+				</div><!-- /map-container -->
+			</div><!-- /base-content of game view -->
+
+			<div class="modals">
+				<div id="bribe-modal">
+					
+				</div><!-- /bribe-modal -->
+			</div><!-- /modals of game-view -->
+
+		</div><!-- /game-view -->
+
+		<div id="game-over-view" class="view">
+			
+		</div><!-- /game-ovier-view -->
+
+		<div id="win-view" class="view">
+			
+		</div><!-- /win-view -->
+
+	</div><!-- /game-views -->
+		
+
+	</div><!-- /wrapper -->
+</body>
+</html>
