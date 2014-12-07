@@ -347,6 +347,9 @@
     map.emitBoss = emitBossReached;
     map.emitEscape = emitEscapeMaze;
     map.emitCoin = emitCoinCollected;
+    Blockly.loadAudio_([Blockly.assetUrl("media/splash.ogg")], "wall");
+    Blockly.loadAudio_([Blockly.assetUrl("media/applause7.wav")], "boss");
+    Blockly.loadAudio_([Blockly.assetUrl("media/coinpickup.ogg")], "coin");
     function move(code) {
         var index = 0;
         var lines = code.split('\n');
@@ -372,12 +375,15 @@
     }
     function emitWallAhead() {
        showImage("http://media.giphy.com/media/ZRr16htlE5tte/giphy.gif", 1000);
+       Blockly.playAudio("wall");
     }
     function emitBossReached() {
         showImage("http://spadow.files.wordpress.com/2010/09/8840000-stand.gif", 3000);
+        Blockly.playAudio("boss");
     }
     function emitCoinCollected() {
         showImage("http://i258.photobucket.com/albums/hh253/jimifunguzz/gangnam%20style/gangnam-style-explosion.gif", 3000);
+        Blockly.playAudio("coin");
     }
     function emitEscapeMaze() {
         showImage("http://cdn.rsvlts.com/wp-content/uploads/2013/03/some_seriously_bad_timing_fails_17.gif", 3000);
