@@ -1,4 +1,5 @@
 #main-view {
+    z-index: 999;
     height: auto;
 	background: #950723;
 }
