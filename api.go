@@ -53,6 +53,106 @@ type Game struct {
 	Level   Level
 }
 
+func HttpJoinGame(w http.ResponseWriter, r *http.Request) {
+
+	var space Space
+	var game Game
+	var response interface{}
+	var jsonResponse []byte
+	var jsonGame []byte
+	var jsonSpace []byte
+	var userIsInGame bool = false
+
+	err := r.ParseForm()
+	if err != nil {
+		ERROR.Println("http-api->JoinGame: err", err)
+	}
+
+	userId := r.FormValue("userId")
+	gameId := r.FormValue("gameId")
+	spaceIp := strings.Split(r.RemoteAddr, ":")[0]
+	helpers.TRACE.Println("http-api->JoinGame: IP", spaceIp)
+
+	if gameId == "" {
+		response = JsonError{Error: "missing gameId"}
+		jsonResponse, err = json.Marshal(response)
+		if err != nil {
+			ERROR.Println("socket.io->JoinGame: json.Marshal error: ", err)
+		}
+	} else if userId == "" {
+		response = JsonError{Error: "missing userId"}
+		jsonResponse, err = json.Marshal(response)
+		if err != nil {
+			ERROR.Println("socket.io->JoinGame: json.Marshal error: ", err)
+		}
+	} else {
+		redisDB := RedisPool.Get()
+		defer redisDB.Close()
+
+		// get the space we have to add the game to and unmarshal it
+		jsonGame, err = redis.Bytes(redisDB.Do("GET", gameId))
+		err = json.Unmarshal(jsonGame, &game)
+		if err != nil {
+			ERROR.Println("http-api->JoinGame: json.Unmarshal error: ", err)
+		}
+
+		for _, element := range game.Player {
+			if element.UserId == userId {
+				userIsInGame = true
+			}
+		}
+
+		if userIsInGame {
+			response = JsonError{Error: "userId is allready registerd for this game"}
+			jsonResponse, err = json.Marshal(response)
+			if err != nil {
+				ERROR.Println("socket.io->JoinGame: json.Marshal error: ", err)
+			}
+		} else {
+			jsonSpace, err = redis.Bytes(redisDB.Do("GET", spaceIp))
+			err = json.Unmarshal(jsonSpace, &space)
+			if err != nil {
+				ERROR.Println("http-api->JoinGame: json.Unmarshal error: ", err)
+			}
+			// get the player for userId
+			var player Player
+			for _, element := range space.Space {
+				if element.UserId == userId {
+					player = element
+				}
+			}
+
+			if player.UserId == "" {
+				// unknown user id
+				response = JsonError{Error: "unknown userId"}
+				jsonResponse, err = json.Marshal(response)
+				if err != nil {
+					ERROR.Println("socket.io->JoinGame: json.Marshal error: ", err)
+				}
+			} else {
+				// add the user to the game and write it to the database
+				game.Player = append(game.Player, player)
+				response = game
+				jsonResponse, err = json.Marshal(response)
+				if err != nil {
+					ERROR.Println("http-api->NewGame: json.Marshal error: ", err)
+				}
+				_, err = redisDB.Do("SET", gameId, jsonResponse)
+				if err != nil {
+					ERROR.Println("http-api->NewGame: RedisDB SET error: ", err)
+				}
+			}
+
+		}
+
+	}
+
+	TRACE.Println("http-api->JoinGame: Answer", response)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsonResponse)
+
+}
+
 func HttpNewGame(w http.ResponseWriter, r *http.Request) {
 
 	var space Space
