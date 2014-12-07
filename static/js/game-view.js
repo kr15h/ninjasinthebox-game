@@ -1,8 +1,13 @@
 (function () {
     'use strict';
 
+    var Blockly = null;
     function GameView() {
     }
+
+    GameView.prototype.pass = function(blockly) {
+        Blockly = blockly;
+    };
 
     function Map(rows, cols) {
     this.rows = rows || 10;
@@ -311,7 +316,7 @@
     }
   };
 
-    GameView.prototype.initGame = function(Blockly) {
+    GameView.prototype.initGame = function() {
         /* Blockly stuff */
         Blockly.Blocks.maze_move = {
             // Block for moving forward/backward
