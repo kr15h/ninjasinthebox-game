@@ -111,6 +111,53 @@ func Logon(so socketio.Socket, msg string) {
 	TRACE.Println("socket.io response:", r)
 }
 
+func HttpNewUser(w http.ResponseWriter, r *http.Request) {
+
+	var space Space
+	//var taken bool = false
+	//var jsonSpace []byte
+
+	err := r.ParseForm()
+	if err != nil {
+		ERROR.Println("http-api->NewUser: err", err)
+	}
+
+	userName := r.FormValue("userName")
+	spaceIp := strings.Split(r.RemoteAddr, ":")[0]
+	helpers.TRACE.Println("http-api->NewUser: IP", spaceIp)
+
+	redisDB := RedisPool.Get()
+	defer redisDB.Close()
+
+	jsonSpace, err := redis.Bytes(redisDB.Do("GET", spaceIp))
+	if err != nil {
+		// so the user is in a new space we add him
+		TRACE.Println("http-api->NewUser: newSpace", err)
+		space = Space{
+			Channel: uuid.New(),
+			SpaceIp: spaceIp,
+			Space: []Player{
+				{
+					UserId:   uuid.New(),
+					UserName: userName,
+				},
+			},
+		}
+		jsonSpace, err = json.Marshal(space)
+		if err != nil {
+			ERROR.Println("http-api->NewUser json.Marshal error: ", err)
+		}
+		_, err = redisDB.Do("SET", spaceIp, jsonSpace)
+		if err != nil {
+			ERROR.Println("http-api->NewUser RedisDB SET error: ", err)
+		}
+
+		TRACE.Println("http-api->NewUser Answer", space)
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(jsonSpace)
+	}
+}
+
 func HttpLogon(w http.ResponseWriter, r *http.Request) {
 
 	var space Space
@@ -190,7 +237,7 @@ func HttpLogon(w http.ResponseWriter, r *http.Request) {
 
 		TRACE.Println("http-api->Logon added", space)
 
-		TRACE.Println("socket.io->Logon: newSpace", err)
+		// generate a answer with only one user
 		space = Space{
 			Channel: space.Channel,
 			SpaceIp: spaceIp,
@@ -200,6 +247,14 @@ func HttpLogon(w http.ResponseWriter, r *http.Request) {
 					UserName: player.UserName,
 				},
 			},
+		}
+		jsonSpace, err = json.Marshal(space)
+		if err != nil {
+			ERROR.Println("http-api->Logon json.Marshal error: ", err)
+		}
+		_, err = redisDB.Do("SET", spaceIp, jsonSpace)
+		if err != nil {
+			ERROR.Println("http-api->Logon RedisDB SET error: ", err)
 		}
 
 	}
