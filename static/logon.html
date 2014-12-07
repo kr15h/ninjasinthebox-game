@@ -21,7 +21,7 @@
       // call the server-side function 'adduser' and send one parameter (value of prompt)
       socket.emit('logon', "10.0.0.12" + " " + "10.987.23.12");
       
-      socket.emit('joinGame');
+      socket.emit('joingame');
       });
 
       
@@ -43,6 +43,7 @@
       $('form').submit(function(){
       socket.emit('chat message', $('#m').val());
       $('#m').val('');
+      socket.emit('joingame');
       return false;
       });
       
@@ -51,8 +52,6 @@
       $('#messages').append($('<li>').text(msg));
 	});
 	
-      
-
     </script>
   </body>
 </html>
