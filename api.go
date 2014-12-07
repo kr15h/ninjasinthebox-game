@@ -127,7 +127,7 @@ func HttpUserMoved(w http.ResponseWriter, r *http.Request) {
 		// move player
 		for _, player := range game.Player {
 			if player.UserId == userId {
-				TRACE.Println("http-api->UserMoved: found user", userId)
+				TRACE.Println("http-api->UserMoved: found user", userId, lx, ly)
 				player.Pos.X = lx
 				player.Pos.Y = ly
 			}
