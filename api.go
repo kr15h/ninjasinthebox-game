@@ -59,7 +59,7 @@ type Game struct {
 
 func getCoins(file string) error {
 
-	csvfile, err := os.Open("somecsvfile.csv")
+	csvfile, err := os.Open(file)
 	if err != nil {
 		ERROR.Println("http-api->readCSV:", err)
 		return err
