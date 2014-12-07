@@ -1,0 +1,33 @@
+#main-view {
+	background: #950723;
+}
+
+#main-view .title {
+	width: 96%;
+	height: auto;
+	margin: 2%;
+}
+
+#main-view .bg {
+	width: 96%;
+	margin: 2%;
+	height: auto;
+}
+
+#main-view .ninja {
+	text-align: center;
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+}
+
+#main-view .ninja img {
+	width: 35%;
+}
+
+#main-view .play-btn {
+	position: relative;
+	z-index: 10;
+	margin-top: 7%;
+}

@@ -1,0 +1,123 @@
+<!doctype html>
+<html dir='ltr'>
+<head>
+
+	<title>Ninjas in the Box</title>
+	<meta charset="utf-8">
+
+	<!-- Head JS includes - Modernizr and normalize CSS is cool -->
+	<!-- JavaScript includes -->
+	<script src='js/blockly.js'></script>
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/modernizr.min.js"></script>
+	<script src="js/preloadimages.min.js"></script>
+
+	<script src="js/main.js"></script>
+	<script src="js/main-view.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="fonts/changchang/stylesheet.css">
+
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/global.css">
+	<link rel="stylesheet" type="text/css" href="css/main-view.css">
+
+</head>
+
+<body>
+
+	<div id="game-views">
+			
+		<div id="main-view" class="view">
+			<div class="base-content">
+				<img class="title" src="media/main-view-title.svg" alt="Ninjas in the Box">
+				<img class="bg" src="media/main-view-bg.jpg" alt="Workers">
+				<div class="ninja">
+					<img src="media/main-view-ninja.svg" alt="Ninja, I'm a ninja too!">
+				<div>
+				<div class="play-btn">
+					<button type="button" class="btn btn-primary btn-lg"
+						data-toggle="modal" data-target="#main-view-modal">Play Game</button>
+				</div>
+			</div><!-- /base-content of main view -->
+
+			<div class="modals">
+				<!-- Modal -->
+				<div class="modal fade" tabindex="-1" aria-hidden="true" id="main-view-modal">
+					<div class="modal-dialog">
+
+						<!-- Story -->
+						<div class="modal-content story">
+							<div class="modal-header">
+								<h4 class="modal-title" id="myModalLabel">Story</h4>
+							</div>
+							<div class="modal-body">
+								<p>Darkness and corruption are attemting to take control over the world. As it is not possible for them to do it alone, human brain is needed.</p>
+								<p>Evil communist neurons have occupied the brain of a leader of the biggest country of the world. They are attempting to take control over all the important regions of the brain.</p>
+								<p>Fortunately there are Ninjas in the Box! They are here to bribe the evil to do good. First - they have to get enough money to be able to do so…</p>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-chevron-right"></span></button>
+							</div>
+						</div><!-- /modal-content story -->
+
+						<!-- Mission -->
+						<!--
+						<div class="modal-content mission">
+							<div class="modal-header">
+								<h4 class="modal-title" id="myModalLabel">Mission</h4>
+							</div>
+							<div class="modal-body">
+								<div class="row">
+									<div class="col-sm-3">
+										Images
+									</div>
+									<div class="col-sm-9">
+										<p>Text ipsum</p>
+									</div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-chevron-right"></span></button>
+							</div>
+						</div>--><!-- /modal-content mission -->
+
+					</div>
+				</div>
+			</div><!-- /modals of main-view -->
+		</div>
+
+		<div id="game-view" class="view">
+
+			<div class="base-content">
+				<div id="blockly-container">
+					<!-- blockly stuff goes here -->
+				</div><!-- /blockly-container -->
+
+				<div id="map-container">
+					<!-- JavaScript generated table goes here -->
+				</div><!-- /map-container -->
+			</div><!-- /base-content of game view -->
+
+			<div class="modals">
+				<div id="bribe-modal">
+					
+				</div><!-- /bribe-modal -->
+			</div><!-- /modals of game-view -->
+
+		</div><!-- /game-view -->
+
+		<div id="game-over-view" class="view">
+			
+		</div><!-- /game-ovier-view -->
+
+		<div id="win-view" class="view">
+			
+		</div><!-- /win-view -->
+
+	</div><!-- /game-views -->
+		
+
+	</div><!-- /wrapper -->
+</body>
+</html>
