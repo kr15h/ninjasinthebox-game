@@ -52,6 +52,35 @@
 				that.container.find('.room-master').show();
 			});
 
+			// Add room
+			this.container.find('.team-up .btn-add-room').click(function(){
+				that.container.find('.team-up').hide();
+				that.container.find('.room-master').show();
+			});
+
+			// Join room
+			this.container.find('.team-up .btn-join-room').click(function(){
+				that.container.find('.team-up').hide();
+				that.container.find('.room-client').show();
+			});
+
+			// Leave room-master
+			this.container.find('.room-master .btn-leave').click(function(){
+				that.container.find('.room-master').hide();
+				that.container.find('.team-up').show();
+			});
+
+			// Start game in room-master
+			this.container.find('.room-master .btn-start-game').click(function(){
+				alert('Ninja, start game!');
+			});
+
+			// Leave room-client
+			this.container.find('.room-client .btn-leave').click(function(){
+				that.container.find('.room-client').hide();
+				that.container.find('.team-up').show();
+			});
+
 		} else {
 			console.log('No container object specified');
 		}
