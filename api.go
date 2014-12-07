@@ -250,7 +250,7 @@ func HttpGetUser(w http.ResponseWriter, r *http.Request) {
 		}
 	} else {
 		// return the space with all the users
-		jsonResponse, err = json.Marshal(response)
+		jsonResponse = response.([]byte)
 		if err != nil {
 			ERROR.Println("socket.io->GetUser json.Marshal error: ", err)
 		}
