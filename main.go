@@ -121,7 +121,7 @@ func main() {
 			TRACE.Println("socket.io->emit:", so.Emit("chat message", msg))
 			so.BroadcastTo("chat", "chat message", msg)
 		})
-		so.On("adduser", Adduser)
+		//so.On("adduser", Adduser)
 		so.On("logon", Logon)
 		so.On("joingame", func() {
 			TRACE.Println("socket.io: joingame")
@@ -134,7 +134,9 @@ func main() {
 		})
 
 	})
-	server.On("error", func(so socketio.Socket, err error) {
+
+	server.On("adduser".Adduser)
+	Server.On("error", func(so socketio.Socket, err error) {
 		ERROR.Println("socket.io->error:", so.Id(), so.Request(), err)
 	})
 
