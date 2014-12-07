@@ -13,8 +13,14 @@
       // call the server-side function 'adduser' and send one parameter (value of prompt)
       socket.emit('logon', "10.0.0.12" + " " + "10.987.23.12");
       
+      socket.emit('joinGame');
       });
 
+      
+      socket.on('joned', function(){
+      alert('joined is received');
+      })
+      
 
       socket.on('space', function(data){
       alert("spaces become");
