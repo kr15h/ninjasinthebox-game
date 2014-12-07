@@ -35,3 +35,35 @@
 #main-view .row {
 	margin-bottom: 5px;
 }
+
+#main-view .team-up-body {
+	margin-top: 30px;
+}
+
+#main-view .team-up-body .btn-sm {
+	font-family: 'OpenSans', sans-serif;
+	font-size: 12px;
+	padding: 2px 15px;
+}
+
+#main-view ul {
+	padding-left: 30px;
+}
+
+#main-view ul.room-user-list {
+	list-style: none;
+	margin: 0;
+	margin-top: 7px;
+	padding: 0;
+}
+
+#main-view .room-user-list li {
+	list-style: none;
+	font-family: 'OpenSans';
+	font-size: 12px;
+	color: #001231;
+	line-height: 14px;
+	margin: 0;
+	margin-bottom: 5px;
+	padding: 0;
+}

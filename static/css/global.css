@@ -40,6 +40,17 @@ h4 {
 	line-height: 51px;
 }
 
+h5 {
+	/* Connected Users: */
+	font-family: 'OpenSans', sans-serif;
+	font-size: 18px;
+	color: #001231;
+	line-height: 21px;
+	text-align: left;
+	margin: 0;
+	margin-bottom: 15px;
+}
+
 .modal p {
 	font-family: 'OpenSans', sans-serif;
 	font-size: 18px;
@@ -52,7 +63,31 @@ h4 {
 	text-align: left;
 }
 
+p.meta {
+	font-weight: normal;
+	font-family: 'OpenSans', sans-serif;
+	font-size: 12px;
+	color: #001231;
+	line-height: 14px;
+}
+
 .row img {
 	width: 100%;
 	height: auto;
+}
+
+li {
+	/* Ninja 1: */
+	font-family: 'OpenSans', sans-serif;
+	font-size: 18px;
+	color: #001231;
+	line-height: 18px;
+	text-align: left;
+	margin-bottom: 10px;
+}
+
+li span.small {
+	font-size: 12px;
+	line-height: 12px;
+	vertical-align: top;
 }
