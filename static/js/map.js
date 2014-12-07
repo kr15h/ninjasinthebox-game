@@ -294,11 +294,17 @@ function emitBossReached() {
     if (this.type === "player") {
         this.imgSrc = 'media/ninja.png';
     } else if (this.type === "wall") {
-        this.imgSrc = 'media/button.png';
+        this.imgSrc = 'media/Wall.png';
     } else if (this.type === "coin") {
-        this.imgSrc = 'media/sprites.png';
-    } else if (this.type === "boss") {
-        this.imgSrc = 'media/canclosed.png';
+        this.imgSrc = 'media/coin.png';
+    } else if (this.type === "boss-tl") {
+        this.imgSrc = 'media/stagin_tl.png';
+    } else if (this.type === "boss-tr") {
+        this.imgSrc = 'media/stagin_tr.png';
+    } else if (this.type === "boss-bl") {
+        this.imgSrc = 'media/stagin_bl.png';
+    } else if (this.type === "boss-br") {
+        this.imgSrc = 'media/stagin_br.png';
     }
     var element = document.createElement('img');
     element.src = this.imgSrc;
@@ -336,9 +342,21 @@ function emitBossReached() {
 
       map.createHtml();
 
-      var boss = new Object("boss");
-      boss.createHtml();
-      map.addObject(boss, 9, 9);
+      var boss_tl = new Object("boss-tl");
+      boss_tl.createHtml();
+      map.addObject(boss_tl, 9, 9);
+
+      var boss_tr = new Object("boss-tr");
+      boss_tr.createHtml();
+      map.addObject(boss_tr, 10, 9);
+
+      var boss_bl = new Object("boss-bl");
+      boss_bl.createHtml();
+      map.addObject(boss_bl, 9, 10);
+
+      var boss_br = new Object("boss-br");
+      boss_br.createHtml();
+      map.addObject(boss_br, 10, 10);
 
       player = new Object("player");
       player.createHtml();
