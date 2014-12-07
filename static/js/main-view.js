@@ -29,6 +29,7 @@
 			// Hide all main view modal parts except first one
 			this.container.find('.mission').hide();
 			this.container.find('.team-up').hide();
+			this.container.find('.room').hide();
 
 			this.container.find('.story button').click(function(){
 				that.container.find('.story').hide();

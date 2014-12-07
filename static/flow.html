@@ -34,10 +34,10 @@
 				<img class="bg" src="media/main-view-bg.jpg" alt="Workers">
 				<div class="ninja">
 					<img src="media/main-view-ninja.svg" alt="Ninja, I'm a ninja too!">
-				<div>
-				<div class="play-btn">
-					<button type="button" class="btn btn-primary btn-lg"
+					<div class="play-btn">
+						<button type="button" class="btn btn-primary btn-lg"
 						data-toggle="modal" data-target="#main-view-modal">Play Game</button>
+					</div>
 				</div>
 			</div><!-- /base-content of main view -->
 
@@ -64,7 +64,7 @@
 						<!-- Mission -->
 						<div class="modal-content mission">
 							<div class="modal-header">
-								<h4 class="modal-title" id="myModalLabel">Mission</h4>
+								<h4 class="modal-title">Mission</h4>
 							</div>
 							<div class="modal-body">
 
@@ -114,7 +114,7 @@
 						<!-- Team up -->
 						<div class="modal-content team-up">
 							<div class="modal-header">
-								<h4 class="modal-title" id="myModalLabel">Team up</h4>
+								<h4 class="modal-title">Team up</h4>
 							</div>
 							<div class="modal-body">
 								<div class="row">
@@ -165,6 +165,33 @@
 							</div>
 						</div><!-- /modal-content team-up -->
 
+						<!-- Room -->
+						<div class="modal-content room">
+							<div class="modal-header">
+								<h4 class="modal-title">Room 1 <span class="small">(master)</span></h4>
+							</div>
+							<div class="modal-body">
+								
+										<div class="team-up-header">
+											<h5>Connected users</h5>
+											<p class="meta">List of users connected to the game.</p>
+										</div>
+										<div class="team-up-body">
+											<ul>
+												<li>Ninja 1</li>
+												<li>Ninja 2 <span class="small">(you)</span></li>
+												<li>Ninja 3</li>
+												<li>Ninja 4</li>
+											</ul>
+										</div>
+							
+							</div><!-- /modal-body -->
+
+							<div class="modal-footer">
+								<button type="button" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-chevron-right"></span></button>
+							</div>
+						</div><!-- /modal-content team-up -->
+
 					</div>
 				</div>
 			</div><!-- /modals of main-view -->
@@ -187,20 +214,15 @@
 					
 				</div><!-- /bribe-modal -->
 			</div><!-- /modals of game-view -->
-
 		</div><!-- /game-view -->
 
 		<div id="game-over-view" class="view">
-			
 		</div><!-- /game-ovier-view -->
 
 		<div id="win-view" class="view">
-			
 		</div><!-- /win-view -->
 
 	</div><!-- /game-views -->
 		
-
-	</div><!-- /wrapper -->
 </body>
 </html>
