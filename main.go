@@ -105,6 +105,11 @@ func main() {
 	// http API
 	router := pat.New()
 
+	router.Get("/getSpace", HttpGetSpace)
+	router.Get("/newUser", HttpNewUser)
+	router.Get("/newGame", HttpNewGame)
+	router.Get("/joinGame", HttpJoinGame)
+	router.Get("/startGame", HttpStartGame)
 	// http static dir
 	router.Add("GET", "/", http.FileServer(http.Dir(cfg.Webserver.Dir)))
 
@@ -113,21 +118,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	server.On("logon", Logon)
 
-	server.On("connection", func(so socketio.Socket) {
-		TRACE.Println("socket.io: connection", so.Id())
-		so.On("chat message", func(msg string) {
-			TRACE.Println("socket.io->emit:", so.Emit("chat message", msg))
-			so.BroadcastTo("chat", "chat message", msg)
-		})
-		so.On("disconnection", func() {
-			TRACE.Println("socket.io: disconnect", so.Id(), so.Request())
-		})
-		so.On("adduser", Adduser)
-		so.On("logon", Logon)
-		so.On("joinGame", JoinGame)
-
-	})
 	server.On("error", func(so socketio.Socket, err error) {
 		ERROR.Println("socket.io->error:", so.Id(), so.Request(), err)
 	})
