@@ -114,7 +114,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	server.On("connection", func(so socketio.Socket) {
+	server.On("connect", func(so socketio.Socket) {
 		TRACE.Println("socket.io: connection", so.Id())
 		so.Join("chat")
 		so.On("chat message", func(msg string) {
@@ -142,7 +142,7 @@ func main() {
 
 	// Register this pat with the default serve mux so that other packages
 	// may also be exported. (i.e. /debug/pprof[>)
-	//http.Handle("/", handlers.CombinedLoggingHandler(helpers.LOGFILE, router))
+	http.Handle("/", handlers.CombinedLoggingHandler(helpers.LOGFILE, router))
 
 	INFO.Printf("listening on %s:%s", cfg.Webserver.Host, cfg.Webserver.Port)
 	err = http.ListenAndServe(cfg.Webserver.Host+":"+cfg.Webserver.Port, nil)
