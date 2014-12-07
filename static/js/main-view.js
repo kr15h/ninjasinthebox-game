@@ -29,6 +29,8 @@
 			// Hide all main view modal parts except first one
 			this.container.find('.mission').hide();
 			this.container.find('.team-up').hide();
+			this.container.find('.room-master').hide();
+			this.container.find('.room-client').hide();
 
 			this.container.find('.story button').click(function(){
 				that.container.find('.story').hide();
@@ -43,6 +45,11 @@
 			this.container.find('.mission .btn-forward').click(function(){
 				that.container.find('.mission').hide();
 				that.container.find('.team-up').show();
+			});
+
+			this.container.find('.team-up .btn-forward').click(function(){
+				that.container.find('.team-up').hide();
+				that.container.find('.room-master').show();
 			});
 
 		} else {

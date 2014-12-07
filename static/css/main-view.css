@@ -23,14 +23,17 @@
 	width: 100%;
 }
 
-#main-view .ninja>img {
+#main-view .ninja img {
 	width: 35%;
 }
 
 #main-view .play-btn {
 	position: relative;
+	top: 75%;
 	z-index: 10;
+	text-align: center;
 	margin-top: 7%;
+	width: 100%;
 }
 
 #main-view .row {
@@ -38,7 +41,7 @@
 }
 
 #main-view .team-up-body {
-	margin-top: 30px;
+	margin-top: 20px;
 }
 
 #main-view .team-up-body .btn-sm {
