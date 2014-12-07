@@ -42,6 +42,7 @@ type Map struct {
 }
 
 type Level struct {
+	Map        Map
 	Timeleft   int16
 	Number     int
 	CoinsCount int16
@@ -53,16 +54,15 @@ type Game struct {
 	SpaceIp string
 	GameId  string
 	Player  []Player
-	Map     Map
 	Level   Level
 }
 
-func getCoins(file string) error {
+func getCoins(file string) ([]PosVector, error) {
 
 	csvfile, err := os.Open(file)
 	if err != nil {
 		ERROR.Println("http-api->readCSV:", err)
-		return err
+		return nil, err
 	}
 
 	defer csvfile.Close()
@@ -75,16 +75,23 @@ func getCoins(file string) error {
 
 	if err != nil {
 		ERROR.Println("http-api->readCSV:", err)
-		return err
+		return nil, err
 	}
 
-	for _, x := range rawCSVdata {
-		for _, y := range x {
-			TRACE.Println(y)
+	pv := []PosVector{{}}
+	for cx, x := range rawCSVdata {
+		for cy, y := range x {
+			if y == "$" {
+				vec := PosVector{
+					X: cx,
+					Y: cy,
+				}
+				pv = append(pv, vec)
+			}
 		}
 	}
 
-	return nil
+	return pv, nil
 }
 
 func vectorRemoveItem(v []PosVector, item int) []PosVector {
@@ -151,10 +158,10 @@ func HttpUserMoved(w http.ResponseWriter, r *http.Request) {
 		// chreck if the user hit a coin
 		lx, _ := strconv.Atoi(x)
 		ly, _ := strconv.Atoi(y)
-		for index, coin := range game.Map.Coins {
+		for index, coin := range game.Level.Map.Coins {
 			if (coin.X == lx) && (coin.Y == ly) {
 				userHitCoin = true
-				game.Map.Coins = vectorRemoveItem(game.Map.Coins, index)
+				game.Level.Map.Coins = vectorRemoveItem(game.Level.Map.Coins, index)
 			}
 		}
 
@@ -422,7 +429,7 @@ func HttpNewGame(w http.ResponseWriter, r *http.Request) {
 			}
 		} else {
 			// read coins
-			err = getCoins("/home/morriswinkler/gameserver/static/maps/Level_1.csv")
+			coins, err := getCoins("/home/morriswinkler/gameserver/static/maps/Level_1.csv")
 			if err != nil {
 				ERROR.Println("http-api->StartGame: getCSV error: ", err)
 			}
@@ -439,6 +446,9 @@ func HttpNewGame(w http.ResponseWriter, r *http.Request) {
 				Level: Level{
 					Number:     1,
 					CoinsCount: 0,
+					Map: Map{
+						Coins: coins,
+					},
 				},
 			}
 
