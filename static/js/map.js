@@ -23,10 +23,10 @@ function turnRight() {
 function emitCoinCollected() {
     $("#blockly-container").append('<img src="http://i258.photobucket.com/albums/hh253/jimifunguzz/gangnam%20style/gangnam-style-explosion.gif">');
     setTimeout(function(){ $("#blockly-container img").remove() }, 3000);
-    alert("ruble yay!");
 }
 function emitBossReached() {
-    alert("uaa scary boss!");
+    $("#blockly-container").append('<img src="http://spadow.files.wordpress.com/2010/09/8840000-stand.gif">');
+    setTimeout(function(){ $("#blockly-container img").remove() }, 3000);
 }
 
 (function () {
