@@ -103,8 +103,11 @@ func Logon(so socketio.Socket, msg string) {
 	}
 
 	TRACE.Println("socket.io->Logon Emit Answer with Id", so.Id(), space)
-	so.Emit("space", space)
-	//	so.BroadcastTo(so.Id(), "space", space)
+	r := so.Emit("space", space)
+	TRACE.Println("socket.io response:", r)
+	TRACE.Println("socket.io->Logon Brodcast Answer with Id", so.Id(), space)
+	r = so.BroadcastTo(so.Id(), "space", space)
+	TRACE.Println("socket.io response:", r)
 }
 
 func JoinGame(so socketio.Socket, msg string) {
