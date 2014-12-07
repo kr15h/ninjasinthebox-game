@@ -231,7 +231,7 @@
             this.emitCoin();
             delete this.objects[x][y];
             $('td').eq((this.cols * y) + x).empty();
-        } else if (obj.type === "boss") {
+        } else if (obj.type.contains("boss")) {
             this.emitBoss();
         } else {
             this.emitWall();
