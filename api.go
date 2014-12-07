@@ -7,6 +7,7 @@ import (
 	"github.com/garyburd/redigo/redis"
 	"github.com/googollee/go-socket.io"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -54,6 +55,100 @@ type Game struct {
 	Level   Level
 }
 
+func vectorRemoveItem(v []PosVector, item int) []PosVector {
+	s := v
+	s = append(s[:item], s[item+1:]...)
+	return s
+}
+
+func HttpUserMoved(w http.ResponseWriter, r *http.Request) {
+
+	var game Game
+	var response interface{}
+	var jsonResponse []byte
+	var jsonGame []byte
+
+	err := r.ParseForm()
+	if err != nil {
+		ERROR.Println("http-api->UserMoved: err", err)
+	}
+
+	x := r.FormValue("x")
+	y := r.FormValue("y")
+	userId := r.FormValue("userId")
+	gameId := r.FormValue("gameId")
+	spaceIp := strings.Split(r.RemoteAddr, ":")[0]
+	helpers.TRACE.Println("http-api->UserMoved: IP", spaceIp)
+
+	if gameId == "" {
+		response = JsonError{Error: "missing gameId"}
+		jsonResponse, err = json.Marshal(response)
+		if err != nil {
+			ERROR.Println("socket.io->UserMoved: json.Marshal error: ", err)
+		}
+	} else if userId == "" {
+		response = JsonError{Error: "missing userId"}
+		jsonResponse, err = json.Marshal(response)
+		if err != nil {
+			ERROR.Println("socket.io->UserMoved: json.Marshal error: ", err)
+		}
+	} else if x == "" {
+		response = JsonError{Error: "missing x"}
+		jsonResponse, err = json.Marshal(response)
+		if err != nil {
+			ERROR.Println("socket.io->UserMoved: json.Marshal error: ", err)
+		}
+	} else if y == "" {
+		response = JsonError{Error: "missing y"}
+		jsonResponse, err = json.Marshal(response)
+		if err != nil {
+			ERROR.Println("socket.io->UserMoved: json.Marshal error: ", err)
+		}
+	} else {
+		redisDB := RedisPool.Get()
+		defer redisDB.Close()
+
+		// get the space we have to modify
+		jsonGame, err = redis.Bytes(redisDB.Do("GET", gameId))
+		err = json.Unmarshal(jsonGame, &game)
+		if err != nil {
+			ERROR.Println("http-api->UserMoved: json.Unmarshal error: ", err)
+		}
+
+		// chreck if the user hit a coin
+		lx, _ := strconv.Atoi(x)
+		ly, _ := strconv.Atoi(y)
+		for index, coin := range game.Map.Coins {
+			if (coin.X == lx) && (coin.Y == ly) {
+				game.Map.Coins = vectorRemoveItem(game.Map.Coins, index)
+			}
+		}
+
+		// move player
+		for _, player := range game.Player {
+			if player.UserId == userId {
+				player.Pos.X = lx
+				player.Pos.Y = ly
+			}
+		}
+
+		// write it back to the database
+		response = game
+		jsonResponse, err = json.Marshal(response)
+		if err != nil {
+			ERROR.Println("http-api->StartGame: json.Marshal error: ", err)
+		}
+		_, err = redisDB.Do("SET", gameId, jsonResponse)
+		if err != nil {
+			ERROR.Println("http-api->StartGame: RedisDB SET error: ", err)
+		}
+	}
+
+	TRACE.Println("http-api->StartGame: Answer", response)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsonResponse)
+}
+
 func HttpStartGame(w http.ResponseWriter, r *http.Request) {
 
 	var game Game
@@ -63,25 +158,25 @@ func HttpStartGame(w http.ResponseWriter, r *http.Request) {
 
 	err := r.ParseForm()
 	if err != nil {
-		ERROR.Println("http-api->JoinGame: err", err)
+		ERROR.Println("http-api->StartGame: err", err)
 	}
 
 	userId := r.FormValue("userId")
 	gameId := r.FormValue("gameId")
 	spaceIp := strings.Split(r.RemoteAddr, ":")[0]
-	helpers.TRACE.Println("http-api->JoinGame: IP", spaceIp)
+	helpers.TRACE.Println("http-api->StartGame: IP", spaceIp)
 
 	if gameId == "" {
 		response = JsonError{Error: "missing gameId"}
 		jsonResponse, err = json.Marshal(response)
 		if err != nil {
-			ERROR.Println("socket.io->JoinGame: json.Marshal error: ", err)
+			ERROR.Println("socket.io->StartGame: json.Marshal error: ", err)
 		}
 	} else if userId == "" {
 		response = JsonError{Error: "missing userId"}
 		jsonResponse, err = json.Marshal(response)
 		if err != nil {
-			ERROR.Println("socket.io->JoinGame: json.Marshal error: ", err)
+			ERROR.Println("socket.io->StartGame: json.Marshal error: ", err)
 		}
 	} else {
 		redisDB := RedisPool.Get()
@@ -91,7 +186,7 @@ func HttpStartGame(w http.ResponseWriter, r *http.Request) {
 		jsonGame, err = redis.Bytes(redisDB.Do("GET", gameId))
 		err = json.Unmarshal(jsonGame, &game)
 		if err != nil {
-			ERROR.Println("http-api->JoinGame: json.Unmarshal error: ", err)
+			ERROR.Println("http-api->StartGame: json.Unmarshal error: ", err)
 		}
 
 		if game.Leader != userId {
@@ -99,7 +194,7 @@ func HttpStartGame(w http.ResponseWriter, r *http.Request) {
 			response = JsonError{Error: "you are not the leader"}
 			jsonResponse, err = json.Marshal(response)
 			if err != nil {
-				ERROR.Println("socket.io->JoinGame: json.Marshal error: ", err)
+				ERROR.Println("socket.io->StartGame: json.Marshal error: ", err)
 			}
 		} else {
 			// ok lets play marshall the game and write it to the database
@@ -107,16 +202,16 @@ func HttpStartGame(w http.ResponseWriter, r *http.Request) {
 			response = game
 			jsonResponse, err = json.Marshal(response)
 			if err != nil {
-				ERROR.Println("http-api->NewGame: json.Marshal error: ", err)
+				ERROR.Println("http-api->StartGame: json.Marshal error: ", err)
 			}
 			_, err = redisDB.Do("SET", gameId, jsonResponse)
 			if err != nil {
-				ERROR.Println("http-api->NewGame: RedisDB SET error: ", err)
+				ERROR.Println("http-api->StartGame: RedisDB SET error: ", err)
 			}
 		}
 	}
 
-	TRACE.Println("http-api->JoinGame: Answer", response)
+	TRACE.Println("http-api->StartGame: Answer", response)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(jsonResponse)
 }
