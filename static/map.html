@@ -14,6 +14,16 @@
 	<script src="js/map.js"></script>
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 	<style>
+	.ninja-visible {
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 0.5s linear;
+    }
+	.ninja-hidden {
+        opacity: 0;
+        visibility: hidden;
+        transition: visibility 0s 0.5s, opacity 0.5s linear;
+    }
 	.rotate90 {
         transform: rotate(90deg);
         -webkit-transform: rotate(90deg);
@@ -52,37 +62,42 @@
 		width: 100%;
 		height: auto;
 	}
+	.btn-primary {
+        background-color: rgba(118, 101, 160, 1.0);
+        border-color: rgba(118, 101, 160, 1.0);
+    }
+    .btn-primary:focus {
+        background-color: rgba(118, 101, 160, 1.0);
+        border-color: rgba(118, 101, 160, 1.0);
+    }
+    .btn-primary:hover {
+        background-color: rgba(118, 101, 160, 1.0);
+        border-color: rgba(118, 101, 160, 1.0);
+    }
 	#blockly-container .collapse-btn {
 		width: 100%;
 	}
 	#headers {
         color: white;
         height: 40px;
+        font-size: large;
+        line-height: 40px;
         background-color: #7665a0;
     }
     #headers #toolbox-header {
-        width: 172px;
+        width: 160px;
+        text-align: center;
         border-right: 1px solid gray;
     }
     #headers #workspace-header {
-    }
-    #headers .blockly-header {
-        height: 40px;
-        text-align: center;
-        overflow-x: hidden;
-        white-space: nowrap;
+        
     }
     #headers div {
-        margin-right: -4px;
         display: inline-block;
     }
     #headers #show-code-header {
         cursor: pointer;
         border-left: 1px solid gray;
-    }
-    #headers .blockly-header span {
-        color: white;
-        line-height: 40px;
     }
     #blockly {
         height: 170px;
@@ -93,7 +108,7 @@
         background: url("media/shared-sprites-26x26.png") 0px 0px;
     }
     button.blocklyLaunch {
-        width: 172px;
+        width: 160px;
         height: 40px;
         color: white;
         font-size: large;
@@ -132,9 +147,9 @@
             </div>
         </div>
         <div id='blockly'></div>
-        <button id="runButton" class="blocklyLaunch" onclick="move(Blockly.Generator.blockSpaceToCode('JavaScript'));Blockly.mainBlockSpace.clear();">
-        <div>Run</div>
-        <img src="media/1x1.gif" class="run26">
+        <button id="runButton" class="blocklyLaunch">
+            <div>Run</div>
+            <img src="media/1x1.gif" class="run26">
     	</button>
     
 
@@ -165,10 +180,10 @@
             init: function() {
                 this.setHSV(184, 1.00, 0.74);
                 this.appendDummyInput()
-                    .appendTitle(new Blockly.FieldDropdown(this.DIRECTIONS), 'DIR');
+                    .appendTitle("move forward"/*new Blockly.FieldDropdown(this.DIRECTIONS)*/, 'DIR');
                 this.setPreviousStatement(true);
                 this.setNextStatement(true);
-                this.setTooltip("move backward or forward");
+                this.setTooltip("move forward");
             }
         };
         Blockly.Blocks.maze_move.DIRECTIONS =
@@ -176,8 +191,8 @@
             ['move backward', 'moveBackward']];
         Blockly.Generator.get('JavaScript').maze_move = function() {
             // Generate JavaScript for moving forward/backward
-            var dir = this.getTitleValue('DIR');
-            return dir + '();\n';
+            //var dir = this.getTitleValue('DIR');
+            return /*dir + */'moveForward();\n';
         };
         Blockly.Blocks.maze_turn = {
             // Block for turning left or right.
@@ -194,7 +209,6 @@
         Blockly.Blocks.maze_turn.DIRECTIONS =
             [['turn left' + ' \u21BA', 'turnLeft'],
             ['turn right' + ' \u21BB', 'turnRight']];
-
         Blockly.Generator.get('JavaScript').maze_turn = function() {
             // Generate JavaScript for turning left or right.
             var dir = this.getTitleValue('DIR');

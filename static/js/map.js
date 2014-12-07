@@ -1,34 +1,3 @@
-/* for blockly */
-var map = null;
-var player = null;
-function move(code) {
-    var index = 0;
-    var lines = code.split('\n');
-    /* execute line by line */
-    var interval = setInterval(tick, 500);
-    function tick() {
-        if (index == lines.length) clearInterval(interval);
-        eval(lines[index++]);
-    }
-}
-function moveForward() {
-  map.moveObject(player);
-}
-function turnLeft() {
-  player.turn('left');
-}
-function turnRight() {
-  player.turn('right');
-}
-function emitCoinCollected() {
-    $("#blockly-container").append('<img src="http://i258.photobucket.com/albums/hh253/jimifunguzz/gangnam%20style/gangnam-style-explosion.gif">');
-    setTimeout(function(){ $("#blockly-container img").remove() }, 3000);
-}
-function emitBossReached() {
-    $("#blockly-container").append('<img src="http://spadow.files.wordpress.com/2010/09/8840000-stand.gif">');
-    setTimeout(function(){ $("#blockly-container img").remove() }, 3000);
-}
-
 (function () {
   'use strict';
 
@@ -247,7 +216,7 @@ function emitBossReached() {
     /* check for map borders */
     if (x < 0 || y < 0 || x > this.cols - 1 || y > this.rows - 1) {
         /* trying to escape map */
-        alert("trying to escape maze");
+        this.emitEscape();
         /* ?..? */
         return;
     }
@@ -259,14 +228,15 @@ function emitBossReached() {
         /* collision is only ok with coins */
         if (obj.type === "coin") {
             /* collect the coin */
-            emitCoinCollected();
+            this.emitCoin();
             delete this.objects[x][y];
             $('td').eq((this.cols * y) + x).empty();
-        } else if (obj.type === "boss") {
-            emitBossReached();
-        } else {
-            /* ?..? */
+        } else if (obj.type === "wall") {
+            this.emitWall();
             return;
+        } else {
+            this.emitBoss();
+            /* ?..? */
         }
     }
     /* clear the previouse table cell and object matrix slot */
@@ -276,10 +246,17 @@ function emitBossReached() {
     object.y = y;
     this.objects[x][y] = object;
     var element = $('td').eq((this.cols * y) + x);
-    element.append(object.element);
+    var classNames = object.element.className;
+    object.element.className = classNames + " ninja-hidden";
+    setTimeout(function() {
+        element.append(object.element);
+        setTimeout(function() {
+            object.element.className = classNames + " ninja-visible";
+        }, 500);
+    }, 500);
   };
 
-  // Player class
+  // Object class
   function Object(type) {
     this.x = 0;
     this.y = 0;
@@ -331,6 +308,8 @@ function emitBossReached() {
   };
 
   // This test
+  var map = null;
+  var player = null;
   $(document).ready(function() {
     map = new Map();
     map.setup($('#map-container'));
@@ -368,6 +347,64 @@ function emitBossReached() {
         map.calcSize();
       });
 
+    });
+
+    /* Blockly stuff */
+    map.emitWall = emitWallAhead;
+    map.emitBoss = emitBossReached;
+    map.emitEscape = emitEscapeMaze;
+    map.emitCoin = emitCoinCollected;
+    Blockly.loadAudio_([Blockly.assetUrl("media/wall.ogg")], "wall");
+    Blockly.loadAudio_([Blockly.assetUrl("media/Boss.wav")], "boss");
+     Blockly.loadAudio_([Blockly.assetUrl("media/escape.ogg")], "escape");
+    Blockly.loadAudio_([Blockly.assetUrl("media/sswooshing.ogg")], "move");
+    Blockly.loadAudio_([Blockly.assetUrl("media/coinpickup.ogg")], "coin");
+    function move(code) {
+        var index = 0;
+        var lines = code.split('\n');
+        eval(lines[index++]);
+        /* execute line by line */
+        var interval = setInterval(function() {
+            if (index == lines.length) clearInterval(interval);
+            eval(lines[index++]);
+        }, 500);
+    }
+    function moveForward() {
+        Blockly.playAudio("move");
+        map.moveObject(player);
+    }
+    function turnLeft() {
+        player.turn('left');
+    }
+    function turnRight() {
+        player.turn('right');
+    }
+    function showImage(imgSrc, time) {
+         $("#blockly-container").append('<img src="'+imgSrc+'">');
+         setTimeout(function(){ $("#blockly-container img").remove() }, time);
+    }
+    function emitWallAhead() {
+       showImage("http://media.giphy.com/media/ZRr16htlE5tte/giphy.gif", 1000);
+       Blockly.playAudio("wall");
+    }
+    function emitBossReached() {
+        showImage("http://spadow.files.wordpress.com/2010/09/8840000-stand.gif", 3000);
+        Blockly.playAudio("boss");
+    }
+    function emitCoinCollected() {
+        showImage("http://i258.photobucket.com/albums/hh253/jimifunguzz/gangnam%20style/gangnam-style-explosion.gif", 3000);
+        Blockly.playAudio("coin");
+    }
+    function emitEscapeMaze() {
+        showImage("http://cdn.rsvlts.com/wp-content/uploads/2013/03/some_seriously_bad_timing_fails_17.gif", 3000);
+        Blockly.playAudio("escape");
+    }
+    $('#runButton').on('click', function() {
+        move(Blockly.Generator.blockSpaceToCode('JavaScript'));
+        Blockly.mainBlockSpace.clear();
+    });
+    $('#show-code-header').on('click', function() {
+        alert(Blockly.Generator.blockSpaceToCode('JavaScript'));
     });
 
     $('#blockly-stuff').on('show.bs.collapse', function () {
