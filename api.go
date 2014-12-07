@@ -106,7 +106,7 @@ func Logon(so socketio.Socket, msg string) {
 	r := so.Emit("space", space)
 	TRACE.Println("socket.io response:", r)
 	TRACE.Println("socket.io->Logon Brodcast Answer with Id", so.Id(), space)
-	r = so.BroadcastTo(so.Id(), "space", space)
+	r = so.BroadcastTo("chat", "space", space)
 	TRACE.Println("socket.io response:", r)
 }
 
