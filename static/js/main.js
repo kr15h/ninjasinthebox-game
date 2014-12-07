@@ -9,7 +9,7 @@ $(document).ready(function() {
 	mainView.setup( $('#main-view').first() );
 	mainView.show();
 
-    gameView.initBlockly(Blockly);
+    //gameView.initGame(Blockly);
 
 	$(window).resize(function(){
 		mainView.onWindowResize();
