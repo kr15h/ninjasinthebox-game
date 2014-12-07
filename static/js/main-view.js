@@ -22,8 +22,8 @@
 
      	this.container.find('#main-view-modal').modal({
   			keyboard: false,
-  			backdrop: 'static'/*,
-  			show: false*/
+  			backdrop: 'static',
+  			show: false
      	});
 
     } else {
