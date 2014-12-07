@@ -1,0 +1,251 @@
+#game-view .ninja-visible {
+    -webkit-transition: all 300ms ease-in-out;
+    -moz-transition: all 300ms ease-in-out;
+    -ms-transition: all 300ms ease-in-out;
+    -o-transition: all 300ms ease-in-out;
+    transition: all 300ms ease-in-out;
+    opacity: 1;
+}
+#game-view .ninja-hidden {
+    -webkit-transition: all 300ms ease-in-out;
+    -moz-transition: all 300ms ease-in-out;
+    -ms-transition: all 300ms ease-in-out;
+    -o-transition: all 300ms ease-in-out;
+    transition: all 300ms ease-in-out;
+    opacity: 0;
+}
+#game-view .rotate-360 {
+    -webkit-transform: rotate(-360deg);
+    -moz-transform: rotate(-360deg);
+    -ms-transform: rotate(-360deg);
+    -o-transform: rotate(-360deg);
+    transform: rotate(-360deg);
+
+    -webkit-transform-origin: 50% 50%;
+    -moz-transform-origin: 50% 50%;
+    -ms-transform-origin: 50% 50%;
+    -o-transform-origin: 50% 50%;
+    transform-origin: 50% 50%;
+
+    -webkit-transition: 300ms linear;
+    -moz-transition: 300ms linear;
+    -o-transition: 300ms linear;
+    transition: 300ms linear;
+}
+#game-view .rotate-270 {
+    -webkit-transform: rotate(-270deg);
+    -moz-transform: rotate(-270deg);
+    -ms-transform: rotate(-270deg);
+    -o-transform: rotate(-270deg);
+    transform: rotate(-270deg);
+
+    -webkit-transform-origin: 50% 50%;
+    -moz-transform-origin: 50% 50%;
+    -ms-transform-origin: 50% 50%;
+    -o-transform-origin: 50% 50%;
+    transform-origin: 50% 50%;
+
+    -webkit-transition: 300ms linear;
+    -moz-transition: 300ms linear;
+    -o-transition: 300ms linear;
+    transition: 300ms linear;
+}
+#game-view .rotate-180 {
+    -webkit-transform: rotate(-180deg);
+    -moz-transform: rotate(-180deg);
+    -ms-transform: rotate(-180deg);
+    -o-transform: rotate(-180deg);
+    transform: rotate(-180deg);
+
+    -webkit-transform-origin: 50% 50%;
+    -moz-transform-origin: 50% 50%;
+    -ms-transform-origin: 50% 50%;
+    -o-transform-origin: 50% 50%;
+    transform-origin: 50% 50%;
+
+    -webkit-transition: 300ms linear;
+    -moz-transition: 300ms linear;
+    -o-transition: 300ms linear;
+    transition: 300ms linear;
+}
+#game-view .rotate-90 {
+    -webkit-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg);
+    transform: rotate(-90deg);
+
+    -webkit-transform-origin: 50% 50%;
+    -moz-transform-origin: 50% 50%;
+    -ms-transform-origin: 50% 50%;
+    -o-transform-origin: 50% 50%;
+    transform-origin: 50% 50%;
+
+    -webkit-transition: 300ms linear;
+    -moz-transition: 300ms linear;
+    -o-transition: 300ms linear;
+    transition: 300ms linear;
+}
+#game-view .rotate0 {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+}
+#game-view .rotate90 {
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    transform: rotate(90deg);
+    
+    -webkit-transform-origin: 50% 50%;
+    -moz-transform-origin: 50% 50%;
+    -ms-transform-origin: 50% 50%;
+    -o-transform-origin: 50% 50%;
+    transform-origin: 50% 50%;
+
+    -webkit-transition: 300ms linear;
+    -moz-transition: 300ms linear;
+    -o-transition: 300ms linear;
+    transition: 300ms linear;
+}
+#game-view .rotate180 {
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    transform: rotate(180deg);
+
+    -webkit-transform-origin: 50% 50%;
+    -moz-transform-origin: 50% 50%;
+    -ms-transform-origin: 50% 50%;
+    -o-transform-origin: 50% 50%;
+    transform-origin: 50% 50%;
+
+    -webkit-transition: 300ms linear;
+    -moz-transition: 300ms linear;
+    -o-transition: 300ms linear;
+    transition: 300ms linear;
+}
+#game-view .rotate270 {
+    -webkit-transform: rotate(270deg);
+    -moz-transform: rotate(270deg);
+    -ms-transform: rotate(270deg);
+    -o-transform: rotate(270deg);
+    transform: rotate(270deg);
+
+    -webkit-transform-origin: 50% 50%;
+    -moz-transform-origin: 50% 50%;
+    -ms-transform-origin: 50% 50%;
+    -o-transform-origin: 50% 50%;
+    transform-origin: 50% 50%;
+
+    -webkit-transition: 300ms linear;
+    -moz-transition: 300ms linear;
+    -o-transition: 300ms linear;
+    transition: 300ms linear;
+}
+#game-view .rotate360 {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+
+    -webkit-transform-origin: 50% 50%;
+    -moz-transform-origin: 50% 50%;
+    -ms-transform-origin: 50% 50%;
+    -o-transform-origin: 50% 50%;
+    transform-origin: 50% 50%;
+
+    -webkit-transition: 300ms linear;
+    -moz-transition: 300ms linear;
+    -o-transition: 300ms linear;
+    transition: 300ms linear;
+}
+#game-view .map-table {
+    width: 100%;
+    height: 100%;
+}
+#game-view 
+.map-cell {
+    background: yellow;
+}
+#game-view 
+table {
+    width: 100%;
+    height: 100%;
+    table-layout: fixed;
+}
+#game-view 
+td {
+    background: #ff0000 url(media/Tile.png);
+}
+#game-view 
+img {
+    width: 100%;
+    height: auto;
+}
+#game-view .btn-primary {
+    background-color: rgba(118, 101, 160, 1.0);
+    border-color: rgba(118, 101, 160, 1.0);
+}
+#game-view .btn-primary:focus {
+    background-color: rgba(118, 101, 160, 1.0);
+    border-color: rgba(118, 101, 160, 1.0);
+}
+#game-view .btn-primary:hover {
+    background-color: rgba(118, 101, 160, 1.0);
+    border-color: rgba(118, 101, 160, 1.0);
+}
+#game-view #blockly-container .collapse-btn {
+    width: 100%;
+}
+#game-view #headers {
+    color: white;
+    height: 40px;
+    font-size: large;
+    line-height: 40px;
+    background-color: #7665a0;
+}
+#game-view #headers #toolbox-header {
+    width: 160px;
+    text-align: center;
+    border-right: 1px solid gray;
+}
+#game-view #headers #workspace-header {
+    
+}
+#game-view #headers div {
+    display: inline-block;
+}
+#game-view #headers #show-code-header {
+    cursor: pointer;
+    border-left: 1px solid gray;
+}
+#game-view #blockly {
+    height: 300px;
+}
+#game-view .run26 {
+    width: 26px;
+    height: 26px;
+    background: url("media/shared-sprites-26x26.png") 0px 0px;
+}
+#game-view button.blocklyLaunch {
+    width: 160px;
+    height: 40px;
+    color: white;
+    font-size: large;
+    text-align: left;
+    padding-top: 3px;
+    border-radius: 4px;
+    display: inline-block;
+    border: 1px solid #7665a0;
+    background-color: #7665a0;
+}
+#game-view button.blocklyLaunch div {
+    float: right;
+    padding-right: 50px;
+}
