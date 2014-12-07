@@ -3,10 +3,12 @@ package main
 import (
 	"./helpers"
 	"code.google.com/p/go-uuid/uuid"
+	"encoding/csv"
 	"encoding/json"
 	"github.com/garyburd/redigo/redis"
 	"github.com/googollee/go-socket.io"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 )
@@ -53,6 +55,34 @@ type Game struct {
 	Player  []Player
 	Map     Map
 	Level   Level
+}
+
+func getCoins(file string) error {
+
+	csvfile, err := os.Open("somecsvfile.csv")
+	if err != nil {
+		ERROR.Println("http-api->readCSV:", err)
+		return err
+	}
+
+	defer csvfile.Close()
+
+	reader := csv.NewReader(csvfile)
+
+	reader.FieldsPerRecord = -1 // see the Reader struct information below
+
+	rawCSVdata, err := reader.ReadAll()
+
+	if err != nil {
+		ERROR.Println("http-api->readCSV:", err)
+		return err
+	}
+
+	for _, each := range rawCSVdata {
+		TRACE.Printf("1 : %s 1 : %s\n", each[1], each[2])
+	}
+
+	return nil
 }
 
 func vectorRemoveItem(v []PosVector, item int) []PosVector {
@@ -207,6 +237,12 @@ func HttpStartGame(w http.ResponseWriter, r *http.Request) {
 				ERROR.Println("socket.io->StartGame: json.Marshal error: ", err)
 			}
 		} else {
+			// read coins
+			err = getCoins("/home/morriswinkler/gameserver/static/maps/Level_1.csv")
+			if err != nil {
+				ERROR.Println("http-api->StartGame: getCSV error: ", err)
+			}
+
 			// ok lets play marshall the game and write it to the database
 			game.Running = true
 			response = game
