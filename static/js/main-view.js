@@ -19,6 +19,13 @@
       preloadimages(['media/main-view-ninja.svg'], function(images) {
       	that.onWindowResize();
       });
+
+     	this.container.find('#main-view-modal').modal({
+  			keyboard: false,
+  			backdrop: 'static'/*,
+  			show: false*/
+     	});
+
     } else {
       console.log('No container object specified');
     }
