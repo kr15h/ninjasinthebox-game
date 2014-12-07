@@ -69,58 +69,66 @@ func HttpNewGame(w http.ResponseWriter, r *http.Request) {
 	spaceIp := strings.Split(r.RemoteAddr, ":")[0]
 	helpers.TRACE.Println("http-api->NewGame: IP", spaceIp)
 
-	redisDB := RedisPool.Get()
-	defer redisDB.Close()
-
-	// get the space we have to add the game to and unmarshal it
-	jsonSpace, err = redis.Bytes(redisDB.Do("GET", spaceIp))
-	err = json.Unmarshal(jsonSpace, &space)
-	if err != nil {
-		ERROR.Println("http-api->NewGame: json.Unmarshal error: ", err)
-	}
-
-	var player Player
-	for _, element := range space.Space {
-		if element.UserId == userId {
-			player = element
+	if userId == "" {
+		response = JsonError{Error: "missing userId"}
+		jsonResponse, err = json.Marshal(response)
+		if err != nil {
+			ERROR.Println("socket.io->NewUser: json.Marshal error: ", err)
 		}
-	}
+	} else {
+		redisDB := RedisPool.Get()
+		defer redisDB.Close()
 
-	// create new game
-	response = Game{
-		Leader:  userId,
-		SpaceIp: spaceIp,
-		GameId:  uuid.New(),
-		Player: []Player{
-			player,
-		},
-		Level: Level{
-			Number:     1,
-			CoinsCount: 0,
-		},
-	}
-	space.Games = append(space.Games, response.(Game))
+		// get the space we have to add the game to and unmarshal it
+		jsonSpace, err = redis.Bytes(redisDB.Do("GET", spaceIp))
+		err = json.Unmarshal(jsonSpace, &space)
+		if err != nil {
+			ERROR.Println("http-api->NewGame: json.Unmarshal error: ", err)
+		}
 
-	// prepare response and write it to the database
+		var player Player
+		for _, element := range space.Space {
+			if element.UserId == userId {
+				player = element
+			}
+		}
 
-	// first the space
-	jsonSpace, err = json.Marshal(space)
-	if err != nil {
-		ERROR.Println("http-api->NewGame: json.Marshal error: ", err)
-	}
-	_, err = redisDB.Do("SET", spaceIp, jsonSpace)
-	if err != nil {
-		ERROR.Println("http-api->NewGame: RedisDB SET error: ", err)
-	}
+		// create new game
+		response = Game{
+			Leader:  userId,
+			SpaceIp: spaceIp,
+			GameId:  uuid.New(),
+			Player: []Player{
+				player,
+			},
+			Level: Level{
+				Number:     1,
+				CoinsCount: 0,
+			},
+		}
+		space.Games = append(space.Games, response.(Game))
 
-	// than the game
-	jsonResponse, err = json.Marshal(response)
-	if err != nil {
-		ERROR.Println("http-api->NewGame: json.Marshal error: ", err)
-	}
-	_, err = redisDB.Do("SET", response.(Game).GameId, jsonResponse)
-	if err != nil {
-		ERROR.Println("http-api->NewGame: RedisDB SET error: ", err)
+		// prepare response and write it to the database
+
+		// first the space
+		jsonSpace, err = json.Marshal(space)
+		if err != nil {
+			ERROR.Println("http-api->NewGame: json.Marshal error: ", err)
+		}
+		_, err = redisDB.Do("SET", spaceIp, jsonSpace)
+		if err != nil {
+			ERROR.Println("http-api->NewGame: RedisDB SET error: ", err)
+		}
+
+		// than the game
+		jsonResponse, err = json.Marshal(response)
+		if err != nil {
+			ERROR.Println("http-api->NewGame: json.Marshal error: ", err)
+		}
+		_, err = redisDB.Do("SET", response.(Game).GameId, jsonResponse)
+		if err != nil {
+			ERROR.Println("http-api->NewGame: RedisDB SET error: ", err)
+		}
 	}
 
 	TRACE.Println("http-api->NewGame: Answer", response)
