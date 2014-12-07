@@ -43,6 +43,8 @@ function emitBossReached() {
     this.EMPTY = '0';
     this.BOSS = 'B';
     this.WALL = 'x';
+	this.TRAP = 'g'; //frank
+	//this.Triger = 'T'; toomuch?
 
     /* create the objects matrix */
     this.objects = [];
