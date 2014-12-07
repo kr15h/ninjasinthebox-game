@@ -15,12 +15,12 @@
             return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
         }
 
-    	var socket = io.connect('http://gdprabowo.koding.io:3002/');
+    	var socket = io.connect('http://localhost:3002/');
     
     	// on connection to server, ask for user's name with an anonymous callback
     	socket.on('connect', function(){
     		// call the server-side function 'adduser' and send one parameter (value of prompt)
-    		socket.emit('joinroom', {query:"username="+prompt("What's your name?")+"&room_id="+getParameterByName("room_id")});
+    		socket.emit('joinroom', {username: prompt("What's your name?"), room_id: getParameterByName("room_id")});
     	});
     
     	// listener, whenever the server emits 'updatechat', this updates the chat body

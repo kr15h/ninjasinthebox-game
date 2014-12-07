@@ -42,16 +42,17 @@ io.sockets.on('connection', function (socket) {
 	});
 
 	// when the client emits 'sendchat', this listens and executes
-	socket.on('joinroom', function () {
+	socket.on('joinroom', function (data) {
+        console.log("joinroom: " + data.room_id + " username: " + data.username);
 	    //if(io.sockets.clients(socket.handshake.query.room_id) == 4){
     	    //join a room
-    	    console.log(socket.handshake.url)
-    	    socket.join(socket.handshake.query.room_id);
-    	    socket.room = socket.handshake.query.room_id;
+    	    console.log(socket.handshake.referer)
+    	    socket.join(data.room_id);
+    	    socket.room = data.room_id;
     	    //register current user
-    	    socket.username = socket.handshake.query.username;
+    	    socket.username = data.username;
     		// we tell the client to execute 'updatechat' with 2 parameters
-    		socket.broadcast.to(socket.room).emit('updatechat', 'SERVER', socket.handshake.query.username + ' has connected to this room');
+    		io.to(socket.room).emit('updatechat', 'SERVER', data.username + ' has connected to this room');
 	    //}
 	    //else{
 	        //socket.emit('roomoccupied', 'SERVER', 'room full!');
@@ -61,7 +62,7 @@ io.sockets.on('connection', function (socket) {
 	// when the client emits 'sendchat', this listens and executes
 	socket.on('sendchat', function (data) {
 		// we tell the client to execute 'updatechat' with 2 parameters
-		io.sockets.in(socket.room).emit('updatechat', socket.username, data);
+		io.to(socket.room).emit('updatechat', socket.username, data);
 	});
 
 	// when the user disconnects.. perform this
