@@ -114,7 +114,27 @@ func main() {
 		log.Fatal(err)
 	}
 
-	server.On("logon", Logon)
+	server.On("connection", func(so socketio.Socket) {
+		TRACE.Println("socket.io: connection", so.Id())
+		so.Join("chat")
+		so.On("chat message", func(msg string) {
+			TRACE.Println("socket.io->emit:", so.Emit("chat message", msg))
+			so.BroadcastTo("chat", "chat message", msg)
+		})
+		so.On("adduser", Adduser)
+		so.On("logon", Logon)
+		so.On("joingame", func() {
+			TRACE.Println("socket.io: joingame")
+			r := so.Emit("joined")
+			TRACE.Println(r)
+		})
+
+		so.On("disconnection", func() {
+			TRACE.Println("socket.io: disconnect", so.Id(), so.Request())
+		})
+
+	})
+
 	server.On("error", func(so socketio.Socket, err error) {
 		ERROR.Println("socket.io->error:", so.Id(), so.Request(), err)
 	})
