@@ -78,8 +78,10 @@ func getCoins(file string) error {
 		return err
 	}
 
-	for _, each := range rawCSVdata {
-		TRACE.Printf("1 : %s 1 : %s\n", each[1], each[2])
+	for _, x := range rawCSVdata {
+		for _, y := range x {
+			TRACE.Println(y)
+		}
 	}
 
 	return nil
