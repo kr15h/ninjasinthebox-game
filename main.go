@@ -114,7 +114,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	server.On("connect", func(so socketio.Socket) {
+	server.On("connection", func(so socketio.Socket) {
 		TRACE.Println("socket.io: connection", so.Id())
 		so.Join("chat")
 		so.On("chat message", func(msg string) {
@@ -125,7 +125,7 @@ func main() {
 		so.On("logon", Logon)
 		so.On("joingame", func() {
 			TRACE.Println("socket.io: joingame")
-			err = so.Emit("joined")
+			err = so.Emit("chat", "joined")
 			TRACE.Println(err)
 		})
 
