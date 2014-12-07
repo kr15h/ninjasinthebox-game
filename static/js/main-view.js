@@ -72,7 +72,7 @@
 
 			// Start game in room-master
 			this.container.find('.room-master .btn-start-game').click(function(){
-				alert('Ninja, start game!');
+                ROOT.startGame();
 			});
 
 			// Leave room-client

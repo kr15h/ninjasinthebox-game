@@ -9,10 +9,16 @@ $(document).ready(function() {
 	mainView.setup( $('#main-view').first() );
 	mainView.show();
 
-    gameView.pass(Blockly);
+    gameView.setup($('#game-view').first(), Blockly);
+
+    ROOT.startGame = function () {
+        mainView.hide();
+        gameView.show();
+    };
 
 	$(window).resize(function(){
 		mainView.onWindowResize();
+        gameView.onWindowResize();
 	});
 
 });

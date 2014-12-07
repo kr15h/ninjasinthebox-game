@@ -3,11 +3,9 @@
 
     var Blockly = null;
     function GameView() {
+        this.map = null;
+        this.container = null;
     }
-
-    GameView.prototype.pass = function(blockly) {
-        Blockly = blockly;
-    };
 
     function Map(rows, cols) {
     this.rows = rows || 10;
@@ -316,7 +314,10 @@
     }
   };
 
-    GameView.prototype.initGame = function() {
+    GameView.prototype.setup = function(container, blockly) {
+        Blockly = blockly;
+        this.container = container;
+        this.container.hide();
         /* Blockly stuff */
         Blockly.Blocks.maze_move = {
             // Block for moving forward/backward
@@ -369,6 +370,7 @@
 
         var player = null;
         var map = new Map();
+        this.map = map;
         map.setup($('#map-container'));
 
         // TODO: show loader
@@ -396,12 +398,6 @@
             player = new Object("player");
             player.createHtml();
             map.addObject(player, 0, 0);
-
-            // We add window on resize handler only
-            // when the map has been created
-            $(window).resize(function() {
-                map.calcSize();
-            });
         });
         
         /* Blockly stuff */
@@ -437,7 +433,7 @@
             player.turn('right');
         }
         function emitWallAhead() {
-        Blockly.playAudio("wall");
+            Blockly.playAudio("wall");
         }
         function emitBossReached() {
             Blockly.playAudio("boss");
@@ -467,6 +463,18 @@
             $('.blockly-icon-down').removeClass('hidden');
             $('.blockly-icon-up').addClass('hidden');
         });
+    };
+
+    GameView.prototype.show = function() {
+        this.container.show();
+    };
+
+    GameView.prototype.hide = function() {
+        this.container.hide();
+    };
+    
+    GameView.prototype.onWindowResize = function() {
+        this.map.calcSize();
     };
 
     ROOT.GameView = GameView;
