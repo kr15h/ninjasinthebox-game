@@ -121,7 +121,7 @@ func HttpLogon(w http.ResponseWriter, r *http.Request) {
 		ERROR.Println("http-api->Logon: err", err)
 	}
 
-	userId := r.FormValue("userId")
+	userId := strings.Split(r.FormValue("userId"), ":")[0]
 	spaceIp := r.RemoteAddr
 	helpers.TRACE.Println("http-api->Logon: IP", spaceIp)
 
