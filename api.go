@@ -229,111 +229,36 @@ func HttpNewUser(w http.ResponseWriter, r *http.Request) {
 	w.Write(jsonResponse)
 }
 
-func HttpLogon(w http.ResponseWriter, r *http.Request) {
+func HttpGetUser(w http.ResponseWriter, r *http.Request) {
 
-	var space Space
-	var known bool = false
-	var jsonSpace []byte
+	var response interface{}
+	var jsonResponse []byte
 
-	err := r.ParseForm()
-	if err != nil {
-		ERROR.Println("http-api->Logon: err", err)
-	}
-
-	userId := r.FormValue("userId")
 	spaceIp := strings.Split(r.RemoteAddr, ":")[0]
-	helpers.TRACE.Println("http-api->Logon: IP", spaceIp)
+	helpers.TRACE.Println("http-api->GetUser: IP", spaceIp)
 
 	redisDB := RedisPool.Get()
 	defer redisDB.Close()
 
-	jsonSpace, err = redis.Bytes(redisDB.Do("GET", spaceIp))
+	response, err := redis.Bytes(redisDB.Do("GET", spaceIp))
 	if err != nil {
-		// so the user is in a new space we add him
-		known = true
-		TRACE.Println("http-api->Logon: newSpace", err)
-		space = Space{
-			Channel: uuid.New(),
-			SpaceIp: spaceIp,
-			Space: []Player{
-				{
-					UserId:   uuid.New(),
-					UserName: "JonDoe",
-				},
-			},
-		}
-		jsonSpace, err := json.Marshal(space)
+		// error no space found under spaceIp
+		response = JsonError{Error: "no space found, use /newUser?userName=youDude"}
+		jsonResponse, err = json.Marshal(response)
 		if err != nil {
-			ERROR.Println("http-api->Logon json.Marshal error: ", err)
+			ERROR.Println("socket.io->GetUser json.Marshal error: ", err)
 		}
-		_, err = redisDB.Do("SET", spaceIp, jsonSpace)
-		if err != nil {
-			ERROR.Println("http-api->Logon RedisDB SET error: ", err)
-		}
-
 	} else {
-		// else unmarshal the json object
-		err = json.Unmarshal(jsonSpace, &space)
+		// return the space with all the users
+		jsonResponse, err = json.Marshal(response)
 		if err != nil {
-			ERROR.Println("http-api->Logon json.Unmarshal error: ", err)
+			ERROR.Println("socket.io->GetUser json.Marshal error: ", err)
 		}
 	}
 
-	// check if the user is known
-	for _, element := range space.Space {
-		if element.UserId == userId {
-			known = true
-			TRACE.Println("http-api->Logon known userId", element.UserId, "in Space", spaceIp)
-		}
-	}
-
-	// if id is unknow add it to the space
-	if !known {
-		TRACE.Println("http-api->Logon unknown UserId", userId, ", lets give the poor guy one")
-
-		player := Player{
-			UserId:   uuid.New(),
-			UserName: "JonDoe",
-		}
-
-		space.Space = append(space.Space, player)
-		jsonSpace, err := json.Marshal(space)
-		if err != nil {
-			ERROR.Println("http-api->Logon json.Marshal error: ", err)
-		}
-		_, err = redisDB.Do("SET", spaceIp, jsonSpace)
-		if err != nil {
-			ERROR.Println("http-api->Logon RedisDB SET error: ", err)
-		}
-
-		TRACE.Println("http-api->Logon added", space)
-
-		// generate a answer with only one user
-		space = Space{
-			Channel: space.Channel,
-			SpaceIp: spaceIp,
-			Space: []Player{
-				{
-					UserId:   player.UserId,
-					UserName: player.UserName,
-				},
-			},
-		}
-		jsonSpace, err = json.Marshal(space)
-		if err != nil {
-			ERROR.Println("http-api->Logon json.Marshal error: ", err)
-		}
-		_, err = redisDB.Do("SET", spaceIp, jsonSpace)
-		if err != nil {
-			ERROR.Println("http-api->Logon RedisDB SET error: ", err)
-		}
-
-	}
-
-	TRACE.Println("http-api->Logon Answer", space)
+	TRACE.Println("http-api->GetUser Answer", response)
 	w.Header().Set("Content-Type", "application/json")
-	w.Write(jsonSpace)
-
+	w.Write(jsonResponse)
 }
 
 func JoinGame(so socketio.Socket, msg string) {

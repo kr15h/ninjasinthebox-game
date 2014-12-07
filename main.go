@@ -105,7 +105,7 @@ func main() {
 	// http API
 	router := pat.New()
 
-	router.Get("/logon", HttpLogon)
+	router.Get("/getUser", HttpGetUser)
 	router.Get("/newUser", HttpNewUser)
 	// http static dir
 	router.Add("GET", "/", http.FileServer(http.Dir(cfg.Webserver.Dir)))
