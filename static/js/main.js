@@ -16,6 +16,10 @@ $(document).ready(function() {
 	var gameOverView = new ROOT.GameOverView();
 	gameOverView.setup( $('#game-over-view').first() );
 
+	// Init game over view
+	var winView = new ROOT.WinView();
+	winView.setup( $('#win-view').first() );
+
 	$(window).resize(function(){
 		mainView.onWindowResize();
 		gameOverView.onWindowResize();
