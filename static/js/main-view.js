@@ -46,6 +46,11 @@
 				that.container.find('.team-up').show();
 			});
 
+			this.container.find('.team-up .btn-forward').click(function(){
+				that.container.find('.team-up').hide();
+				that.container.find('.room').show();
+			});
+
 		} else {
 			console.log('No container object specified');
 		}
