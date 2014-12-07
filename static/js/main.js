@@ -3,16 +3,22 @@ var ROOT = {};
 
 $(document).ready(function() {
 
+	// Init main view
 	var mainView = new ROOT.MainView();
-    var gameView = new ROOT.GameView();
-
 	mainView.setup( $('#main-view').first() );
 	mainView.show();
 
-    gameView.initBlockly(Blockly);
+	// Init game view
+	var gameView = new ROOT.GameView();
+	gameView.initBlockly(Blockly);
+
+	// Init game over view
+	var gameOverView = new ROOT.GameOverView();
+	gameOverView.setup( $('#game-over-view').first() );
 
 	$(window).resize(function(){
 		mainView.onWindowResize();
+		gameOverView.onWindowResize();
 	});
 
 });
