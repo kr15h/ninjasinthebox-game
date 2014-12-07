@@ -9,3 +9,20 @@ body, h1, h2, h3 {
 	width: 100%;
 	height: 100%;
 }
+
+.btn {
+	border-radius: 8px;
+	border: 2px solid rgba(255, 230, 30, 0.75);
+	font-family: 'changchangregular';
+	background: #002244;
+	background-image: linear-gradient(0deg, #002244 0%, #005599 100%);
+}
+
+.btn:hover, .btn:visited, .btn:active {
+	border: 2px solid rgba(255, 230, 30, 1.0);
+	background-image: linear-gradient(180deg, #002244 0%, #005599 100%);
+}
+
+.btn-lg {
+	font-size: 24px;
+}

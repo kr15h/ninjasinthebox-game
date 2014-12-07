@@ -25,3 +25,9 @@
 #main-view .ninja img {
 	width: 35%;
 }
+
+#main-view .play-btn {
+	position: relative;
+	z-index: 10;
+	margin-top: 7%;
+}
