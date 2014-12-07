@@ -347,7 +347,7 @@
     map.emitBoss = emitBossReached;
     map.emitEscape = emitEscapeMaze;
     map.emitCoin = emitCoinCollected;
-    Blockly.loadAudio_([Blockly.assetUrl("media/splash.ogg")], "wall");
+    Blockly.loadAudio_([Blockly.assetUrl("media/wall.ogg")], "wall");
     Blockly.loadAudio_([Blockly.assetUrl("media/applause7.wav")], "boss");
     Blockly.loadAudio_([Blockly.assetUrl("media/coinpickup.ogg")], "coin");
     function move(code) {
