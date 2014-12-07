@@ -188,6 +188,19 @@ func HttpLogon(w http.ResponseWriter, r *http.Request) {
 		}
 
 		TRACE.Println("http-api->Logon added", space)
+
+		TRACE.Println("socket.io->Logon: newSpace", err)
+		space = Space{
+			Channel: space.Channel,
+			SpaceIp: spaceIp,
+			Space: []Player{
+				{
+					UserId:   player.UserId,
+					UserName: player.UserName,
+				},
+			},
+		}
+
 	}
 
 	TRACE.Println("http-api->Logon Answer", space)
