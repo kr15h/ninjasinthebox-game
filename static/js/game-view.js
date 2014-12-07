@@ -258,7 +258,7 @@
         element.append(object.element);
         setTimeout(function() {
             object.element.className = classNames + " ninja-visible";
-        }, 1);
+        }, 50);
     }, 300);
   };
 
