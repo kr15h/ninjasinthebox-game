@@ -348,7 +348,8 @@
     map.emitEscape = emitEscapeMaze;
     map.emitCoin = emitCoinCollected;
     Blockly.loadAudio_([Blockly.assetUrl("media/wall.ogg")], "wall");
-    Blockly.loadAudio_([Blockly.assetUrl("media/applause7.wav")], "boss");
+    Blockly.loadAudio_([Blockly.assetUrl("media/Boss.wav")], "boss");
+    Blockly.loadAudio_([Blockly.assetUrl("media/steps.wav")], "steps");
     Blockly.loadAudio_([Blockly.assetUrl("media/coinpickup.ogg")], "coin");
     function move(code) {
         var index = 0;
@@ -361,6 +362,7 @@
         }, 500);
     }
     function moveForward() {
+        Blockly.playAudio("steps");
         map.moveObject(player);
     }
     function turnLeft() {
