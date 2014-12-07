@@ -67,6 +67,7 @@ func HttpUserMoved(w http.ResponseWriter, r *http.Request) {
 	var response interface{}
 	var jsonResponse []byte
 	var jsonGame []byte
+	var userHitCoin bool = false
 
 	err := r.ParseForm()
 	if err != nil {
@@ -120,8 +121,13 @@ func HttpUserMoved(w http.ResponseWriter, r *http.Request) {
 		ly, _ := strconv.Atoi(y)
 		for index, coin := range game.Map.Coins {
 			if (coin.X == lx) && (coin.Y == ly) {
+				userHitCoin = true
 				game.Map.Coins = vectorRemoveItem(game.Map.Coins, index)
 			}
+		}
+
+		if userHitCoin {
+			game.Level.CoinsCount += 1
 		}
 
 		// move player
@@ -130,6 +136,9 @@ func HttpUserMoved(w http.ResponseWriter, r *http.Request) {
 				TRACE.Println("http-api->UserMoved: found user", userId, lx, ly)
 				game.Player[item].Pos.X = lx
 				game.Player[item].Pos.Y = ly
+				if userHitCoin {
+					game.Player[item].Coins += 1
+				}
 			}
 		}
 
