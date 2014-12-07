@@ -105,6 +105,7 @@ func main() {
 	// http API
 	router := pat.New()
 
+	router.Get("/logon", HttpLogon)
 	// http static dir
 	router.Add("GET", "/", http.FileServer(http.Dir(cfg.Webserver.Dir)))
 
@@ -113,7 +114,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	server.On("logon", Logon)
 
 	server.On("error", func(so socketio.Socket, err error) {
