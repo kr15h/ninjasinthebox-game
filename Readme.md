@@ -36,7 +36,7 @@ crate a new game ( you got your userId from newUser )
 
 joinGame
 
-join a game ( gameId is visiable from getSpace =
+join a game ( gameId is visiable from getSpace )
 ```
 	joinGame?gameId=58b848f0-6be8-4b85-b8f5-dfbbe2711928&userId=a181a363-67c4-4f96-9e62-295079916e2d
 ```
