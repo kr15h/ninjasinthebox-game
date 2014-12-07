@@ -21,6 +21,7 @@ type Space struct {
 }
 
 type Player struct {
+	Leader   bool
 	UserId   string
 	UserName string
 }
@@ -30,6 +31,156 @@ func Adduser(msg string) {
 
 }
 
+func HttpNewUser(w http.ResponseWriter, r *http.Request) {
+
+	var space Space
+	var response interface{}
+	var jsonResponse []byte
+	var jsonSpace []byte
+	var taken bool
+
+	err := r.ParseForm()
+	if err != nil {
+		ERROR.Println("http-api->NewUser: err", err)
+	}
+
+	userName := r.FormValue("userName")
+	spaceIp := strings.Split(r.RemoteAddr, ":")[0]
+	helpers.TRACE.Println("http-api->NewUser: IP", spaceIp)
+
+	// check if there was a username provided
+	if userName == "" {
+		response = JsonError{Error: "missing userName"}
+		jsonResponse, err = json.Marshal(response)
+		if err != nil {
+			ERROR.Println("socket.io->NewUser json.Marshal error: ", err)
+		}
+	} else {
+		redisDB := RedisPool.Get()
+		defer redisDB.Close()
+
+		jsonSpace, err = redis.Bytes(redisDB.Do("GET", spaceIp))
+		if err != nil {
+			// so the user is in a new space we add him as the leader
+			// and create a new space
+			TRACE.Println("http-api->NewUser: newSpace", err)
+			response = Space{
+				Channel: uuid.New(),
+				SpaceIp: spaceIp,
+				Space: []Player{
+					{
+						Leader:   true,
+						UserId:   uuid.New(),
+						UserName: userName,
+					},
+				},
+			}
+			// prepare response and write it to the database
+			jsonResponse, err = json.Marshal(response)
+			if err != nil {
+				ERROR.Println("socket.io->NewUser json.Marshal error: ", err)
+			}
+			_, err = redisDB.Do("SET", spaceIp, jsonResponse)
+			if err != nil {
+				ERROR.Println("socket.io->NewUser RedisDB SET error: ", err)
+			}
+
+		} else {
+			// space exists
+			// else unmarshal the json object
+			err = json.Unmarshal(jsonSpace, &space)
+			if err != nil {
+				ERROR.Println("http-api->NewUser json.Unmarshal error: ", err)
+			}
+
+			// check if username is taken
+			for _, element := range space.Space {
+				if element.UserName == userName {
+					taken = true
+					TRACE.Println("http-api->NewUser known userId", element.UserId, "in Space", spaceIp)
+				}
+			}
+
+			if taken {
+				// error user exists allready, try an other alias
+				response = JsonError{Error: "user exists"}
+				jsonResponse, err = json.Marshal(response)
+				if err != nil {
+					ERROR.Println("socket.io->NewUser json.Marshal error: ", err)
+				}
+			} else {
+				// add user to space
+				player := Player{
+					Leader:   false,
+					UserId:   uuid.New(),
+					UserName: userName,
+				}
+
+				// add user to json object in database
+				space.Space = append(space.Space, player)
+				jsonSpace, err := json.Marshal(space)
+				if err != nil {
+					ERROR.Println("socket.io->NewUser json.Marshal error: ", err)
+				}
+				_, err = redisDB.Do("SET", spaceIp, jsonSpace)
+				if err != nil {
+					ERROR.Println("socket.io->NewUser RedisDB SET error: ", err)
+				}
+				// return onle the new user to the request
+				response = Space{
+					Channel: uuid.New(),
+					SpaceIp: spaceIp,
+					Space: []Player{
+						player,
+					},
+				}
+
+				jsonResponse, err = json.Marshal(response)
+				if err != nil {
+					ERROR.Println("socket.io->NewUser json.Marshal error: ", err)
+				}
+			}
+		}
+	}
+
+	TRACE.Println("http-api->NewUser Answer", response)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsonResponse)
+}
+
+func HttpGetUser(w http.ResponseWriter, r *http.Request) {
+
+	var response interface{}
+	var jsonResponse []byte
+
+	spaceIp := strings.Split(r.RemoteAddr, ":")[0]
+	helpers.TRACE.Println("http-api->GetUser: IP", spaceIp)
+
+	redisDB := RedisPool.Get()
+	defer redisDB.Close()
+
+	response, err := redis.Bytes(redisDB.Do("GET", spaceIp))
+	if err != nil {
+		// error no space found under spaceIp
+		response = JsonError{Error: "no space found, use /newUser?userName=youDude"}
+		jsonResponse, err = json.Marshal(response)
+		if err != nil {
+			ERROR.Println("socket.io->GetUser json.Marshal error: ", err)
+		}
+	} else {
+		// return the space with all the users
+		jsonResponse = response.([]byte)
+		if err != nil {
+			ERROR.Println("socket.io->GetUser json.Marshal error: ", err)
+		}
+	}
+
+	TRACE.Println("http-api->GetUser Answer", response)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsonResponse)
+}
+
+// historical function fuck websockets, they took me a day and got me nowhere ( whining )
 func Logon(so socketio.Socket, msg string) {
 
 	var space Space
@@ -113,157 +264,4 @@ func Logon(so socketio.Socket, msg string) {
 	TRACE.Println("socket.io->Logon Brodcast Answer with Id", so.Id(), space)
 	r = so.BroadcastTo("chat", "space", space)
 	TRACE.Println("socket.io response:", r)
-}
-
-func HttpNewUser(w http.ResponseWriter, r *http.Request) {
-
-	var space Space
-	var response interface{}
-	var jsonResponse []byte
-	var jsonSpace []byte
-	var taken bool
-
-	err := r.ParseForm()
-	if err != nil {
-		ERROR.Println("http-api->NewUser: err", err)
-	}
-
-	userName := r.FormValue("userName")
-	spaceIp := strings.Split(r.RemoteAddr, ":")[0]
-	helpers.TRACE.Println("http-api->NewUser: IP", spaceIp)
-
-	// check if there was a username provided
-	if userName == "" {
-		response = JsonError{Error: "missing userName"}
-		jsonResponse, err = json.Marshal(response)
-		if err != nil {
-			ERROR.Println("socket.io->NewUser json.Marshal error: ", err)
-		}
-	} else {
-		redisDB := RedisPool.Get()
-		defer redisDB.Close()
-
-		jsonSpace, err = redis.Bytes(redisDB.Do("GET", spaceIp))
-		if err != nil {
-			// so the user is in a new space we add him
-			TRACE.Println("http-api->NewUser: newSpace", err)
-			response = Space{
-				Channel: uuid.New(),
-				SpaceIp: spaceIp,
-				Space: []Player{
-					{
-						UserId:   uuid.New(),
-						UserName: userName,
-					},
-				},
-			}
-			// prepare response and write it to the database
-			jsonResponse, err = json.Marshal(response)
-			if err != nil {
-				ERROR.Println("socket.io->NewUser json.Marshal error: ", err)
-			}
-			_, err = redisDB.Do("SET", spaceIp, jsonResponse)
-			if err != nil {
-				ERROR.Println("socket.io->NewUser RedisDB SET error: ", err)
-			}
-
-		} else {
-			// space exists
-			// else unmarshal the json object
-			err = json.Unmarshal(jsonSpace, &space)
-			if err != nil {
-				ERROR.Println("http-api->NewUser json.Unmarshal error: ", err)
-			}
-
-			// check if username is taken
-			for _, element := range space.Space {
-				if element.UserName == userName {
-					taken = true
-					TRACE.Println("http-api->NewUser known userId", element.UserId, "in Space", spaceIp)
-				}
-			}
-
-			if taken {
-				// error user exists allready, try an other alias
-				response = JsonError{Error: "user exists"}
-				jsonResponse, err = json.Marshal(response)
-				if err != nil {
-					ERROR.Println("socket.io->NewUser json.Marshal error: ", err)
-				}
-			} else {
-				// add user to space
-				player := Player{
-					UserId:   uuid.New(),
-					UserName: userName,
-				}
-
-				// add user to json object in database
-				space.Space = append(space.Space, player)
-				jsonSpace, err := json.Marshal(space)
-				if err != nil {
-					ERROR.Println("socket.io->NewUser json.Marshal error: ", err)
-				}
-				_, err = redisDB.Do("SET", spaceIp, jsonSpace)
-				if err != nil {
-					ERROR.Println("socket.io->NewUser RedisDB SET error: ", err)
-				}
-				// return onle the new user to the request
-				response = Space{
-					Channel: uuid.New(),
-					SpaceIp: spaceIp,
-					Space: []Player{
-						player,
-					},
-				}
-
-				jsonResponse, err = json.Marshal(response)
-				if err != nil {
-					ERROR.Println("socket.io->NewUser json.Marshal error: ", err)
-				}
-			}
-		}
-	}
-
-	TRACE.Println("http-api->NewUser Answer", response)
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(jsonResponse)
-}
-
-func HttpGetUser(w http.ResponseWriter, r *http.Request) {
-
-	var response interface{}
-	var jsonResponse []byte
-
-	spaceIp := strings.Split(r.RemoteAddr, ":")[0]
-	helpers.TRACE.Println("http-api->GetUser: IP", spaceIp)
-
-	redisDB := RedisPool.Get()
-	defer redisDB.Close()
-
-	response, err := redis.Bytes(redisDB.Do("GET", spaceIp))
-	if err != nil {
-		// error no space found under spaceIp
-		response = JsonError{Error: "no space found, use /newUser?userName=youDude"}
-		jsonResponse, err = json.Marshal(response)
-		if err != nil {
-			ERROR.Println("socket.io->GetUser json.Marshal error: ", err)
-		}
-	} else {
-		// return the space with all the users
-		jsonResponse = response.([]byte)
-		if err != nil {
-			ERROR.Println("socket.io->GetUser json.Marshal error: ", err)
-		}
-	}
-
-	TRACE.Println("http-api->GetUser Answer", response)
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(jsonResponse)
-}
-
-func JoinGame(so socketio.Socket, msg string) {
-
-	helpers.TRACE.Println("socket.io: Join", msg)
-
-	so.Emit("channel", "abcde")
 }
