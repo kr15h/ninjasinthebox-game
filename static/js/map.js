@@ -246,7 +246,14 @@
     object.y = y;
     this.objects[x][y] = object;
     var element = $('td').eq((this.cols * y) + x);
-    element.append(object.element);
+    var classNames = object.element.className;
+    object.element.className = classNames + " ninja-hidden";
+    setTimeout(function() {
+        element.append(object.element);
+        setTimeout(function() {
+            object.element.className = classNames + " ninja-visible";
+        }, 500);
+    }, 500);
   };
 
   // Object class
@@ -349,7 +356,8 @@
     map.emitCoin = emitCoinCollected;
     Blockly.loadAudio_([Blockly.assetUrl("media/wall.ogg")], "wall");
     Blockly.loadAudio_([Blockly.assetUrl("media/Boss.wav")], "boss");
-    Blockly.loadAudio_([Blockly.assetUrl("media/steps.wav")], "steps");
+     Blockly.loadAudio_([Blockly.assetUrl("media/escape.ogg")], "escape");
+    Blockly.loadAudio_([Blockly.assetUrl("media/sswooshing.ogg")], "move");
     Blockly.loadAudio_([Blockly.assetUrl("media/coinpickup.ogg")], "coin");
     function move(code) {
         var index = 0;
@@ -362,7 +370,7 @@
         }, 500);
     }
     function moveForward() {
-        Blockly.playAudio("steps");
+        Blockly.playAudio("move");
         map.moveObject(player);
     }
     function turnLeft() {
@@ -389,6 +397,7 @@
     }
     function emitEscapeMaze() {
         showImage("http://cdn.rsvlts.com/wp-content/uploads/2013/03/some_seriously_bad_timing_fails_17.gif", 3000);
+        Blockly.playAudio("escape");
     }
     $('#runButton').on('click', function() {
         move(Blockly.Generator.blockSpaceToCode('JavaScript'));

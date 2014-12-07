@@ -14,6 +14,16 @@
 	<script src="js/map.js"></script>
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 	<style>
+	.ninja-visible {
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 0.5s linear;
+    }
+	.ninja-hidden {
+        opacity: 0;
+        visibility: hidden;
+        transition: visibility 0s 0.5s, opacity 0.5s linear;
+    }
 	.rotate90 {
         transform: rotate(90deg);
         -webkit-transform: rotate(90deg);
