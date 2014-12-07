@@ -264,11 +264,17 @@
     if (this.type === "player") {
         this.imgSrc = 'media/ninja.png';
     } else if (this.type === "wall") {
-        this.imgSrc = 'media/button.png';
+        this.imgSrc = 'media/Wall.png';
     } else if (this.type === "coin") {
-        this.imgSrc = '../ui/images/coin.png';
-    } else if (this.type === "boss") {
-        this.imgSrc = 'media/canclosed.png';
+        this.imgSrc = 'media/coin.png';
+    } else if (this.type === "boss-tl") {
+        this.imgSrc = 'media/stagin_tl.png';
+    } else if (this.type === "boss-tr") {
+        this.imgSrc = 'media/stagin_tr.png';
+    } else if (this.type === "boss-bl") {
+        this.imgSrc = 'media/stagin_bl.png';
+    } else if (this.type === "boss-br") {
+        this.imgSrc = 'media/stagin_br.png';
     }
     var element = document.createElement('img');
     element.src = this.imgSrc;
@@ -308,9 +314,21 @@
 
       map.createHtml();
 
-      var boss = new Object("boss");
-      boss.createHtml();
-      map.addObject(boss, 9, 9);
+      var boss_tl = new Object("boss-tl");
+      boss_tl.createHtml();
+      map.addObject(boss_tl, 9, 9);
+
+      var boss_tr = new Object("boss-tr");
+      boss_tr.createHtml();
+      map.addObject(boss_tr, 10, 9);
+
+      var boss_bl = new Object("boss-bl");
+      boss_bl.createHtml();
+      map.addObject(boss_bl, 9, 10);
+
+      var boss_br = new Object("boss-br");
+      boss_br.createHtml();
+      map.addObject(boss_br, 10, 10);
 
       player = new Object("player");
       player.createHtml();
@@ -348,21 +366,21 @@
     function turnRight() {
         player.turn('right');
     }
+    function showImage(imgSrc, time) {
+         $("#blockly-container").append('<img src="'+imgSrc+'">');
+         setTimeout(function(){ $("#blockly-container img").remove() }, time);
+    }
     function emitWallAhead() {
-        $("#blockly-container").append('<img src="http://media.giphy.com/media/ZRr16htlE5tte/giphy.gif">');
-        setTimeout(function(){ $("#blockly-container img").remove() }, 1000);
+       showImage("http://media.giphy.com/media/ZRr16htlE5tte/giphy.gif", 1000);
     }
     function emitBossReached() {
-        $("#blockly-container").append('<img src="http://spadow.files.wordpress.com/2010/09/8840000-stand.gif">');
-        setTimeout(function(){ $("#blockly-container img").remove() }, 3000);
+        showImage("http://spadow.files.wordpress.com/2010/09/8840000-stand.gif", 3000);
     }
     function emitCoinCollected() {
-        $("#blockly-container").append('<img src="http://i258.photobucket.com/albums/hh253/jimifunguzz/gangnam%20style/gangnam-style-explosion.gif">');
-        setTimeout(function(){ $("#blockly-container img").remove() }, 3000);
+        showImage("http://i258.photobucket.com/albums/hh253/jimifunguzz/gangnam%20style/gangnam-style-explosion.gif", 3000);
     }
     function emitEscapeMaze() {
-        $("#blockly-container").append('<img src="http://cdn.rsvlts.com/wp-content/uploads/2013/03/some_seriously_bad_timing_fails_17.gif">');
-        setTimeout(function(){ $("#blockly-container img").remove() }, 3000);
+        showImage("http://cdn.rsvlts.com/wp-content/uploads/2013/03/some_seriously_bad_timing_fails_17.gif", 3000);
     }
     $('#runButton').on('click', function() {
         move(Blockly.Generator.blockSpaceToCode('JavaScript'));
