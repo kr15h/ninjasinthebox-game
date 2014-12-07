@@ -1,34 +1,3 @@
-/* for blockly */
-var map = null;
-var player = null;
-function move(code) {
-    var index = 0;
-    var lines = code.split('\n');
-    /* execute line by line */
-    var interval = setInterval(tick, 500);
-    function tick() {
-        if (index == lines.length) clearInterval(interval);
-        eval(lines[index++]);
-    }
-}
-function moveForward() {
-  map.moveObject(player);
-}
-function turnLeft() {
-  player.turn('left');
-}
-function turnRight() {
-  player.turn('right');
-}
-function emitCoinCollected() {
-    $("#blockly-container").append('<img src="http://i258.photobucket.com/albums/hh253/jimifunguzz/gangnam%20style/gangnam-style-explosion.gif">');
-    setTimeout(function(){ $("#blockly-container img").remove() }, 3000);
-}
-function emitBossReached() {
-    $("#blockly-container").append('<img src="http://spadow.files.wordpress.com/2010/09/8840000-stand.gif">');
-    setTimeout(function(){ $("#blockly-container img").remove() }, 3000);
-}
-
 (function () {
   'use strict';
 
@@ -247,7 +216,7 @@ function emitBossReached() {
     /* check for map borders */
     if (x < 0 || y < 0 || x > this.cols - 1 || y > this.rows - 1) {
         /* trying to escape map */
-        alert("trying to escape maze");
+        this.emitEscape();
         /* ?..? */
         return;
     }
@@ -259,12 +228,13 @@ function emitBossReached() {
         /* collision is only ok with coins */
         if (obj.type === "coin") {
             /* collect the coin */
-            emitCoinCollected();
+            this.emitCoin();
             delete this.objects[x][y];
             $('td').eq((this.cols * y) + x).empty();
         } else if (obj.type === "boss") {
-            emitBossReached();
+            this.emitBoss();
         } else {
+            this.emitWall();
             /* ?..? */
             return;
         }
@@ -279,7 +249,7 @@ function emitBossReached() {
     element.append(object.element);
   };
 
-  // Player class
+  // Object class
   function Object(type) {
     this.x = 0;
     this.y = 0;
@@ -296,7 +266,7 @@ function emitBossReached() {
     } else if (this.type === "wall") {
         this.imgSrc = 'media/button.png';
     } else if (this.type === "coin") {
-        this.imgSrc = 'media/sprites.png';
+        this.imgSrc = '../ui/images/coin.png';
     } else if (this.type === "boss") {
         this.imgSrc = 'media/canclosed.png';
     }
@@ -325,6 +295,8 @@ function emitBossReached() {
   };
 
   // This test
+  var map = null;
+  var player = null;
   $(document).ready(function() {
     map = new Map();
     map.setup($('#map-container'));
@@ -350,6 +322,54 @@ function emitBossReached() {
         map.calcSize();
       });
 
+    });
+
+    /* Blockly stuff */
+    map.emitWall = emitWallAhead;
+    map.emitBoss = emitBossReached;
+    map.emitEscape = emitEscapeMaze;
+    map.emitCoin = emitCoinCollected;
+    function move(code) {
+        var index = 0;
+        var lines = code.split('\n');
+        eval(lines[index++]);
+        /* execute line by line */
+        var interval = setInterval(function() {
+            if (index == lines.length) clearInterval(interval);
+            eval(lines[index++]);
+        }, 500);
+    }
+    function moveForward() {
+        map.moveObject(player);
+    }
+    function turnLeft() {
+        player.turn('left');
+    }
+    function turnRight() {
+        player.turn('right');
+    }
+    function emitWallAhead() {
+        $("#blockly-container").append('<img src="http://media.giphy.com/media/ZRr16htlE5tte/giphy.gif">');
+        setTimeout(function(){ $("#blockly-container img").remove() }, 1000);
+    }
+    function emitBossReached() {
+        $("#blockly-container").append('<img src="http://spadow.files.wordpress.com/2010/09/8840000-stand.gif">');
+        setTimeout(function(){ $("#blockly-container img").remove() }, 3000);
+    }
+    function emitCoinCollected() {
+        $("#blockly-container").append('<img src="http://i258.photobucket.com/albums/hh253/jimifunguzz/gangnam%20style/gangnam-style-explosion.gif">');
+        setTimeout(function(){ $("#blockly-container img").remove() }, 3000);
+    }
+    function emitEscapeMaze() {
+        $("#blockly-container").append('<img src="http://cdn.rsvlts.com/wp-content/uploads/2013/03/some_seriously_bad_timing_fails_17.gif">');
+        setTimeout(function(){ $("#blockly-container img").remove() }, 3000);
+    }
+    $('#runButton').on('click', function() {
+        move(Blockly.Generator.blockSpaceToCode('JavaScript'));
+        Blockly.mainBlockSpace.clear();
+    });
+    $('#show-code-header').on('click', function() {
+        alert(Blockly.Generator.blockSpaceToCode('JavaScript'));
     });
 
     $('#blockly-stuff').on('show.bs.collapse', function () {
