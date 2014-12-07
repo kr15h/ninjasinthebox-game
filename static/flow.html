@@ -22,6 +22,7 @@
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="css/global.css">
 	<link rel="stylesheet" type="text/css" href="css/main-view.css">
+	<link rel="stylesheet" type="text/css" href="css/game-view.css">
 
 </head>
 
@@ -175,8 +176,36 @@
 
 			<div class="base-content">
 				<div id="blockly-container">
-					<!-- blockly stuff goes here -->
-				</div><!-- /blockly-container -->
+
+            <div id="blockly-stuff" class="collapse in">
+                
+                
+        <div id="headers" dir="ltr">
+            <div id="toolbox-header" class="blockly-header">
+                <span>Blocks</span>
+            </div>
+            <div id="workspace-header" class="blockly-header">
+                <span id="workspace-header-span">Assemble your blocks here</span>
+            </div>
+            <div id="show-code-header" class="blockly-header">
+                <span>Show Code</span>
+            </div>
+        </div>
+        <div id='blockly'></div>
+        <button id="runButton" class="blocklyLaunch">
+            <div>Run</div>
+            <img src="media/1x1.gif" class="run26">
+        </button>
+    
+
+            </div><!-- /blockly-stuff -->
+
+            <button type="button" class="collapse-btn btn-primary btn-lg" data-toggle="collapse" data-target="#blockly-stuff" aria-expanded="true" aria-controls="blockly-stuff">
+                <span class="blockly-icon-down glyphicon glyphicon-chevron-down hidden"></span>
+                <span class="blockly-icon-up glyphicon glyphicon-chevron-up"></span>
+            </button><!-- /collapse-btn -->
+
+        </div><!-- /blockly-container -->
 
 				<div id="map-container">
 					<!-- JavaScript generated table goes here -->
