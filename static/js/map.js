@@ -231,12 +231,12 @@
             this.emitCoin();
             delete this.objects[x][y];
             $('td').eq((this.cols * y) + x).empty();
-        } else if (obj.type.contains("boss")) {
-            this.emitBoss();
-        } else {
+        } else if (obj.type === "wall") {
             this.emitWall();
-            /* ?..? */
             return;
+        } else {
+            this.emitBoss();
+            /* ?..? */
         }
     }
     /* clear the previouse table cell and object matrix slot */
