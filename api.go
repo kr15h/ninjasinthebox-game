@@ -237,12 +237,6 @@ func HttpStartGame(w http.ResponseWriter, r *http.Request) {
 				ERROR.Println("socket.io->StartGame: json.Marshal error: ", err)
 			}
 		} else {
-			// read coins
-			err = getCoins("/home/morriswinkler/gameserver/static/maps/Level_1.csv")
-			if err != nil {
-				ERROR.Println("http-api->StartGame: getCSV error: ", err)
-			}
-
 			// ok lets play marshall the game and write it to the database
 			game.Running = true
 			response = game
@@ -425,6 +419,11 @@ func HttpNewGame(w http.ResponseWriter, r *http.Request) {
 				ERROR.Println("socket.io->NewGame: json.Marshal error: ", err)
 			}
 		} else {
+			// read coins
+			err = getCoins("/home/morriswinkler/gameserver/static/maps/Level_1.csv")
+			if err != nil {
+				ERROR.Println("http-api->StartGame: getCSV error: ", err)
+			}
 
 			// create new game
 			response = Game{
@@ -440,6 +439,7 @@ func HttpNewGame(w http.ResponseWriter, r *http.Request) {
 					CoinsCount: 0,
 				},
 			}
+
 			space.Games = append(space.Games, response.(Game))
 
 			// prepare response and write it to the database
