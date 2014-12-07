@@ -298,7 +298,14 @@
     /* add the rotation class */
     this.element.className = "rotate"+this.rotation;
     /* when rotation is completed, go to 0 */
-    if (Math.abs(this.rotation) == 360) this.rotation = 0;
+    if (Math.abs(this.rotation) == 360) {
+        /* secretly go back to 0 degree */
+        this.rotation = 0;
+        var el = this.element;
+        setTimeout(function() {
+            el.className = "rotate0";
+        }, 400);
+    }
   };
 
   // This test
