@@ -10,7 +10,7 @@ $(document).ready(function() {
 
 	// Init game view
 	var gameView = new ROOT.GameView();
-	gameView.initBlockly(Blockly);
+	gameView.pass(Blockly);
 
 	// Init game over view
 	var gameOverView = new ROOT.GameOverView();

@@ -181,7 +181,7 @@ table {
 }
 #game-view 
 td {
-    background: #ff0000 url(media/Tile.png);
+    background-image: url(../media/Tile.png);
 }
 #game-view 
 img {
