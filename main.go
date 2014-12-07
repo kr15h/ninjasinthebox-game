@@ -126,6 +126,7 @@ func main() {
 		so.On("adduser", Adduser)
 		so.On("logon", Logon)
 		so.On("joinGame", func() {
+			TRACE.Println("socket.io: joinGame")
 			so.Emit("joined")
 		})
 
