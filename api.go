@@ -14,6 +14,11 @@ type JsonError struct {
 	Error string
 }
 
+type PosVector struct {
+	X int
+	Y int
+}
+
 type Space struct {
 	Channel string
 	SpaceIp string
@@ -24,6 +29,26 @@ type Player struct {
 	Leader   bool
 	UserId   string
 	UserName string
+	Coins    int
+	Pos      PosVector
+}
+
+type Map struct {
+	Coins []PosVector
+	Boss  [4]PosVector
+}
+
+type Level struct {
+	Timeleft   int16
+	Number     int
+	CoinsCoint int16
+}
+
+type Game struct {
+	GameId string
+	Player []Player
+	Map    Map
+	Level  Level
 }
 
 func Adduser(msg string) {
