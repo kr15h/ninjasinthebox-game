@@ -20,6 +20,14 @@ function turnLeft() {
 function turnRight() {
   player.turn('right');
 }
+function emitCoinCollected() {
+    $("#blockly-container").append('<img src="http://i258.photobucket.com/albums/hh253/jimifunguzz/gangnam%20style/gangnam-style-explosion.gif">');
+    setTimeout(function(){ $("#blockly-container img").remove() }, 3000);
+}
+function emitBossReached() {
+    $("#blockly-container").append('<img src="http://spadow.files.wordpress.com/2010/09/8840000-stand.gif">');
+    setTimeout(function(){ $("#blockly-container img").remove() }, 3000);
+}
 
 (function () {
   'use strict';
@@ -251,10 +259,11 @@ function turnRight() {
         /* collision is only ok with coins */
         if (obj.type === "coin") {
             /* collect the coin */
-            $("#blockly-container").append('<img src="http://i258.photobucket.com/albums/hh253/jimifunguzz/gangnam%20style/gangnam-style-explosion.gif">');
-            setTimeout(function(){ $("#blockly-container img").remove() }, 3000);
+            emitCoinCollected();
             delete this.objects[x][y];
             $('td').eq((this.cols * y) + x).empty();
+        } else if (obj.type === "boss") {
+            emitBossReached();
         } else {
             /* ?..? */
             return;
@@ -289,7 +298,7 @@ function turnRight() {
     } else if (this.type === "coin") {
         this.imgSrc = 'media/sprites.png';
     } else if (this.type === "boss") {
-        this.imgSrc = 'media/boss.png';
+        this.imgSrc = 'media/canclosed.png';
     }
     var element = document.createElement('img');
     element.src = this.imgSrc;
@@ -324,8 +333,12 @@ function turnRight() {
 
     // Async map loading... Provide anonymous callback func
     map.loadMap('maps/Level_1.csv', function(){
-      
+
       map.createHtml();
+
+      var boss = new Object("boss");
+      boss.createHtml();
+      map.addObject(boss, 9, 9);
 
       player = new Object("player");
       player.createHtml();
