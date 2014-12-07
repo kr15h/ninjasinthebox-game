@@ -1,0 +1,38 @@
+#game-over-view {
+	z-index: 999;
+	height: auto;
+	background: #141414;
+}
+
+#game-over-view .title {
+	width: 50%;
+	height: auto;
+	margin: 2% 25%;
+}
+
+#game-over-view .bg {
+	width: 96%;
+	margin: 2%;
+	height: auto;
+}
+
+#game-over-view .ninja {
+	text-align: center;
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+}
+
+#game-over-view .ninja img {
+	width: 35%;
+}
+
+#game-over-view .play-btn {
+	position: relative;
+	top: 75%;
+	z-index: 10;
+	text-align: center;
+	margin-top: 7%;
+	width: 100%;
+}
