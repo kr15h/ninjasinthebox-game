@@ -317,7 +317,6 @@
     GameView.prototype.setup = function(container, blockly) {
         Blockly = blockly;
         this.container = container;
-        this.container.hide();
         /* Blockly stuff */
         Blockly.Blocks.maze_move = {
             // Block for moving forward/backward

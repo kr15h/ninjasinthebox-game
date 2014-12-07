@@ -72,6 +72,7 @@
 
 			// Start game in room-master
 			this.container.find('.room-master .btn-start-game').click(function(){
+                that.container.find('#main-view-modal').modal('hide')
                 ROOT.startGame();
 			});
 
