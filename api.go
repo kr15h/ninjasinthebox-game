@@ -121,8 +121,8 @@ func HttpLogon(w http.ResponseWriter, r *http.Request) {
 		ERROR.Println("http-api->Logon: err", err)
 	}
 
-	userId := strings.Split(r.FormValue("userId"), ":")[0]
-	spaceIp := r.RemoteAddr
+	userId := r.FormValue("userId")
+	spaceIp := strings.Split(r.RemoteAddr, ":")[0]
 	helpers.TRACE.Println("http-api->Logon: IP", spaceIp)
 
 	redisDB := RedisPool.Get()
