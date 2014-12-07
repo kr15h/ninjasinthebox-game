@@ -127,6 +127,7 @@ func HttpUserMoved(w http.ResponseWriter, r *http.Request) {
 		// move player
 		for _, player := range game.Player {
 			if player.UserId == userId {
+				TRACE.Println("http-api->UserMoved: found user", userId)
 				player.Pos.X = lx
 				player.Pos.Y = ly
 			}
@@ -136,15 +137,15 @@ func HttpUserMoved(w http.ResponseWriter, r *http.Request) {
 		response = game
 		jsonResponse, err = json.Marshal(response)
 		if err != nil {
-			ERROR.Println("http-api->StartGame: json.Marshal error: ", err)
+			ERROR.Println("http-api->UserMoved: json.Marshal error: ", err)
 		}
 		_, err = redisDB.Do("SET", gameId, jsonResponse)
 		if err != nil {
-			ERROR.Println("http-api->StartGame: RedisDB SET error: ", err)
+			ERROR.Println("http-api->UserMoved: RedisDB SET error: ", err)
 		}
 	}
 
-	TRACE.Println("http-api->StartGame: Answer", response)
+	TRACE.Println("http-api->UserMoved: Answer", response)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(jsonResponse)
 }
