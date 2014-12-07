@@ -100,6 +100,45 @@ func vectorRemoveItem(v []PosVector, item int) []PosVector {
 	return s
 }
 
+func HttpGetGame(w http.ResponseWriter, r *http.Request) {
+
+	var game Game
+	var response interface{}
+	var jsonResponse []byte
+
+	err := r.ParseForm()
+	if err != nil {
+		ERROR.Println("http-api->UserMoved: err", err)
+	}
+
+	gameId := r.FormValue("gameId")
+	spaceIp := strings.Split(r.RemoteAddr, ":")[0]
+	helpers.TRACE.Println("http-api->UserMoved: IP", spaceIp)
+
+	if gameId == "" {
+		response = JsonError{Error: "missing gameId"}
+		jsonResponse, err = json.Marshal(response)
+		if err != nil {
+			ERROR.Println("socket.io->UserMoved: json.Marshal error: ", err)
+		}
+	} else {
+		redisDB := RedisPool.Get()
+		defer redisDB.Close()
+
+		// get the game we have to modify
+		jsonResponse, err = redis.Bytes(redisDB.Do("GET", gameId))
+		err = json.Unmarshal(jsonResponse, &game)
+		if err != nil {
+			ERROR.Println("http-api->UserMoved: json.Unmarshal error: ", err)
+		}
+		response = game
+	}
+
+	TRACE.Println("http-api->UserMoved: Answer", response)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsonResponse)
+}
+
 func HttpUserMoved(w http.ResponseWriter, r *http.Request) {
 
 	var game Game
@@ -148,7 +187,7 @@ func HttpUserMoved(w http.ResponseWriter, r *http.Request) {
 		redisDB := RedisPool.Get()
 		defer redisDB.Close()
 
-		// get the space we have to modify
+		// get the game we have to modify
 		jsonGame, err = redis.Bytes(redisDB.Do("GET", gameId))
 		err = json.Unmarshal(jsonGame, &game)
 		if err != nil {
