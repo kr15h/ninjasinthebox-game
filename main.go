@@ -142,7 +142,7 @@ func main() {
 
 	// Register this pat with the default serve mux so that other packages
 	// may also be exported. (i.e. /debug/pprof[>)
-	http.Handle("/", handlers.CombinedLoggingHandler(helpers.LOGFILE, router))
+	//http.Handle("/", handlers.CombinedLoggingHandler(helpers.LOGFILE, router))
 
 	INFO.Printf("listening on %s:%s", cfg.Webserver.Host, cfg.Webserver.Port)
 	err = http.ListenAndServe(cfg.Webserver.Host+":"+cfg.Webserver.Port, nil)
