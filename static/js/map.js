@@ -252,7 +252,7 @@
         element.append(object.element);
         setTimeout(function() {
             object.element.className = classNames + " ninja-visible";
-        }, 500);
+        }, 100);
     }, 500);
   };
 
@@ -291,20 +291,14 @@
   };
 
   Object.prototype.turn = function(dir) {
-    /* when player is turning left */
-    if (dir === "left") {
-        /* anti-clockwise rotation */
-        this.rotation -= 90;
-        /* when anti-clockwise rotation is completed, go to 270 */
-        if (this.rotation < 0) this.rotation = 270;
-    } else {
-        /* clockwise rotation */
-        this.rotation += 90;
-        /* when clockwise rotation is completed, go to 0 */
-        if (this.rotation > 270) this.rotation = 0;
-    }
+    /* anti-clockwise rotation */
+    if (dir === "left") this.rotation -= 90;
+    /* clockwise rotation */
+    else this.rotation += 90;
     /* add the rotation class */
     this.element.className = "rotate"+this.rotation;
+    /* when rotation is completed, go to 0 */
+    if (Math.abs(this.rotation) == 360) this.rotation = 0;
   };
 
   // This test
@@ -374,9 +368,11 @@
         map.moveObject(player);
     }
     function turnLeft() {
+        Blockly.playAudio("move");
         player.turn('left');
     }
     function turnRight() {
+        Blockly.playAudio("move");
         player.turn('right');
     }
     function showImage(imgSrc, time) {

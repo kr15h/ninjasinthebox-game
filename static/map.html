@@ -15,29 +15,182 @@
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 	<style>
 	.ninja-visible {
+        -webkit-transition: all 500ms ease-in-out;
+        -moz-transition: all 500ms ease-in-out;
+        -ms-transition: all 500ms ease-in-out;
+        -o-transition: all 500ms ease-in-out;
+        transition: all 500ms ease-in-out;
         opacity: 1;
-        visibility: visible;
-        transition: opacity 0.5s linear;
     }
 	.ninja-hidden {
+        -webkit-transition: all 500ms ease-in-out;
+        -moz-transition: all 500ms ease-in-out;
+        -ms-transition: all 500ms ease-in-out;
+        -o-transition: all 500ms ease-in-out;
+        transition: all 500ms ease-in-out;
         opacity: 0;
-        visibility: hidden;
-        transition: visibility 0s 0.5s, opacity 0.5s linear;
+    }
+    .rotate-360 {
+        -webkit-transform: rotate(-360deg);
+        -moz-transform: rotate(-360deg);
+        -ms-transform: rotate(-360deg);
+        -o-transform: rotate(-360deg);
+        transform: rotate(-360deg);
+
+        -webkit-transform-origin: 50% 50%;
+        -moz-transform-origin: 50% 50%;
+        -ms-transform-origin: 50% 50%;
+        -o-transform-origin: 50% 50%;
+        transform-origin: 50% 50%;
+
+        -webkit-transition: 300ms linear;
+        -moz-transition: 300ms linear;
+        -o-transition: 300ms linear;
+        transition: 300ms linear;
+    }
+    .rotate-270 {
+        -webkit-transform: rotate(-270deg);
+        -moz-transform: rotate(-270deg);
+        -ms-transform: rotate(-270deg);
+        -o-transform: rotate(-270deg);
+        transform: rotate(-270deg);
+
+        -webkit-transform-origin: 50% 50%;
+        -moz-transform-origin: 50% 50%;
+        -ms-transform-origin: 50% 50%;
+        -o-transform-origin: 50% 50%;
+        transform-origin: 50% 50%;
+
+        -webkit-transition: 300ms linear;
+        -moz-transition: 300ms linear;
+        -o-transition: 300ms linear;
+        transition: 300ms linear;
+    }
+    .rotate-180 {
+        -webkit-transform: rotate(-180deg);
+        -moz-transform: rotate(-180deg);
+        -ms-transform: rotate(-180deg);
+        -o-transform: rotate(-180deg);
+        transform: rotate(-180deg);
+
+        -webkit-transform-origin: 50% 50%;
+        -moz-transform-origin: 50% 50%;
+        -ms-transform-origin: 50% 50%;
+        -o-transform-origin: 50% 50%;
+        transform-origin: 50% 50%;
+
+        -webkit-transition: 300ms linear;
+        -moz-transition: 300ms linear;
+        -o-transition: 300ms linear;
+        transition: 300ms linear;
+    }
+    .rotate-90 {
+        -webkit-transform: rotate(-90deg);
+        -moz-transform: rotate(-90deg);
+        -ms-transform: rotate(-90deg);
+        -o-transform: rotate(-90deg);
+        transform: rotate(-90deg);
+
+        -webkit-transform-origin: 50% 50%;
+        -moz-transform-origin: 50% 50%;
+        -ms-transform-origin: 50% 50%;
+        -o-transform-origin: 50% 50%;
+        transform-origin: 50% 50%;
+
+        -webkit-transition: 300ms linear;
+        -moz-transition: 300ms linear;
+        -o-transition: 300ms linear;
+        transition: 300ms linear;
+    }
+    .rotate0 {
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+        
+        -webkit-transform-origin: 50% 50%;
+        -moz-transform-origin: 50% 50%;
+        -ms-transform-origin: 50% 50%;
+        -o-transform-origin: 50% 50%;
+        transform-origin: 50% 50%;
+
+        -webkit-transition: 300ms linear;
+        -moz-transition: 300ms linear;
+        -o-transition: 300ms linear;
+        transition: 300ms linear;
     }
 	.rotate90 {
-        transform: rotate(90deg);
         -webkit-transform: rotate(90deg);
+        -moz-transform: rotate(90deg);
         -ms-transform: rotate(90deg);
+        -o-transform: rotate(90deg);
+        transform: rotate(90deg);
+        
+        -webkit-transform-origin: 50% 50%;
+        -moz-transform-origin: 50% 50%;
+        -ms-transform-origin: 50% 50%;
+        -o-transform-origin: 50% 50%;
+        transform-origin: 50% 50%;
+
+        -webkit-transition: 300ms linear;
+        -moz-transition: 300ms linear;
+        -o-transition: 300ms linear;
+        transition: 300ms linear;
     }
     .rotate180 {
-        transform: rotate(180deg);
         -webkit-transform: rotate(180deg);
+        -moz-transform: rotate(180deg);
         -ms-transform: rotate(180deg);
+        -o-transform: rotate(180deg);
+        transform: rotate(180deg);
+
+        -webkit-transform-origin: 50% 50%;
+        -moz-transform-origin: 50% 50%;
+        -ms-transform-origin: 50% 50%;
+        -o-transform-origin: 50% 50%;
+        transform-origin: 50% 50%;
+
+        -webkit-transition: 300ms linear;
+        -moz-transition: 300ms linear;
+        -o-transition: 300ms linear;
+        transition: 300ms linear;
     }
     .rotate270 {
-        transform: rotate(270deg);
         -webkit-transform: rotate(270deg);
+        -moz-transform: rotate(270deg);
         -ms-transform: rotate(270deg);
+        -o-transform: rotate(270deg);
+        transform: rotate(270deg);
+
+        -webkit-transform-origin: 50% 50%;
+        -moz-transform-origin: 50% 50%;
+        -ms-transform-origin: 50% 50%;
+        -o-transform-origin: 50% 50%;
+        transform-origin: 50% 50%;
+
+        -webkit-transition: 300ms linear;
+        -moz-transition: 300ms linear;
+        -o-transition: 300ms linear;
+        transition: 300ms linear;
+    }
+    .rotate360 {
+        -webkit-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+
+        -webkit-transform-origin: 50% 50%;
+        -moz-transform-origin: 50% 50%;
+        -ms-transform-origin: 50% 50%;
+        -o-transform-origin: 50% 50%;
+        transform-origin: 50% 50%;
+
+        -webkit-transition: 300ms linear;
+        -moz-transition: 300ms linear;
+        -o-transition: 300ms linear;
+        transition: 300ms linear;
     }
 	.map-table {
 		width: 100%;
