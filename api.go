@@ -73,7 +73,7 @@ func HttpNewGame(w http.ResponseWriter, r *http.Request) {
 		response = JsonError{Error: "missing userId"}
 		jsonResponse, err = json.Marshal(response)
 		if err != nil {
-			ERROR.Println("socket.io->NewUser: json.Marshal error: ", err)
+			ERROR.Println("socket.io->NewGame: json.Marshal error: ", err)
 		}
 	} else {
 		redisDB := RedisPool.Get()
@@ -92,42 +92,50 @@ func HttpNewGame(w http.ResponseWriter, r *http.Request) {
 				player = element
 			}
 		}
+		if player.UserId == "" {
+			response = JsonError{Error: "unknown userId"}
+			jsonResponse, err = json.Marshal(response)
+			if err != nil {
+				ERROR.Println("socket.io->NewGame: json.Marshal error: ", err)
+			}
+		} else {
 
-		// create new game
-		response = Game{
-			Leader:  userId,
-			SpaceIp: spaceIp,
-			GameId:  uuid.New(),
-			Player: []Player{
-				player,
-			},
-			Level: Level{
-				Number:     1,
-				CoinsCount: 0,
-			},
-		}
-		space.Games = append(space.Games, response.(Game))
+			// create new game
+			response = Game{
+				Leader:  userId,
+				SpaceIp: spaceIp,
+				GameId:  uuid.New(),
+				Player: []Player{
+					player,
+				},
+				Level: Level{
+					Number:     1,
+					CoinsCount: 0,
+				},
+			}
+			space.Games = append(space.Games, response.(Game))
 
-		// prepare response and write it to the database
+			// prepare response and write it to the database
 
-		// first the space
-		jsonSpace, err = json.Marshal(space)
-		if err != nil {
-			ERROR.Println("http-api->NewGame: json.Marshal error: ", err)
-		}
-		_, err = redisDB.Do("SET", spaceIp, jsonSpace)
-		if err != nil {
-			ERROR.Println("http-api->NewGame: RedisDB SET error: ", err)
-		}
+			// first the space
+			jsonSpace, err = json.Marshal(space)
+			if err != nil {
+				ERROR.Println("http-api->NewGame: json.Marshal error: ", err)
+			}
+			_, err = redisDB.Do("SET", spaceIp, jsonSpace)
+			if err != nil {
+				ERROR.Println("http-api->NewGame: RedisDB SET error: ", err)
+			}
 
-		// than the game
-		jsonResponse, err = json.Marshal(response)
-		if err != nil {
-			ERROR.Println("http-api->NewGame: json.Marshal error: ", err)
-		}
-		_, err = redisDB.Do("SET", response.(Game).GameId, jsonResponse)
-		if err != nil {
-			ERROR.Println("http-api->NewGame: RedisDB SET error: ", err)
+			// than the game
+			jsonResponse, err = json.Marshal(response)
+			if err != nil {
+				ERROR.Println("http-api->NewGame: json.Marshal error: ", err)
+			}
+			_, err = redisDB.Do("SET", response.(Game).GameId, jsonResponse)
+			if err != nil {
+				ERROR.Println("http-api->NewGame: RedisDB SET error: ", err)
+			}
 		}
 	}
 
