@@ -59,6 +59,7 @@ func HttpNewGame(w http.ResponseWriter, r *http.Request) {
 	var response interface{}
 	var jsonResponse []byte
 	var jsonSpace []byte
+	var userHasGame bool = false
 
 	err := r.ParseForm()
 	if err != nil {
@@ -86,14 +87,30 @@ func HttpNewGame(w http.ResponseWriter, r *http.Request) {
 			ERROR.Println("http-api->NewGame: json.Unmarshal error: ", err)
 		}
 
+		// get the player for userId
 		var player Player
 		for _, element := range space.Space {
 			if element.UserId == userId {
 				player = element
 			}
 		}
+
+		for _, element := range space.Games {
+			if element.Leader == userId {
+				userHasGame = true
+			}
+		}
+
 		if player.UserId == "" {
+			// unknown user id
 			response = JsonError{Error: "unknown userId"}
+			jsonResponse, err = json.Marshal(response)
+			if err != nil {
+				ERROR.Println("socket.io->NewGame: json.Marshal error: ", err)
+			}
+		} else if userHasGame {
+			// user has allready started a game
+			response = JsonError{Error: "userId has allready started a game"}
 			jsonResponse, err = json.Marshal(response)
 			if err != nil {
 				ERROR.Println("socket.io->NewGame: json.Marshal error: ", err)
