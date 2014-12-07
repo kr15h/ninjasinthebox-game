@@ -105,7 +105,7 @@ func main() {
 	// http API
 	router := pat.New()
 
-	router.Get("/getUser", HttpGetUser)
+	router.Get("/getSpace", HttpGetSpace)
 	router.Get("/newUser", HttpNewUser)
 	router.Get("/newGame", HttpNewGame)
 	// http static dir

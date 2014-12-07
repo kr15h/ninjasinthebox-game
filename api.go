@@ -277,13 +277,13 @@ func HttpNewUser(w http.ResponseWriter, r *http.Request) {
 	w.Write(jsonResponse)
 }
 
-func HttpGetUser(w http.ResponseWriter, r *http.Request) {
+func HttpGetSpace(w http.ResponseWriter, r *http.Request) {
 
 	var response interface{}
 	var jsonResponse []byte
 
 	spaceIp := strings.Split(r.RemoteAddr, ":")[0]
-	helpers.TRACE.Println("http-api->GetUser: IP", spaceIp)
+	helpers.TRACE.Println("http-api->GetSpace: IP", spaceIp)
 
 	redisDB := RedisPool.Get()
 	defer redisDB.Close()
@@ -294,17 +294,17 @@ func HttpGetUser(w http.ResponseWriter, r *http.Request) {
 		response = JsonError{Error: "no space found, use /newUser?userName=youDude"}
 		jsonResponse, err = json.Marshal(response)
 		if err != nil {
-			ERROR.Println("socket.io->GetUser json.Marshal error: ", err)
+			ERROR.Println("socket.io->GetSpace json.Marshal error: ", err)
 		}
 	} else {
 		// return the space with all the users
 		jsonResponse = response.([]byte)
 		if err != nil {
-			ERROR.Println("socket.io->GetUser json.Marshal error: ", err)
+			ERROR.Println("socket.io->GetSpace json.Marshal error: ", err)
 		}
 	}
 
-	TRACE.Println("http-api->GetUser Answer", response)
+	TRACE.Println("http-api->GetSpace Answer", response)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(jsonResponse)
 }
