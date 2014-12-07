@@ -115,6 +115,7 @@ func HttpLogon(w http.ResponseWriter, r *http.Request) {
 
 	var space Space
 	var known bool = false
+	var jsonSpace []byte
 
 	err := r.ParseForm()
 	if err != nil {
@@ -128,7 +129,7 @@ func HttpLogon(w http.ResponseWriter, r *http.Request) {
 	redisDB := RedisPool.Get()
 	defer redisDB.Close()
 
-	jsonSpace, err := redis.Bytes(redisDB.Do("GET", spaceIp))
+	jsonSpace, err = redis.Bytes(redisDB.Do("GET", spaceIp))
 	if err != nil {
 		// so the user is in a new space we add him
 		known = true
