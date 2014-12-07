@@ -79,12 +79,12 @@ func getCoins(file string) ([]PosVector, error) {
 	}
 
 	pv := []PosVector{}
-	for cx, x := range rawCSVdata {
-		for cy, y := range x {
-			if y == "$" {
+	for cy, y := range rawCSVdata {
+		for cx, x := range y {
+			if x == "$" {
 				vec := PosVector{
-					X: cx,
-					Y: cy,
+					X: cx - 1,
+					Y: cy - 1,
 				}
 				pv = append(pv, vec)
 			}
