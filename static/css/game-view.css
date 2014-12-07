@@ -249,3 +249,43 @@ img {
     float: right;
     padding-right: 50px;
 }
+
+#game-view .modal .row {
+    margin-bottom: 10px;
+}
+
+#game-view .modal .boss p{
+    text-align: left;
+}
+
+#game-view .modal .ninja p{
+    text-align: right;
+}
+
+#game-view .modal .bribe-price {
+    text-align: left;
+}
+
+#game-view .modal .ninja-coins {
+    text-align: right;
+}
+
+#game-view .modal-footer {
+    text-align: center;
+}
+
+#game-view .btn-back {
+    background-image: linear-gradient(180deg, #ff0000 0%, #880000 100%);
+}
+
+#game-view .btn-back:hover {
+    background-image: linear-gradient(0deg, #ff0000 0%, #880000 100%);
+}
+
+#game-view .btn-pay {
+    background-image: linear-gradient(180deg, #55ff33 0%, #338833 100%);
+}
+
+#game-view .btn-pay:hover {
+    background-image: linear-gradient(0deg, #55ff33 0%, #338833 100%);
+}
