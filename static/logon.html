@@ -12,12 +12,12 @@
     </form>
 
     <script>
-      var socket = io('/', {
-      'timeout': 10000
- });
+      var socket = io();
 
       // on connection to server, ask for user's name with an anonymous callback
       socket.on('connect', function(){
+      console.log(socket.handshake.address);
+      console.log(socket.client.conn.remoteAddress);
       // call the server-side function 'adduser' and send one parameter (value of prompt)
       socket.emit('logon', "10.0.0.12" + " " + "10.987.23.12");
       
