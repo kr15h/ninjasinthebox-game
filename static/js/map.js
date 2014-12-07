@@ -204,11 +204,11 @@
   Map.prototype.moveObject = function(object) {
     /* see where the player needs to be moved */
     var x = object.x, y = object.y;
-    if (object.rotation === 0) {
+    if (object.rotation === 0 || object.rotation === 360 || object.rotation === -360) {
         y += 1;
-    } else if (object.rotation === 90) {
+    } else if (object.rotation === 90 || object.rotation === -270) {
         x -= 1;
-    } else if (object.rotation === 180) {
+    } else if (object.rotation === 180 || object.rotation === -180) {
         y -= 1;
     } else {
         x += 1;
@@ -252,8 +252,8 @@
         element.append(object.element);
         setTimeout(function() {
             object.element.className = classNames + " ninja-visible";
-        }, 500);
-    }, 500);
+        }, 1);
+    }, 300);
   };
 
   // Object class
@@ -291,20 +291,14 @@
   };
 
   Object.prototype.turn = function(dir) {
-    /* when player is turning left */
-    if (dir === "left") {
-        /* anti-clockwise rotation */
-        this.rotation -= 90;
-        /* when anti-clockwise rotation is completed, go to 270 */
-        if (this.rotation < 0) this.rotation = 270;
-    } else {
-        /* clockwise rotation */
-        this.rotation += 90;
-        /* when clockwise rotation is completed, go to 0 */
-        if (this.rotation > 270) this.rotation = 0;
-    }
+    /* anti-clockwise rotation */
+    if (dir === "left") this.rotation -= 90;
+    /* clockwise rotation */
+    else this.rotation += 90;
     /* add the rotation class */
     this.element.className = "rotate"+this.rotation;
+    /* when rotation is completed, go to 0 */
+    if (Math.abs(this.rotation) == 360) this.rotation = 0;
   };
 
   // This test
@@ -356,7 +350,7 @@
     map.emitCoin = emitCoinCollected;
     Blockly.loadAudio_([Blockly.assetUrl("media/wall.ogg")], "wall");
     Blockly.loadAudio_([Blockly.assetUrl("media/Boss.wav")], "boss");
-     Blockly.loadAudio_([Blockly.assetUrl("media/escape.ogg")], "escape");
+    Blockly.loadAudio_([Blockly.assetUrl("media/escape.ogg")], "escape");
     Blockly.loadAudio_([Blockly.assetUrl("media/sswooshing.ogg")], "move");
     Blockly.loadAudio_([Blockly.assetUrl("media/coinpickup.ogg")], "coin");
     function move(code) {
@@ -374,29 +368,23 @@
         map.moveObject(player);
     }
     function turnLeft() {
+        Blockly.playAudio("move");
         player.turn('left');
     }
     function turnRight() {
+        Blockly.playAudio("move");
         player.turn('right');
     }
-    function showImage(imgSrc, time) {
-         $("#blockly-container").append('<img src="'+imgSrc+'">');
-         setTimeout(function(){ $("#blockly-container img").remove() }, time);
-    }
     function emitWallAhead() {
-       showImage("http://media.giphy.com/media/ZRr16htlE5tte/giphy.gif", 1000);
        Blockly.playAudio("wall");
     }
     function emitBossReached() {
-        showImage("http://spadow.files.wordpress.com/2010/09/8840000-stand.gif", 3000);
         Blockly.playAudio("boss");
     }
     function emitCoinCollected() {
-        showImage("http://i258.photobucket.com/albums/hh253/jimifunguzz/gangnam%20style/gangnam-style-explosion.gif", 3000);
         Blockly.playAudio("coin");
     }
     function emitEscapeMaze() {
-        showImage("http://cdn.rsvlts.com/wp-content/uploads/2013/03/some_seriously_bad_timing_fails_17.gif", 3000);
         Blockly.playAudio("escape");
     }
     $('#runButton').on('click', function() {
