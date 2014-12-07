@@ -72,7 +72,8 @@
 
 			// Start game in room-master
 			this.container.find('.room-master .btn-start-game').click(function(){
-				alert('Ninja, start game!');
+                that.container.find('#main-view-modal').modal('hide')
+                ROOT.startGame();
 			});
 
 			// Leave room-client

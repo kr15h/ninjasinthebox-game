@@ -10,7 +10,6 @@ $(document).ready(function() {
 
 	// Init game view
 	var gameView = new ROOT.GameView();
-	gameView.pass(Blockly);
 
 	// Init game over view
 	var gameOverView = new ROOT.GameOverView();
@@ -22,7 +21,13 @@ $(document).ready(function() {
 
 	$(window).resize(function(){
 		mainView.onWindowResize();
+        gameView.onWindowResize();
 		gameOverView.onWindowResize();
 	});
+
+    ROOT.startGame = function () {
+        mainView.hide();
+        gameView.setup($('#game-view').first(), Blockly);
+    };
 
 });
