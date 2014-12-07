@@ -13,7 +13,7 @@
       this.container.hide();
 
       var ninjaMarginLeftPx = String(this.ninjaMarginLeft) + 'px';
-      this.container.find('.ninja img').css('margin-left', ninjaMarginLeftPx);
+      this.container.find('.ninja>img').css('margin-left', ninjaMarginLeftPx);
 
       var that = this;
       preloadimages(['media/main-view-ninja.svg'], function(images) {
@@ -24,6 +24,19 @@
   			keyboard: false,
   			backdrop: 'static',
   			show: false
+     	});
+
+     	// Hide all main view modal parts except first one
+     	this.container.find('.mission').hide();
+
+     	this.container.find('.story button').click(function(){
+     		that.container.find('.story').hide();
+     		that.container.find('.mission').show();
+     	});
+
+     	this.container.find('.mission .btn-back').click(function(){
+     		that.container.find('.mission').hide();
+     		that.container.find('.story').show();
      	});
 
     } else {

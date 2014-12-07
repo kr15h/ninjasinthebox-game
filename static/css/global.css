@@ -45,4 +45,14 @@ h4 {
 	font-size: 18px;
 	color: #001231;
 	line-height: 21px;
+	text-align: center;
+}
+
+.row p {
+	text-align: left;
+}
+
+.row img {
+	width: 100%;
+	height: auto;
 }
