@@ -125,7 +125,7 @@ func main() {
 		so.On("logon", Logon)
 		so.On("joingame", func() {
 			TRACE.Println("socket.io: joingame")
-			r = so.Emit("joined")
+			r := so.Emit("joined")
 			TRACE.Println(r)
 		})
 
