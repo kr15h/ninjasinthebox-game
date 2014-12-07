@@ -106,6 +106,8 @@ func main() {
 	router := pat.New()
 
 	router.Get("/getSpace", HttpGetSpace)
+	router.Get("/getGame", HttpGetGame)
+
 	router.Get("/newUser", HttpNewUser)
 	router.Get("/newGame", HttpNewGame)
 	router.Get("/joinGame", HttpJoinGame)
