@@ -59,20 +59,17 @@
 					//alert(data.Channel);
 					that.container.find('.mission').hide();
 					that.container.find('.team-up').show();
+                            var string = "";
 							var games = data.Games;
 							for(var i = 0; i < games.length; i++){
-								var x = $(".team-up-body").append(
-									"<div class='game' id='" + games[i].GameId + "'><label>Game" + i + "</label></div>"
-								);
-								
+								string += "<li class='game' id='" + games[i].GameId + "'>Game " + (i+1) + "</li><ul class='room-user-list'>";
 								for(var j = 0; j < games[i].Player.length; j++){
-									$(x).append(
-										"<div class='player' id='" + games[i].Player[j].UserId + "'>" + games[i].Player[j].UserName + "</div>"
-									);
+									string += "<li id='" + games[i].Player[j].UserId + "'>" + games[i].Player[j].UserName + "</li>";
 								}
+								string += '</ul><button id="btn-join-room-'+i+'" class="btn btn-primary btn-sm btn-join-room">Join</button>';
 							}
+							$("#available-games ul").append(string);
 				});
-					});
 				}
 			});
 
