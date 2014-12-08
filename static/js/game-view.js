@@ -286,7 +286,8 @@
   Object.prototype.createHtml = function() {
     /* somewhere else would be better :) */
     if (this.type === "player") {
-        this.imgSrc = 'media/ninja.png';
+        this.imgSrc = ROOT.ninjaImages[0];
+        ROOT.ninjaImages.splice(0, 1);
     } else if (this.type === "wall") {
         this.imgSrc = 'media/Wall.png';
     } else if (this.type === "coin") {
@@ -331,6 +332,13 @@
 
     GameView.prototype.setup = function(container, blockly) {
         
+        ROOT.ninjaImages = [
+            'media/ninja-white.png',
+            'media/ninja-yellow.png',
+            'media/ninja-red.png',
+            'media/ninja-blue.png'
+        ];
+
         var player = null;
         var map = new Map();
         this.map = map;
