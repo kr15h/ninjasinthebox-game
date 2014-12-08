@@ -55,10 +55,10 @@
 					});
 				}
 				else{
-				$.get("http://morriswinkler.koding.io/getSpace", function(data){
-					//alert(data.Channel);
-					that.container.find('.mission').hide();
-					that.container.find('.team-up').show();
+					$.get("http://morriswinkler.koding.io/getSpace", function(data){
+						//alert(data.Channel);
+						that.container.find('.mission').hide();
+						that.container.find('.team-up').show(function(){
 							var games = data.Games;
 							for(var i = 0; i < games.length; i++){
 								var x = $(".team-up-body").append(
@@ -71,7 +71,7 @@
 									);
 								}
 							}
-				});
+						});
 					});
 				}
 			});
