@@ -44,11 +44,36 @@
 
 			this.container.find('.mission .btn-forward').click(function(){
 				//alert();
-				$.get("http://morriswinkler.koding.io/getSpace", function(data){
-					//alert(data.Channel);
-					that.container.find('.mission').hide();
-					that.container.find('.team-up').show();
-				});
+				if(ROOT.user_id === "undefined"){
+					$.ajax({
+						url: "http://morriswinkler.koding.io/newUser", 
+						data: { userName: prompt("Please insert your username") },
+						success: function (data){
+							ROOT.user_id = data.Space[0].UserId;
+							ROOT.user_name = data.Space[0].UserName;
+						}
+					});
+				}
+				else{
+					$.get("http://morriswinkler.koding.io/getSpace", function(data){
+						//alert(data.Channel);
+						that.container.find('.mission').hide();
+						that.container.find('.team-up').show(function(){
+							var games = data.Games;
+							for(var i = 0; i < games.length; i++){
+								var x = $(".team-up-body").append(
+									"<div class='game' id='" + games[i].GameId + "'><label>Game" + i + "</label></div>"
+								);
+								
+								for(var j = 0; j < games[i].Player.length; j++){
+									$(x).append(
+										"<div class='player' id='" + games[i].Player[j].UserId + "'>" + games[i].Player[j].UserName + "</div>"
+									);
+								}
+							}
+						});
+					});
+				}
 			});
 
 			this.container.find('.team-up .btn-forward').click(function(){
