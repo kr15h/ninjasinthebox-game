@@ -454,6 +454,7 @@ func HttpJoinGame(w http.ResponseWriter, r *http.Request) {
 	var jsonGame []byte
 	var jsonSpace []byte
 	var userIsInGame bool = false
+	var gameIsFull bool = false
 
 	err := r.ParseForm()
 	if err != nil {
@@ -488,14 +489,23 @@ func HttpJoinGame(w http.ResponseWriter, r *http.Request) {
 			ERROR.Println("http-api->JoinGame: json.Unmarshal error: ", err)
 		}
 
-		for _, element := range game.Player {
+		for index, element := range game.Player {
 			if element.UserId == userId {
 				userIsInGame = true
+			}
+			if index >= 3 {
+				gameIsFull = true
 			}
 		}
 
 		if userIsInGame {
 			response = JsonError{Error: "userId is allready registerd for this game"}
+			jsonResponse, err = json.Marshal(response)
+			if err != nil {
+				ERROR.Println("socket.io->JoinGame: json.Marshal error: ", err)
+			}
+		} else if gameIsFull {
+			response = JsonError{Error: "max 4 player allowed"}
 			jsonResponse, err = json.Marshal(response)
 			if err != nil {
 				ERROR.Println("socket.io->JoinGame: json.Marshal error: ", err)
