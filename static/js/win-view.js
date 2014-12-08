@@ -22,7 +22,7 @@
 
 			// Credits button
 			this.container.find('.btn-credits').click(function(){
-				alert('credits');
+				ROOT.showCredits();
 			});
 
 			// Play again button

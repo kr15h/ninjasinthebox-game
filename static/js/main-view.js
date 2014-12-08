@@ -93,6 +93,7 @@
                             }
 							ROOT.user_id = data.Space[0].UserId;
 							ROOT.user_name = data.Space[0].UserName;
+							load(that.container);
 						}
 					});
 				}

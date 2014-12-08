@@ -1,0 +1,54 @@
+#credits-view {
+	padding-top: 10%;
+	background: #000000;
+	color: #ffffff;
+}
+
+#credits-view ul,
+#credits-view li {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	width: 100%;
+	text-align: center;
+}
+
+#credits-view li {
+	margin-bottom: 15px;
+}
+
+#credits-view h4 {
+	color: #ffffff;
+	border-bottom: 1px solid #222222;
+	margin: 0 10% 20px 10%;
+	padding: 0 0 15px 0;
+	line-height: 1;
+}
+
+#credits-view .row {
+	margin: 10px 10%;
+}
+
+#credits-view h5 {
+	color: #ffffff;
+	font-family: 'changchangregular';
+	font-size: 22px;
+	margin: 0;
+	margin-bottom: 5px;
+	text-align: center;
+	line-height: 1;
+}
+
+#credits-view p {
+	color: #ffffff;
+	font-size: 12px;
+	line-height: 1;
+	text-align: center;
+}
+
+#credits-view .btn-container {
+	border-top: 1px solid #222222;
+	text-align: center;
+	padding-top: 15px;
+	margin: 0 10%
+}
