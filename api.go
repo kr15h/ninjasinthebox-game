@@ -12,6 +12,7 @@ import (
 	"path"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type JsonError struct {
@@ -60,6 +61,18 @@ type Game struct {
 	Player   []Player
 	Level    []Level
 	LevelNow int
+}
+
+func doTickEvery(sec int) {
+	ticker := time.NewTicker(time.Second * 1)
+	go func() {
+		for t := range ticker.C {
+			TRACE.Println("http-api->Timer tick", t)
+		}
+	}()
+	time.Sleep(time.Duration(sec) * time.Second)
+	ticker.Stop()
+	TRACE.Println("http-api->Timer stopped")
 }
 
 func getCoins(file string) ([]PosVector, error) {
@@ -359,6 +372,8 @@ func HttpStartGame(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				ERROR.Println("http-api->StartGame: RedisDB SET error: ", err)
 			}
+			// start the timer
+			doTickEvery(30)
 		}
 	}
 
