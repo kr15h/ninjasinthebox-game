@@ -63,13 +63,53 @@ type Game struct {
 	LevelNow int
 }
 
-func doTickEvery(sec int) {
+func doTickEvery(sec int16, gameId string) {
+
+	var game Game
+	var jsonGame []byte
+	var jsonResponse []byte
+
+	redisDB := RedisPool.Get()
+	defer redisDB.Close()
+
+	// get the game we have to modify
+	jsonGame, err := redis.Bytes(redisDB.Do("GET", gameId))
+	err = json.Unmarshal(jsonGame, &game)
+	if err != nil {
+		ERROR.Println("http-api->StartBribe: json.Unmarshal error: ", err)
+	}
+
 	ticker := time.NewTicker(time.Second * 1)
+
+	// this is necessary to find the []Level that is game.LevelNow
+	// slices are unordered so we have to force the index
+
+	var levelNumber int
+	for levelindex, level := range game.Level {
+		if level.Number == game.LevelNow {
+			levelNumber = levelindex
+		}
+	}
+
 	go func() {
+		counter := sec
 		for t := range ticker.C {
 			TRACE.Println("http-api->Timer tick", t)
+			game.Level[levelNumber].Timeleft = counter
+			counter--
+
+			jsonResponse, err = json.Marshal(game)
+			if err != nil {
+				ERROR.Println("http-api->Ticker: json.Marshal error: ", err)
+			}
+			_, err = redisDB.Do("SET", gameId, jsonResponse)
+			if err != nil {
+				ERROR.Println("http-api->Ticker: RedisDB SET error: ", err)
+			}
+
 		}
 	}()
+
 	time.Sleep(time.Duration(sec) * time.Second)
 	ticker.Stop()
 	TRACE.Println("http-api->Timer stopped")
@@ -380,7 +420,7 @@ func HttpStartGame(w http.ResponseWriter, r *http.Request) {
 				ERROR.Println("http-api->StartGame: RedisDB SET error: ", err)
 			}
 			// start the timer
-			go doTickEvery(30)
+			go doTickEvery(30, gameId)
 		}
 	}
 
