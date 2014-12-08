@@ -360,6 +360,13 @@ func HttpStartGame(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				ERROR.Println("socket.io->StartGame: json.Marshal error: ", err)
 			}
+		} else if game.Running {
+			// game allready running
+			response = JsonError{Error: "game allready running"}
+			jsonResponse, err = json.Marshal(response)
+			if err != nil {
+				ERROR.Println("socket.io->StartGame: json.Marshal error: ", err)
+			}
 		} else {
 			// ok lets play marshall the game and write it to the database
 			game.Running = true
@@ -373,7 +380,7 @@ func HttpStartGame(w http.ResponseWriter, r *http.Request) {
 				ERROR.Println("http-api->StartGame: RedisDB SET error: ", err)
 			}
 			// start the timer
-			doTickEvery(30)
+			go doTickEvery(30)
 		}
 	}
 
