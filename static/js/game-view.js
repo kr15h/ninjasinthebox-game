@@ -102,6 +102,9 @@
     
     console.log(fileUrl);
 
+    this.container.empty();
+    this.container.append('Loading...');
+
     // Hack to make this accessible from within 
     // ajax success callback function
     var that = this; 
@@ -331,9 +334,9 @@
         var player = null;
         var map = new Map();
         this.map = map;
+        //$('#blockly-stuff').collapse('show');
         map.setup($('#map-container'));
-
-        // TODO: show loader
+        //$('#blockly-stuff').collapse('show');
 
         // Async map loading... Provide anonymous callback func
         map.loadMap('maps/Level_1.csv', function() {
