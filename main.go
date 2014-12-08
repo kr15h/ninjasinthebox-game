@@ -107,6 +107,7 @@ func main() {
 
 	router.Get("/getSpace", HttpGetSpace)
 	router.Get("/getGame", HttpGetGame)
+	router.Get("/getMap", HttpGetMap)
 
 	router.Get("/newUser", HttpNewUser)
 	router.Get("/newGame", HttpNewGame)

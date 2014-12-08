@@ -158,6 +158,21 @@ func vectorRemoveItem(v []PosVector, item int) []PosVector {
 	return s
 }
 
+func HttpGetMap(w http.ResponseWriter, r *http.Request) {
+
+	err := r.ParseForm()
+	if err != nil {
+		ERROR.Println("http-api->StartBribe: err", err)
+	}
+
+	mapUrl := r.FormValue("mapUrl")
+
+	fp := path.Join(cfg.Webserver.Dir, mapUrl)
+
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	http.ServeFile(w, r, fp)
+}
+
 func HttpStartBribe(w http.ResponseWriter, r *http.Request) {
 
 	var game Game
