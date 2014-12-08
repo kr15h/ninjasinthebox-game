@@ -259,7 +259,7 @@
     object.x = x;
     object.y = y;
     $.get("http://morriswinkler.koding.io/userMoved?gameId="+ROOT.game_id+"&userId="+ROOT.user_id+"&x="+x+"&y="+y, function(data){
-        alert(JSON.stringify(data));
+        //alert(JSON.stringify(data));
     });
     this.objects[x][y] = object;
     var element = $('td').eq((this.cols * y) + x);
@@ -337,7 +337,7 @@
         //$('#blockly-stuff').collapse('show');
         map.setup($('#map-container'));
         
-         var team = [];
+         var team = {};
          var pos = [{x: 19, y: 0}, {x: 0, y: 19}, {x: 19, y: 19}];
         $.get("http://morriswinkler.koding.io/getGame?gameId="+ROOT.game_id, function(data){
             alert(JSON.stringify(data));
@@ -371,7 +371,7 @@
                     var p = new Object("player");
                     p.createHtml();
                     map.addObject(p, pos[i].x, pos[i].y);
-                    team.push({data.Player[i].UserId: p});
+                    team[data.Player[i].UserId] = p;
                 }
                 alert(JSON.stringify(team));
             });
@@ -380,17 +380,17 @@
             $.get("http://morriswinkler.koding.io/getGame?gameId="+ROOT.game_id, function(data){
                 //alert(JSON.stringify(data));
                 var totalCoins = 0;
-                alert(JSON.stringify(team));
+                //alert(JSON.stringify(team));
                 for (var i = 0; i < data.Player.length; i++) {
+                    totalCoins += data.Player[i].Coins;
                     if (data.Player[i].UserName === ROOT.user_name) continue;
                     var element = $('td').eq((this.cols * data.Player[i].Pos.Y) + data.Player[i].Pos.X);
                     element.append(team[data.Player[i].UserId].element);
-                    totalCoins += data.Player[i].Coins;
                 }
                 $(".hud-time .val").empty();
                 $(".hud-coins .val").empty();
                 $(".hud-coins .val").append(totalCoins);
-                $(".hud-time .val").append(data.Timeleft);
+                $(".hud-time .val").append(data.Level[0].Timeleft);
                 if (data.Bribeing) alert("bribeing boss!!!");
                 if (data.Won) alert("won the game yayahh!");
             });
