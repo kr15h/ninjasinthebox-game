@@ -10,6 +10,7 @@ $(document).ready(function() {
 
 	// Init game view
 	var gameView = new ROOT.GameView();
+	//$('#bribe-modal').modal('show');
 
 	// Init game over view
 	var gameOverView = new ROOT.GameOverView();

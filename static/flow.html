@@ -58,7 +58,7 @@
 								<h4 class="modal-title" id="myModalLabel">Story</h4>
 							</div>
 							<div class="modal-body">
-								<p>Darkness and corruption are attemting to take control over the world. As it is not possible for them to do it alone, human brain is needed.</p>
+								<p>Darkness and corruption are attempting to take control over the world. As it is not possible for them to do it alone, human brain is needed.</p>
 								<p>Evil communist neurons have occupied the brain of a leader of the biggest country of the world. They are attempting to take control over all the important regions of the brain.</p>
 								<p>Fortunately there are Ninjas in the Box! They are here to bribe the evil to do good. First - they have to get enough money to be able to do so…</p>
 							</div>
@@ -260,9 +260,23 @@
 
             </div><!-- /blockly-stuff -->
 
-            <button type="button" class="collapse-btn btn-primary btn-lg" data-toggle="collapse" data-target="#blockly-stuff" aria-expanded="true" aria-controls="blockly-stuff">
-                <span class="blockly-icon-down glyphicon glyphicon-chevron-down hidden"></span>
-                <span class="blockly-icon-up glyphicon glyphicon-chevron-up"></span>
+            <!-- Blockly collapse button -->
+            <button type="button" class="btn collapse-btn btn-primary btn-lg" data-toggle="collapse" data-target="#blockly-stuff" aria-expanded="true" aria-controls="blockly-stuff">
+                
+                <!-- Simple HUD build into the Blockly collapse button -->
+                <div class="row">
+                	<div class="col-xs-4 hud hud-coins">
+                		<span class="lbl">Coins:</span> <span class="val">2</span>
+                	</div>
+                	<div class="col-xs-4">
+                		<span class="blockly-icon-down glyphicon glyphicon-chevron-down hidden"></span>
+                		<span class="blockly-icon-up glyphicon glyphicon-chevron-up"></span>
+                	</div>
+               		<div class="col-xs-4 hud hud-time">
+               			<span class="lbl">Time:</span> <span class="val">03:34</span> 
+               		</div>
+                </div><!-- /row -->
+
             </button><!-- /collapse-btn -->
 
         </div><!-- /blockly-container -->
@@ -273,6 +287,76 @@
 			</div><!-- /base-content of game view -->
 
 			<div class="modals">
+
+				<!-- Modal -->
+				<div class="modal fade" tabindex="-1" aria-hidden="true" id="bribe-modal">
+					<div class="modal-dialog">
+
+						<!-- Bribe -->
+						<div class="modal-content bribe">
+							<div class="modal-header">
+								<h4 class="modal-title">Moment of Truth</h4>
+							</div>
+							<div class="modal-body">
+
+								<div class="row boss">
+									<div class="col-xs-3">
+										<img src="media/boss-avatar.jpg">
+									</div>
+									<div class="col-xs-9">
+										<p>Haha you stupid ninjas! What are you doing here?</p>
+									</div>
+								</div><!-- /row -->
+
+								<div class="row ninja">
+									<div class="col-xs-9">
+										<p>We are here to stop you from doing things you shouldn’t. Give up you communist bastard!</p>
+									</div>
+									<div class="col-xs-3">
+										<img src="media/ninja.png">
+									</div>
+								</div><!-- /row -->
+
+								<div class="row boss">
+									<div class="col-xs-3">
+										<img src="media/boss-avatar.jpg">
+									</div>
+									<div class="col-xs-9">
+										<p>Haha - not so fast, ninjas! I know a way how to make this good for both of us...</p>
+									</div>
+								</div><!-- /row -->
+
+								<div class="row ninja">
+									<div class="col-xs-9">
+										<p>Your karma is not going to get better after this...</p>
+									</div>
+									<div class="col-xs-3">
+										<img src="media/ninja.png">
+									</div>
+								</div><!-- /row -->
+
+							</div>
+							<div class="modal-footer">
+								<div class="row">
+									<div class="col-xs-6 bribe-price">
+										<span class="bribe-price-val">10</span>
+										<span class="bribe-price-label">Bribe price</span>
+									</div>
+									<div class="col-xs-6 ninja-coins">
+										<span class="ninja-coins-label">Ninja coins</span>
+										<span class="ninja-coins-val">12</span>
+									</div>
+								</div><!-- /row footer -->
+
+								<button type="button" class="btn btn-primary btn-lg btn-back">Go Back</button>
+								<button type="button" class="btn btn-primary btn-lg btn-pay">Pay</button>
+							</div>
+						</div><!-- /modal-content bribe -->
+
+					</div>
+				</div>
+
+
 				<div id="bribe-modal">
 					
 				</div><!-- /bribe-modal -->

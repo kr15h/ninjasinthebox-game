@@ -462,6 +462,24 @@
             $('.blockly-icon-down').removeClass('hidden');
             $('.blockly-icon-up').addClass('hidden');
         });
+
+        // Pay button
+        this.container.find('.btn-pay').click(function(){
+            alert('Pay the bribe');
+        });
+
+        // Back button
+        this.container.find('.btn-back').click(function() {
+            alert('Back');
+        });
+
+        this.container.find('#bribe-modal').modal({
+            keyboard: false,
+            backdrop: 'static',
+            show: false
+        });
+
+        //this.container.find('#bribe-modal').modal('show');
     };
 
     GameView.prototype.show = function() {
