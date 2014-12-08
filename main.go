@@ -78,12 +78,12 @@ func init() {
 	}
 
 	// check if tmpir is absolute, if not make it
-	if !path.IsAbs(cfg.Tmp.Tmpdir) {
+	if !path.IsAbs(cfg.Tmp.TmpDir) {
 		basedir, err := os.Getwd()
 		if err != nil {
 			ERROR.Printf("can't resolve basename: %s", err)
 		} else {
-			cfg.Tmp.Tmpdir = path.Join(basedir, cfg.Tmp.Tmpdir)
+			cfg.Tmp.TmpDir = path.Join(basedir, cfg.Tmp.TmpDir)
 		}
 	}
 
