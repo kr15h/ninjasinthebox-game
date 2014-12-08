@@ -804,13 +804,13 @@ func HttpGetSpace(w http.ResponseWriter, r *http.Request) {
 			ERROR.Println("http-api->GetSpace: json.Unmarshal error: ", err)
 		}
 
-		space.Games = space.Games[0:0]
 		for index, games := range space.Games {
 			jsonGame, err = redis.Bytes(redisDB.Do("GET", games.GameId))
 			err = json.Unmarshal(jsonGame, &game)
 			if err != nil {
 				ERROR.Println("http-api->GetSpace: json.Unmarshal error: ", err)
 			}
+			space.Games[index] = Game{}
 			space.Games[index] = game
 		}
 
