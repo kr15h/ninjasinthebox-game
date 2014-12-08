@@ -108,6 +108,15 @@ func doTickEvery(sec int16, gameId string) {
 			}
 
 		}
+		game.Running = false
+		jsonResponse, err = json.Marshal(game)
+		if err != nil {
+			ERROR.Println("http-api->Ticker: json.Marshal error: ", err)
+		}
+		_, err = redisDB.Do("SET", gameId, jsonResponse)
+		if err != nil {
+			ERROR.Println("http-api->Ticker: RedisDB SET error: ", err)
+		}
 	}()
 
 	time.Sleep(time.Duration(sec) * time.Second)
