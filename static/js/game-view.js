@@ -242,7 +242,9 @@
             return;
         } else {
             this.emitBoss();
-            /* ?..? */
+
+            // Open bribe modal
+            $('#bribe-modal').modal('show');
         }
     }
     /* clear the previouse table cell and object matrix slot */
