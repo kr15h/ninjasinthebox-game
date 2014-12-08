@@ -346,7 +346,7 @@
         map.setup($('#map-container'));
         
          var team = {};
-         var pos = [{x: 19, y: 0}, {x: 19, y: 0}, {x: 0, y: 19}, {x: 19, y: 19}];
+         var pos = [{x: 0, y: 0}, {x: 19, y: 0}, {x: 0, y: 19}, {x: 19, y: 19}];
         $.get("http://morriswinkler.koding.io/getGame?gameId="+ROOT.game_id, function(data){
             //alert(JSON.stringify(data));
 
@@ -371,7 +371,7 @@
                 map.addObject(boss_br, 10, 10);
 
                 for (var i = 0; i < data.Player.length; i++) {
-                    if (data.Player[i].UserName === ROOT.user_name) {
+                    if (data.Player[i].UserId === ROOT.user_id) {
                         player = new Object("player");
                         player.createHtml();
                         map.addObject(player, pos[i].x, pos[i].y);
@@ -381,6 +381,9 @@
                         map.addObject(p, pos[i].x, pos[i].y);
                         team[data.Player[i].UserId] = p;
                     }
+                    $.get("http://morriswinkler.koding.io/userMoved?gameId="+ROOT.game_id+"&userId="+data.Player[i].UserId+"&x="+pos[i].x+"&y="+pos[i].y, function(data){
+                        //alert(JSON.stringify(data));
+                    });
                 }
                 //alert(JSON.stringify(team));
             });
@@ -392,7 +395,7 @@
                 //alert(JSON.stringify(team));
                 for (var i = 0; i < data.Player.length; i++) {
                     totalCoins += data.Player[i].Coins;
-                    if (data.Player[i].UserName === ROOT.user_name) continue;
+                    if (data.Player[i].UserId === ROOT.user_id) continue;
                     var element = $('td').eq((this.cols * data.Player[i].Pos.Y) + data.Player[i].Pos.X);
                     element.append(team[data.Player[i].UserId].element);
                 }
