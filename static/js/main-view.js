@@ -155,16 +155,17 @@
 
 			// Start game in room-master
 			this.container.find('.room-master .btn-start-game').click(function(){
-                that.container.find('#main-view-modal').modal('hide');
                 var timer = setInterval(function() {
                     $.get("http://morriswinkler.koding.io/getGame?gameId="+ROOT.game_id, function(data){
                         if (data.Leader === ROOT.user_id) {
                             $.get("http://morriswinkler.koding.io/startGame?gameId="+ROOT.game_id+"&userId="+ROOT.user_id, function(data){
                             });
                             clearInterval(timer);
+                            that.container.find('#main-view-modal').modal('hide');
                             ROOT.startGame();
                         } else if (data.Running) {
                             clearInterval(timer);
+                            that.container.find('#main-view-modal').modal('hide');
                             ROOT.startGame();
                         }
                     });
