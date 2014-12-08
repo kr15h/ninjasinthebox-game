@@ -26,6 +26,7 @@
 
 	GameOverView.prototype.show = function() {
 		this.container.show();
+		this.onWindowResize();
 	};
 
 	GameOverView.prototype.hide = function() {
