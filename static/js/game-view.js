@@ -477,6 +477,10 @@
             console.log('on show');
             $('.blockly-icon-up').removeClass('hidden');
             $('.blockly-icon-down').addClass('hidden');
+
+            setTimeout(function(){ 
+                Blockly.fireUiEvent(window,"resize"); 
+            }, 100);
         });
 
         $('#blockly-stuff').on('hide.bs.collapse', function () {
@@ -507,6 +511,8 @@
 
     GameView.prototype.show = function() {
         this.container.show();
+        this.onWindowResize();
+        Blockly.fireUiEvent(window,"resize");
     };
 
     GameView.prototype.hide = function() {

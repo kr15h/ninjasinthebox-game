@@ -67,7 +67,7 @@
                             }
                             $("#available-users ul").append(string);
                             string = "";
-							for(var i = 0; i < games.length; i++){
+							for(i = 0; i < games.length; i++){
 								string += "<li class='game' id='" + games[i].GameId + "'>Game " + (i+1) + "</li><ul class='room-user-list'>";
 								for(var j = 0; j < games[i].Player.length; j++){
 									string += "<li id='" + games[i].Player[j].UserId + "'>" + games[i].Player[j].UserName + "</li>";
@@ -104,7 +104,7 @@
 
 			// Start game in room-master
 			this.container.find('.room-master .btn-start-game').click(function(){
-                that.container.find('#main-view-modal').modal('hide')
+                that.container.find('#main-view-modal').modal('hide');
                 ROOT.startGame();
 			});
 
@@ -121,6 +121,7 @@
 
 	MainView.prototype.show = function() {
 		this.container.show();
+		this.onWindowResize();
 	};
 
 	MainView.prototype.hide = function() {
