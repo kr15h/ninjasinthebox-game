@@ -39,6 +39,15 @@ download map for game ( mapUrl is listed in every getGame Game.Level[].Map)
 	getMap?mapUrl=/maps/Level_1.csv
 ```
 
+gameFinished
+
+
+deletes the whole space
+```
+	gameFinished
+```
+
+
 more to come
 
 

@@ -19,6 +19,10 @@ type JsonError struct {
 	Error string
 }
 
+type JsonSuccess struct {
+	Success string
+}
+
 type PosVector struct {
 	X int
 	Y int
@@ -180,6 +184,42 @@ func HttpGetMap(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	http.ServeFile(w, r, fp)
+}
+
+func HttpGameFinished(w http.ResponseWriter, r *http.Request) {
+
+	var response interface{}
+	var jsonResponse []byte
+
+	spaceIp := strings.Split(r.RemoteAddr, ":")[0]
+	helpers.TRACE.Println("http-api->StartBribe: IP", spaceIp)
+
+	redisDB := RedisPool.Get()
+	defer redisDB.Close()
+
+	// get the game we have to modify
+	_, err := redis.Bool(redisDB.Do("DEL", spaceIp))
+	if err != nil {
+		ERROR.Println("http-api->GameFinished: err", err)
+		response = JsonError{Error: "space was not deleted"}
+		jsonResponse, err = json.Marshal(response)
+		if err != nil {
+			ERROR.Println("socket.io->StartBribe: json.Marshal error: ", err)
+		}
+
+	} else {
+		response = JsonSuccess{Success: "space was deleted"}
+		jsonResponse, err = json.Marshal(response)
+		if err != nil {
+			ERROR.Println("socket.io->StartBribe: json.Marshal error: ", err)
+		}
+
+	}
+
+	TRACE.Println("http-api->StartBribe: Answer", response)
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Write(jsonResponse)
 }
 
 func HttpStartBribe(w http.ResponseWriter, r *http.Request) {
