@@ -25,9 +25,17 @@ this function will return a json structure holding the space its players and gam
 ```
 	getSpace
 ```
+getGame
+
+this function returns the game status don't forget the gameId
+```	
+	getGame?gameId=2a9ef92d-56c7-416d-bdb3-d5947bc3b46e
+```
 
 more to come
 
+
+#### Setters
 
 newUser 
 
@@ -51,11 +59,27 @@ join a game ( gameId is visiable from getSpace )
 	joinGame?gameId=58b848f0-6be8-4b85-b8f5-dfbbe2711928&userId=a181a363-67c4-4f96-9e62-295079916e2d
 ```
 
-sratGame
+startGame
 
 start a game ( you need to be the game leader otherwhise it won't work --> the guy who made startGame is the leader)
 ```
 	startGame?gameId=58b848f0-6be8-4b85-b8f5-dfbbe2711928&userId=6b72844b-5551-4c82-b05c-b1e8c07ffd64
+```
+
+userMoved
+
+call it allwayes when your user moves, the distance can not be more than one field   
+so if you have been last at 4,3 you can be now at 5,3 and so on 
+```
+	userMoved?gameId=2a9ef92d-56c7-416d-bdb3-d5947bc3b46e&userId=57a6132a-b5d5-4ab3-a8fa-fecedd2aa9d3&x=12&y=4
+```
+
+startBribe
+
+
+start bribing 
+```   
+      startBribe?gameId=a9ef92d-56c7-416d-bdb3-d5947bc3b46e
 ```
 
 more to come
