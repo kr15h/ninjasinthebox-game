@@ -399,6 +399,9 @@
                 $(".hud-coins .val").empty();
                 $(".hud-coins .val").append(totalCoins);
                 $(".hud-time .val").append(data.Level[0].Timeleft);
+                if (data.Level[0].Timeleft <= 0) {
+                    ROOT.gameOver();
+                }
                 if (data.Bribeing) alert("bribeing boss!!!");
                 if (data.Won) alert("won the game yayahh!");
             });

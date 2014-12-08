@@ -50,6 +50,12 @@ $(document).ready(function() {
     	winView.show();
     };
 
+    ROOT.gameOver = function() {
+    	gameView.destroy();
+    	gameView.hide();
+    	gameOverView.show();
+    };
+
     ROOT.showCredits = function() {
     	winView.hide();
     	gameOverView.hide();
