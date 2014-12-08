@@ -116,12 +116,34 @@
                     $("#room-users ul").empty();
                     $("#room-users ul").append("<li>"+ROOT.user_name+"</li>");
                 });
+                setInterval(function() {
+                    $.get("http://morriswinkler.koding.io/getGame?gameId="+ROOT.game_id, function(data){
+                        var string = "";
+                        for(var i = 0; i < data.Player.length; i++) {
+                            string += "<li>"+data.Player[i].UserName+"</li>";
+                        }
+                        $("#room-users ul").empty();
+                        $("#room-users ul").append(string);
+
+                    });
+                }, 3000);
 			});
 
 			// Join room
 			this.container.find('.team-up .btn-join-room').click(function(){
 				that.container.find('.team-up').hide();
 				that.container.find('.room-client').show();
+                setInterval(function() {
+                    $.get("http://morriswinkler.koding.io/getGame?gameId="+ROOT.game_id, function(data){
+                        var string = "";
+                        for(var i = 0; i < data.Player.length; i++) {
+                            string += "<li>"+data.Player[i].UserName+"</li>";
+                        }
+                        $("#room-users ul").empty();
+                        $("#room-users ul").append(string);
+
+                    });
+                }, 3000);
 			});
 
 			// Leave room-master
