@@ -58,7 +58,7 @@ type Game struct {
 	SpaceIp  string
 	GameId   string
 	Player   []Player
-	Level    map[int]*Level
+	Level    []Level
 	LevelNow int
 }
 
@@ -255,15 +255,17 @@ func HttpUserMoved(w http.ResponseWriter, r *http.Request) {
 		// chreck if the user hit a coin
 		lx, _ := strconv.Atoi(x)
 		ly, _ := strconv.Atoi(y)
-		for index, coin := range game.Level[game.LevelNow].Map.Coins {
-			if (coin.X == lx) && (coin.Y == ly) {
-				userHitCoin = true
-				game.Level[game.LevelNow].Map.Coins = vectorRemoveItem(game.Level[game.LevelNow].Map.Coins, index)
-			}
-		}
 
-		if userHitCoin {
-			game.Level[game.LevelNow].CoinsCount += 1
+		for levelindex, level := range game.Level {
+			if level.Number == game.LevelNow {
+				for index, coin := range game.Level[levelindex].Map.Coins {
+					if (coin.X == lx) && (coin.Y == ly) {
+						userHitCoin = true
+						game.Level[levelindex].Map.Coins = vectorRemoveItem(game.Level[levelindex].Map.Coins, index)
+						game.Level[levelindex].CoinsCount += 1
+					}
+				}
+			}
 		}
 
 		// move player
@@ -535,17 +537,6 @@ func HttpNewGame(w http.ResponseWriter, r *http.Request) {
 				ERROR.Println("http-api->StartGame: getCSV error: ", err)
 			}
 
-			var level = make(map[int]*Level)
-
-			level[1] = &Level{
-				Number:     1,
-				CoinsCount: 0,
-				Map: Map{
-					Coins:  coins,
-					MapURL: path.Join(cfg.Game.MapURL, "Level_1.csv"),
-				},
-			}
-
 			// create new game
 			response = Game{
 				Leader:   userId,
@@ -557,7 +548,16 @@ func HttpNewGame(w http.ResponseWriter, r *http.Request) {
 				Player: []Player{
 					player,
 				},
-				Level:    level,
+				Level: []Level{
+					{
+						Number:     1,
+						CoinsCount: 0,
+						Map: Map{
+							Coins:  coins,
+							MapURL: path.Join(cfg.Game.MapURL, "Level_1.csv"),
+						},
+					},
+				},
 				LevelNow: 1,
 			}
 
