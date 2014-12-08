@@ -337,16 +337,11 @@
         //$('#blockly-stuff').collapse('show');
         map.setup($('#map-container'));
         
-         var team = {};
+         var team = [];
+         var pos = [{x: 19, y: 0}, {x: 0, y: 19}, {x: 19, y: 19}];
         $.get("http://morriswinkler.koding.io/getGame?gameId="+ROOT.game_id, function(data){
             alert(JSON.stringify(data));
 
-            for (var i = 0; i < data.Player.length; i++) {
-                var p = new Object("player");
-                p.createHtml();
-                map.addObject(p, data.Player[i].Pos.X, data.Player[i].Pos.Y);
-                team[data.Player[i].UserId] = p;
-            }
             // Async map loading... Provide anonymous callback func
             map.loadMap("http://morriswinkler.koding.io/getMap?mapUrl="+data.Level[0].Map.MapURL, function() {
                 map.createHtml();
@@ -370,13 +365,24 @@
                 player = new Object("player");
                 player.createHtml();
                 map.addObject(player, 0, 0);
+                
+                for (var i = 0; i < data.Player.length; i++) {
+                    if (data.Player[i].UserName === ROOT.user_name) continue;
+                    var p = new Object("player");
+                    p.createHtml();
+                    map.addObject(p, pos[i].x, pos[i].y);
+                    team.push({data.Player[i].UserId: p});
+                }
+                alert(JSON.stringify(team));
             });
         });
         setInterval(function() {
             $.get("http://morriswinkler.koding.io/getGame?gameId="+ROOT.game_id, function(data){
                 //alert(JSON.stringify(data));
                 var totalCoins = 0;
+                alert(JSON.stringify(team));
                 for (var i = 0; i < data.Player.length; i++) {
+                    if (data.Player[i].UserName === ROOT.user_name) continue;
                     var element = $('td').eq((this.cols * data.Player[i].Pos.Y) + data.Player[i].Pos.X);
                     element.append(team[data.Player[i].UserId].element);
                     totalCoins += data.Player[i].Coins;
