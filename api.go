@@ -150,6 +150,7 @@ func HttpStartBribe(w http.ResponseWriter, r *http.Request) {
 
 	TRACE.Println("http-api->UserMoved: Answer", response)
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Write(jsonResponse)
 }
 
@@ -189,6 +190,7 @@ func HttpGetGame(w http.ResponseWriter, r *http.Request) {
 
 	TRACE.Println("http-api->UserMoved: Answer", response)
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Write(jsonResponse)
 }
 
@@ -287,6 +289,7 @@ func HttpUserMoved(w http.ResponseWriter, r *http.Request) {
 
 	TRACE.Println("http-api->UserMoved: Answer", response)
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Write(jsonResponse)
 }
 
@@ -354,6 +357,7 @@ func HttpStartGame(w http.ResponseWriter, r *http.Request) {
 
 	TRACE.Println("http-api->StartGame: Answer", response)
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Write(jsonResponse)
 }
 
@@ -453,6 +457,7 @@ func HttpJoinGame(w http.ResponseWriter, r *http.Request) {
 
 	TRACE.Println("http-api->JoinGame: Answer", response)
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Write(jsonResponse)
 
 }
@@ -574,6 +579,7 @@ func HttpNewGame(w http.ResponseWriter, r *http.Request) {
 
 	TRACE.Println("http-api->NewGame: Answer", response)
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Write(jsonResponse)
 
 }
@@ -690,6 +696,7 @@ func HttpNewUser(w http.ResponseWriter, r *http.Request) {
 
 	TRACE.Println("http-api->NewUser: Answer", response)
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Write(jsonResponse)
 }
 
@@ -722,6 +729,7 @@ func HttpGetSpace(w http.ResponseWriter, r *http.Request) {
 
 	TRACE.Println("http-api->GetSpace Answer", response)
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Write(jsonResponse)
 }
 
