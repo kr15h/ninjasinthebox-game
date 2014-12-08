@@ -20,6 +20,11 @@ $(document).ready(function() {
 	var winView = new ROOT.WinView();
 	winView.setup( $('#win-view').first() );
 
+	// Init credits view
+	var creditsView = new ROOT.CreditsView();
+	creditsView.setup( $('#credits-view').first() );
+	//creditsView.show();
+
 	$(window).resize(function(){
 		mainView.onWindowResize();
         gameView.onWindowResize();
@@ -29,6 +34,7 @@ $(document).ready(function() {
 		ROOT.restartGame = function() {
 			winView.hide();
 			gameOverView.hide();
+			creditsView.hide();
 			mainView.show();
 			gameView.show();
 		};
@@ -42,6 +48,12 @@ $(document).ready(function() {
     	gameView.destroy();
     	gameView.hide();
     	winView.show();
+    };
+
+    ROOT.showCredits = function() {
+    	winView.hide();
+    	gameOverView.hide();
+    	creditsView.show();
     };
 
 });
