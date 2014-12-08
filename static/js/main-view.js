@@ -61,6 +61,12 @@
 					that.container.find('.team-up').show();
                             var string = "";
 							var games = data.Games;
+                            alert(JSON.stringify(data.Space[1].UserName));
+                            for(var i = 0; i < data.Space.length; i++){
+                                string += "<li id="+data.Space[i].UserId+">"+data.Space[i].UserName+"</li>";
+                            }
+                            $("#available-users ul").append(string);
+                            string = "";
 							for(var i = 0; i < games.length; i++){
 								string += "<li class='game' id='" + games[i].GameId + "'>Game " + (i+1) + "</li><ul class='room-user-list'>";
 								for(var j = 0; j < games[i].Player.length; j++){

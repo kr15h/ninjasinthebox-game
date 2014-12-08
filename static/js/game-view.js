@@ -418,7 +418,7 @@
             $.get("http://morriswinkler.koding.io/getGame?gameId="+ROOT.game_id, function(data){
                 alert(JSON.stringify(data));
                 var totalCoins = 0;
-                for (player in data.Player) {
+                for (var player in data.Player) {
                     var element = $('td').eq((this.cols * player.Pos.Y) + player.Pos.X);
                     element.append(team[player.UserId].element);
                     totalCoins += player.Coins;
