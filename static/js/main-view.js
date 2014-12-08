@@ -44,7 +44,7 @@
 
 			this.container.find('.mission .btn-forward').click(function(){
 				//alert();
-				if(ROOT.user_id === "undefined"){
+				if (ROOT.user_id === undefined){
 					$.ajax({
 						url: "http://morriswinkler.koding.io/newUser", 
 						data: { userName: prompt("Please insert your username") },
@@ -61,7 +61,6 @@
 					that.container.find('.team-up').show();
                             var string = "";
 							var games = data.Games;
-                            alert(JSON.stringify(data.Space[1].UserName));
                             for(var i = 0; i < data.Space.length; i++){
                                 string += "<li id="+data.Space[i].UserId+">"+data.Space[i].UserName+"</li>";
                             }
@@ -88,6 +87,10 @@
 			this.container.find('.team-up .btn-add-room').click(function(){
 				that.container.find('.team-up').hide();
 				that.container.find('.room-master').show();
+                $.get("http://morriswinkler.koding.io/newGame?userId="+ROOT.user_id, function(data){
+                    //data.GameId
+                    $("#available-users ul").append("<li>"+ROOT.user_name+"</li>");
+                });
 			});
 
 			// Join room
