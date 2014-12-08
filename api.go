@@ -49,12 +49,14 @@ type Level struct {
 }
 
 type Game struct {
-	Leader  string
-	Running bool
-	SpaceIp string
-	GameId  string
-	Player  []Player
-	Level   Level
+	Leader   string
+	Running  bool
+	Bribeing bool
+	Won      bool
+	SpaceIp  string
+	GameId   string
+	Player   []Player
+	Level    Level
 }
 
 func getCoins(file string) ([]PosVector, error) {
@@ -98,6 +100,57 @@ func vectorRemoveItem(v []PosVector, item int) []PosVector {
 	s := v
 	s = append(s[:item], s[item+1:]...)
 	return s
+}
+
+func HttpStartBribe(w http.ResponseWriter, r *http.Request) {
+
+	var game Game
+	var response interface{}
+	var jsonResponse []byte
+	var jsonGame []byte
+
+	err := r.ParseForm()
+	if err != nil {
+		ERROR.Println("http-api->UserMoved: err", err)
+	}
+
+	gameId := r.FormValue("gameId")
+	spaceIp := strings.Split(r.RemoteAddr, ":")[0]
+	helpers.TRACE.Println("http-api->UserMoved: IP", spaceIp)
+
+	if gameId == "" {
+		response = JsonError{Error: "missing gameId"}
+		jsonResponse, err = json.Marshal(response)
+		if err != nil {
+			ERROR.Println("socket.io->UserMoved: json.Marshal error: ", err)
+		}
+	} else {
+		redisDB := RedisPool.Get()
+		defer redisDB.Close()
+
+		// get the game we have to modify
+		jsonGame, err = redis.Bytes(redisDB.Do("GET", gameId))
+		err = json.Unmarshal(jsonGame, &game)
+		if err != nil {
+			ERROR.Println("http-api->UserMoved: json.Unmarshal error: ", err)
+		}
+		game.Bribeing = true
+		response = game
+
+		jsonResponse, err = json.Marshal(response)
+		if err != nil {
+			ERROR.Println("http-api->NewGame: json.Marshal error: ", err)
+		}
+		_, err = redisDB.Do("SET", response.(Game).GameId, jsonResponse)
+		if err != nil {
+			ERROR.Println("http-api->NewGame: RedisDB SET error: ", err)
+		}
+
+	}
+
+	TRACE.Println("http-api->UserMoved: Answer", response)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsonResponse)
 }
 
 func HttpGetGame(w http.ResponseWriter, r *http.Request) {
@@ -475,10 +528,12 @@ func HttpNewGame(w http.ResponseWriter, r *http.Request) {
 
 			// create new game
 			response = Game{
-				Leader:  userId,
-				Running: false,
-				SpaceIp: spaceIp,
-				GameId:  uuid.New(),
+				Leader:   userId,
+				Running:  false,
+				Bribeing: false,
+				Won:      false,
+				SpaceIp:  spaceIp,
+				GameId:   uuid.New(),
 				Player: []Player{
 					player,
 				},

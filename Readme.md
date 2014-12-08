@@ -64,6 +64,14 @@ so if you have been last at 4,3 you can be now at 5,3 and so on
 	userMoved?gameId=2a9ef92d-56c7-416d-bdb3-d5947bc3b46e&userId=57a6132a-b5d5-4ab3-a8fa-fecedd2aa9d3&x=12&y=4
 ```
 
+startBribe
+
+
+start bribing 
+```   
+      startBribe?gameId=a9ef92d-56c7-416d-bdb3-d5947bc3b46e
+```
+
 more to come
 
 

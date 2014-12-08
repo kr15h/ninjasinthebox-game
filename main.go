@@ -113,6 +113,7 @@ func main() {
 	router.Get("/joinGame", HttpJoinGame)
 	router.Get("/startGame", HttpStartGame)
 	router.Get("/userMoved", HttpUserMoved)
+	router.Get("/startBribe", HttpStartBribe)
 	// http static dir
 	router.Add("GET", "/", http.FileServer(http.Dir(cfg.Webserver.Dir)))
 
