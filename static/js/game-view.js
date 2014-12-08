@@ -332,33 +332,59 @@
         var map = new Map();
         this.map = map;
         map.setup($('#map-container'));
+        
+         var team = {};
+        $.get("http://morriswinkler.koding.io/getGame?gameId="+ROOT.game_id, function(data){
+            alert(JSON.stringify(data));
 
-        // TODO: show loader
+            for (var i = 0; i < data.Player.length; i++) {
+                var p = new Object("player");
+                p.createHtml();
+                map.addObject(p, data.Player[i].Pos.X, data.Player[i].Pos.Y);
+                team[data.Player[i].UserId] = p;
+            }
+            // Async map loading... Provide anonymous callback func
+            map.loadMap("http://morriswinkler.koding.io/getMap?mapUrl="+data.Level[0].Map.MapURL, function() {
+                map.createHtml();
 
-        // Async map loading... Provide anonymous callback func
-        map.loadMap('maps/Level_1.csv', function() {
-            map.createHtml();
+                var boss_tl = new Object("boss-tl");
+                boss_tl.createHtml();
+                map.addObject(boss_tl, 9, 9);
 
-            var boss_tl = new Object("boss-tl");
-            boss_tl.createHtml();
-            map.addObject(boss_tl, 9, 9);
+                var boss_tr = new Object("boss-tr");
+                boss_tr.createHtml();
+                map.addObject(boss_tr, 10, 9);
 
-            var boss_tr = new Object("boss-tr");
-            boss_tr.createHtml();
-            map.addObject(boss_tr, 10, 9);
+                var boss_bl = new Object("boss-bl");
+                boss_bl.createHtml();
+                map.addObject(boss_bl, 9, 10);
 
-            var boss_bl = new Object("boss-bl");
-            boss_bl.createHtml();
-            map.addObject(boss_bl, 9, 10);
+                var boss_br = new Object("boss-br");
+                boss_br.createHtml();
+                map.addObject(boss_br, 10, 10);
 
-            var boss_br = new Object("boss-br");
-            boss_br.createHtml();
-            map.addObject(boss_br, 10, 10);
-
-            player = new Object("player");
-            player.createHtml();
-            map.addObject(player, 0, 0);
+                player = new Object("player");
+                player.createHtml();
+                map.addObject(player, 0, 0);
+            });
         });
+        setInterval(function() {
+            $.get("http://morriswinkler.koding.io/getGame?gameId="+ROOT.game_id, function(data){
+                //alert(JSON.stringify(data));
+                var totalCoins = 0;
+                for (var i = 0; i < data.Player.length; i++) {
+                    var element = $('td').eq((this.cols * data.Player[i].Pos.Y) + data.Player[i].Pos.X);
+                    element.append(team[data.Player[i].UserId].element);
+                    totalCoins += data.Player[i].Coins;
+                }
+                $(".hud-time .val").empty();
+                $(".hud-coins .val").empty();
+                $(".hud-coins .val").append(totalCoins);
+                $(".hud-time .val").append(data.Timeleft);
+                if (data.Bribeing) alert("bribeing boss!!!");
+                if (data.Won) alert("won the game yayahh!");
+            });
+        }, 3000);
         
         /* Blockly stuff */
         map.emitWall = emitWallAhead;
