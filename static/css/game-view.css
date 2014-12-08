@@ -250,6 +250,31 @@ img {
     padding-right: 50px;
 }
 
+/* Heads Up Display (HUD) style */
+
+#game-view .hud-coins {
+    text-align: left;
+}
+
+#game-view .hud-time {
+    text-align: right;
+}
+
+#game-view .hud {
+    font-family: 'OpenSans';
+    font-size: 18px;
+    color: #FFFFFF;
+    line-height: 28px;
+    font-weight: normal;
+}
+
+#game-view .hud .val {
+    font-family: 'OpenSans-Bold';
+    color: #F8E71C;
+}
+
+/* Modal style */
+
 #game-view .modal .row {
     margin-bottom: 10px;
 }

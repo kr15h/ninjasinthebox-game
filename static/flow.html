@@ -260,9 +260,23 @@
 
             </div><!-- /blockly-stuff -->
 
-            <button type="button" class="collapse-btn btn-primary btn-lg" data-toggle="collapse" data-target="#blockly-stuff" aria-expanded="true" aria-controls="blockly-stuff">
-                <span class="blockly-icon-down glyphicon glyphicon-chevron-down hidden"></span>
-                <span class="blockly-icon-up glyphicon glyphicon-chevron-up"></span>
+            <!-- Blockly collapse button -->
+            <button type="button" class="btn collapse-btn btn-primary btn-lg" data-toggle="collapse" data-target="#blockly-stuff" aria-expanded="true" aria-controls="blockly-stuff">
+                
+                <!-- Simple HUD build into the Blockly collapse button -->
+                <div class="row">
+                	<div class="col-xs-4 hud hud-coins">
+                		<span class="lbl">Coins:</span> <span class="val">2</span>
+                	</div>
+                	<div class="col-xs-4">
+                		<span class="blockly-icon-down glyphicon glyphicon-chevron-down hidden"></span>
+                		<span class="blockly-icon-up glyphicon glyphicon-chevron-up"></span>
+                	</div>
+               		<div class="col-xs-4 hud hud-time">
+               			<span class="lbl">Time:</span> <span class="val">03:34</span> 
+               		</div>
+                </div><!-- /row -->
+
             </button><!-- /collapse-btn -->
 
         </div><!-- /blockly-container -->
