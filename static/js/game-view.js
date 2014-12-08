@@ -255,6 +255,9 @@
     /* move to new table cell and matrix cell */
     object.x = x;
     object.y = y;
+    $.get("http://morriswinkler.koding.io/userMoved?gameId="+ROOT.game_id+"&userId="+ROOT.user_id+"&x="+x+"&y="+y, function(data){
+        alert(JSON.stringify(data));
+    });
     this.objects[x][y] = object;
     var element = $('td').eq((this.cols * y) + x);
     var classNames = object.element.className;
@@ -419,7 +422,6 @@
                 '<block type="maze_turn"><title name="DIR">turnLeft</title></block>' +
                 '<block type="maze_turn"><title name="DIR">turnRight</title></block></xml>',
         });
-
         
         Blockly.loadAudio_([Blockly.assetUrl("media/wall.ogg")], "wall");
         Blockly.loadAudio_([Blockly.assetUrl("media/Boss.wav")], "boss");
@@ -453,6 +455,9 @@
         }
         function emitBossReached() {
             Blockly.playAudio("boss");
+            $.get("http://morriswinkler.koding.io/startBribe?gameId="+ROOT.game_id, function(data){
+                alert(JSON.stringify(data));
+            });
         }
         function emitCoinCollected() {
             Blockly.playAudio("coin");
@@ -509,7 +514,7 @@
     };
     
     GameView.prototype.onWindowResize = function() {
-        this.map.calcSize();
+        //this.map.calcSize();
     };
 
     ROOT.GameView = GameView;
