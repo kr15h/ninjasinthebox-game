@@ -231,7 +231,7 @@ img {
 #game-view .run26 {
     width: 26px;
     height: 26px;
-    background: url("media/shared-sprites-26x26.png") 0px 0px;
+    background: url("../media/shared-sprites-26x26.png") 0px 0px;
 }
 #game-view button.blocklyLaunch {
     width: 160px;

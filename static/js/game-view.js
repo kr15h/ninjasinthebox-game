@@ -340,7 +340,7 @@
          var team = {};
          var pos = [{x: 19, y: 0}, {x: 0, y: 19}, {x: 19, y: 19}];
         $.get("http://morriswinkler.koding.io/getGame?gameId="+ROOT.game_id, function(data){
-            alert(JSON.stringify(data));
+            //alert(JSON.stringify(data));
 
             // Async map loading... Provide anonymous callback func
             map.loadMap("http://morriswinkler.koding.io/getMap?mapUrl="+data.Level[0].Map.MapURL, function() {
@@ -373,7 +373,7 @@
                     map.addObject(p, pos[i].x, pos[i].y);
                     team[data.Player[i].UserId] = p;
                 }
-                alert(JSON.stringify(team));
+                //alert(JSON.stringify(team));
             });
         });
         setInterval(function() {
@@ -492,7 +492,7 @@
         function emitBossReached() {
             Blockly.playAudio("boss");
             $.get("http://morriswinkler.koding.io/startBribe?gameId="+ROOT.game_id, function(data){
-                alert(JSON.stringify(data));
+                //alert(JSON.stringify(data));
             });
         }
         function emitCoinCollected() {
