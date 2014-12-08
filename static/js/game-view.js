@@ -338,7 +338,7 @@
         map.setup($('#map-container'));
         
          var team = {};
-         var pos = [{x: 19, y: 0}, {x: 0, y: 19}, {x: 19, y: 19}];
+         var pos = [{x: 19, y: 0}, {x: 19, y: 0}, {x: 0, y: 19}, {x: 19, y: 19}];
         $.get("http://morriswinkler.koding.io/getGame?gameId="+ROOT.game_id, function(data){
             //alert(JSON.stringify(data));
 
@@ -362,16 +362,17 @@
                 boss_br.createHtml();
                 map.addObject(boss_br, 10, 10);
 
-                player = new Object("player");
-                player.createHtml();
-                map.addObject(player, 0, 0);
-                
                 for (var i = 0; i < data.Player.length; i++) {
-                    if (data.Player[i].UserName === ROOT.user_name) continue;
-                    var p = new Object("player");
-                    p.createHtml();
-                    map.addObject(p, pos[i].x, pos[i].y);
-                    team[data.Player[i].UserId] = p;
+                    if (data.Player[i].UserName === ROOT.user_name) {
+                        player = new Object("player");
+                        player.createHtml();
+                        map.addObject(player, pos[i].x, pos[i].y);
+                    } else {
+                        var p = new Object("player");
+                        p.createHtml();
+                        map.addObject(p, pos[i].x, pos[i].y);
+                        team[data.Player[i].UserId] = p;
+                    }
                 }
                 //alert(JSON.stringify(team));
             });
