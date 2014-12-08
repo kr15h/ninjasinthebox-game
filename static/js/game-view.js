@@ -207,6 +207,10 @@
     element.append(object.element);
   };
 
+  Map.prototype.destroy = function() {
+    this.container.empty();
+  };
+
   Map.prototype.moveObject = function(object) {
     /* see where the player needs to be moved */
     var x = object.x, y = object.y;
@@ -239,7 +243,7 @@
             $('td').eq((this.cols * y) + x).empty();
         } else if (obj.type === "wall") {
             this.emitWall();
-            //$('#bribe-modal').modal('show');
+            $('#bribe-modal').modal('show');
             return;
         } else {
             this.emitBoss();
@@ -313,6 +317,11 @@
             el.className = "rotate0";
         }, 400);
     }
+  };
+
+  GameView.prototype.destroy = function() {
+    this.map.destroy();
+    this.map = null;
   };
 
     GameView.prototype.setup = function(container, blockly) {
@@ -465,10 +474,12 @@
         });
 
         // Pay button
+        var that = this;
         this.container.find('.btn-pay').click(function(){
-            alert('Pay the bribe');
+            $('#bribe-modal').modal('hide');
+            ROOT.winGame();
         });
-        this.container.find('.btn-pay').hide();
+        //this.container.find('.btn-pay').hide();
 
         // Back button
         this.container.find('.btn-back').click(function() {

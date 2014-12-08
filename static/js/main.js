@@ -31,4 +31,10 @@ $(document).ready(function() {
         gameView.setup($('#game-view').first(), Blockly);
     };
 
+    ROOT.winGame = function() {
+    	gameView.destroy();
+    	gameView.hide();
+    	winView.show();
+    };
+
 });
