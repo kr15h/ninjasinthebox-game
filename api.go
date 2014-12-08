@@ -58,7 +58,8 @@ type Game struct {
 	SpaceIp  string
 	GameId   string
 	Player   []Player
-	Level    Level
+	Level    map[int]*Level
+	LevelNow int
 }
 
 func getCoins(file string) ([]PosVector, error) {
@@ -254,15 +255,15 @@ func HttpUserMoved(w http.ResponseWriter, r *http.Request) {
 		// chreck if the user hit a coin
 		lx, _ := strconv.Atoi(x)
 		ly, _ := strconv.Atoi(y)
-		for index, coin := range game.Level.Map.Coins {
+		for index, coin := range game.Level[game.LevelNow].Map.Coins {
 			if (coin.X == lx) && (coin.Y == ly) {
 				userHitCoin = true
-				game.Level.Map.Coins = vectorRemoveItem(game.Level.Map.Coins, index)
+				game.Level[game.LevelNow].Map.Coins = vectorRemoveItem(game.Level[game.LevelNow].Map.Coins, index)
 			}
 		}
 
 		if userHitCoin {
-			game.Level.CoinsCount += 1
+			game.Level[game.LevelNow].CoinsCount += 1
 		}
 
 		// move player
@@ -445,11 +446,11 @@ func HttpJoinGame(w http.ResponseWriter, r *http.Request) {
 				response = game
 				jsonResponse, err = json.Marshal(response)
 				if err != nil {
-					ERROR.Println("http-api->NewGame: json.Marshal error: ", err)
+					ERROR.Println("http-api->JoinGame: json.Marshal error: ", err)
 				}
 				_, err = redisDB.Do("SET", gameId, jsonResponse)
 				if err != nil {
-					ERROR.Println("http-api->NewGame: RedisDB SET error: ", err)
+					ERROR.Println("http-api->JoinGame: RedisDB SET error: ", err)
 				}
 			}
 
@@ -534,6 +535,17 @@ func HttpNewGame(w http.ResponseWriter, r *http.Request) {
 				ERROR.Println("http-api->StartGame: getCSV error: ", err)
 			}
 
+			var level = make(map[int]*Level)
+
+			level[1] = &Level{
+				Number:     1,
+				CoinsCount: 0,
+				Map: Map{
+					Coins:  coins,
+					MapURL: path.Join(cfg.Game.MapURL, "Level_1.csv"),
+				},
+			}
+
 			// create new game
 			response = Game{
 				Leader:   userId,
@@ -545,14 +557,8 @@ func HttpNewGame(w http.ResponseWriter, r *http.Request) {
 				Player: []Player{
 					player,
 				},
-				Level: Level{
-					Number:     1,
-					CoinsCount: 0,
-					Map: Map{
-						Coins:  coins,
-						MapURL: path.Join(cfg.Game.MapURL, "Level_1.csv"),
-					},
-				},
+				Level:    level,
+				LevelNow: 1,
 			}
 
 			space.Games = append(space.Games, response.(Game))
