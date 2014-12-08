@@ -186,7 +186,7 @@ td {
 #game-view 
 img {
     width: 100%;
-    height: auto;
+    height: 100%;
 }
 #game-view .btn-primary {
     background-color: rgba(118, 101, 160, 1.0);
@@ -291,6 +291,31 @@ img {
     text-align: left;
 }
 
+#game-view .bribe-price-val,
+#game-view .ninja-coins-val {
+    font-family: 'OpenSans-Bold', sans-serif;
+    font-size: 36px;
+    line-height: 36px;
+}
+
+#game-view .bribe-price-val { color: #001231; }
+#game-view .ninja-coins-val,
+#game-view .ninja-coins-val.invalid { color: #D0021B; }
+#game-view .ninja-coins-val.valid { color: green; }
+
+#game-view .bribe-price-val,
+#game-view .ninja-coins-val,
+#game-view .bribe-price-label,
+#game-view .ninja-coins-label {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#game-view .bribe-price-label,
+#game-view .ninja-coins-label {
+    line-height: 1;
+}
+
 #game-view .modal .ninja-coins {
     text-align: right;
 }
@@ -300,17 +325,17 @@ img {
 }
 
 #game-view .btn-back {
-    background-image: linear-gradient(180deg, #ff0000 0%, #880000 100%);
+    background-image: linear-gradient(0deg, #7C0417 0%, #B20A31 100%) !important;
 }
 
 #game-view .btn-back:hover {
-    background-image: linear-gradient(0deg, #ff0000 0%, #880000 100%);
+    background-image: linear-gradient(180deg, #7C0417 0%, #B20A31 100%) !important;
 }
 
 #game-view .btn-pay {
-    background-image: linear-gradient(180deg, #55ff33 0%, #338833 100%);
+    background-image: linear-gradient(0deg, #2E5C03 0%, #579207 100%) !important;
 }
 
 #game-view .btn-pay:hover {
-    background-image: linear-gradient(0deg, #55ff33 0%, #338833 100%);
+    background-image: linear-gradient(180deg, #2E5C03 0%, #579207 100%) !important;
 }

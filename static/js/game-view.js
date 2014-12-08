@@ -239,10 +239,11 @@
             $('td').eq((this.cols * y) + x).empty();
         } else if (obj.type === "wall") {
             this.emitWall();
+            //$('#bribe-modal').modal('show');
             return;
         } else {
             this.emitBoss();
-            /* ?..? */
+            $('#bribe-modal').modal('show');
         }
     }
     /* clear the previouse table cell and object matrix slot */
@@ -500,10 +501,11 @@
         this.container.find('.btn-pay').click(function(){
             alert('Pay the bribe');
         });
+        this.container.find('.btn-pay').hide();
 
         // Back button
         this.container.find('.btn-back').click(function() {
-            alert('Back');
+            $('#bribe-modal').modal('hide');
         });
 
         this.container.find('#bribe-modal').modal({
@@ -511,8 +513,6 @@
             backdrop: 'static',
             show: false
         });
-
-        //this.container.find('#bribe-modal').modal('show');
     };
 
     GameView.prototype.show = function() {
