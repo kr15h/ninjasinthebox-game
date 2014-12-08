@@ -103,7 +103,7 @@
     console.log(fileUrl);
 
     this.container.empty();
-    this.container.append('Loading...');
+    this.container.append('Loading map...');
 
     // Hack to make this accessible from within 
     // ajax success callback function
