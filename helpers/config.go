@@ -16,7 +16,7 @@ type Config struct {
 	}
 
 	Tmp struct {
-		Tmpdir string
+		TmpDir string
 	}
 
 	Database struct {
@@ -25,6 +25,10 @@ type Config struct {
 
 	Webserver struct {
 		Host, Port, Dir, BaseURL string
+	}
+
+	Game struct {
+		MapDir, MapURL string
 	}
 }
 

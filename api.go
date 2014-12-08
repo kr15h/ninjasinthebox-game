@@ -9,6 +9,7 @@ import (
 	"github.com/googollee/go-socket.io"
 	"net/http"
 	"os"
+	"path"
 	"strconv"
 	"strings"
 )
@@ -37,8 +38,9 @@ type Player struct {
 }
 
 type Map struct {
-	Coins []PosVector
-	Boss  [4]PosVector
+	Coins  []PosVector
+	Boss   [4]PosVector
+	MapURL string
 }
 
 type Level struct {
@@ -111,18 +113,18 @@ func HttpStartBribe(w http.ResponseWriter, r *http.Request) {
 
 	err := r.ParseForm()
 	if err != nil {
-		ERROR.Println("http-api->UserMoved: err", err)
+		ERROR.Println("http-api->StartBribe: err", err)
 	}
 
 	gameId := r.FormValue("gameId")
 	spaceIp := strings.Split(r.RemoteAddr, ":")[0]
-	helpers.TRACE.Println("http-api->UserMoved: IP", spaceIp)
+	helpers.TRACE.Println("http-api->StartBribe: IP", spaceIp)
 
 	if gameId == "" {
 		response = JsonError{Error: "missing gameId"}
 		jsonResponse, err = json.Marshal(response)
 		if err != nil {
-			ERROR.Println("socket.io->UserMoved: json.Marshal error: ", err)
+			ERROR.Println("socket.io->StartBribe: json.Marshal error: ", err)
 		}
 	} else {
 		redisDB := RedisPool.Get()
@@ -132,24 +134,25 @@ func HttpStartBribe(w http.ResponseWriter, r *http.Request) {
 		jsonGame, err = redis.Bytes(redisDB.Do("GET", gameId))
 		err = json.Unmarshal(jsonGame, &game)
 		if err != nil {
-			ERROR.Println("http-api->UserMoved: json.Unmarshal error: ", err)
+			ERROR.Println("http-api->StartBribe: json.Unmarshal error: ", err)
 		}
 		game.Bribeing = true
 		response = game
 
 		jsonResponse, err = json.Marshal(response)
 		if err != nil {
-			ERROR.Println("http-api->NewGame: json.Marshal error: ", err)
+			ERROR.Println("http-api->StartBribe: json.Marshal error: ", err)
 		}
 		_, err = redisDB.Do("SET", response.(Game).GameId, jsonResponse)
 		if err != nil {
-			ERROR.Println("http-api->NewGame: RedisDB SET error: ", err)
+			ERROR.Println("http-api->StartBribe: RedisDB SET error: ", err)
 		}
 
 	}
 
-	TRACE.Println("http-api->UserMoved: Answer", response)
+	TRACE.Println("http-api->StartBribe: Answer", response)
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Write(jsonResponse)
 }
 
@@ -161,18 +164,18 @@ func HttpGetGame(w http.ResponseWriter, r *http.Request) {
 
 	err := r.ParseForm()
 	if err != nil {
-		ERROR.Println("http-api->UserMoved: err", err)
+		ERROR.Println("http-api->GetGame: err", err)
 	}
 
 	gameId := r.FormValue("gameId")
 	spaceIp := strings.Split(r.RemoteAddr, ":")[0]
-	helpers.TRACE.Println("http-api->UserMoved: IP", spaceIp)
+	helpers.TRACE.Println("http-api->GetGame: IP", spaceIp)
 
 	if gameId == "" {
 		response = JsonError{Error: "missing gameId"}
 		jsonResponse, err = json.Marshal(response)
 		if err != nil {
-			ERROR.Println("socket.io->UserMoved: json.Marshal error: ", err)
+			ERROR.Println("socket.io->GetGame: json.Marshal error: ", err)
 		}
 	} else {
 		redisDB := RedisPool.Get()
@@ -182,13 +185,14 @@ func HttpGetGame(w http.ResponseWriter, r *http.Request) {
 		jsonResponse, err = redis.Bytes(redisDB.Do("GET", gameId))
 		err = json.Unmarshal(jsonResponse, &game)
 		if err != nil {
-			ERROR.Println("http-api->UserMoved: json.Unmarshal error: ", err)
+			ERROR.Println("http-api->GetGame: json.Unmarshal error: ", err)
 		}
 		response = game
 	}
 
-	TRACE.Println("http-api->UserMoved: Answer", response)
+	TRACE.Println("http-api->GetGame: Answer", response)
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Write(jsonResponse)
 }
 
@@ -287,6 +291,7 @@ func HttpUserMoved(w http.ResponseWriter, r *http.Request) {
 
 	TRACE.Println("http-api->UserMoved: Answer", response)
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Write(jsonResponse)
 }
 
@@ -354,6 +359,7 @@ func HttpStartGame(w http.ResponseWriter, r *http.Request) {
 
 	TRACE.Println("http-api->StartGame: Answer", response)
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Write(jsonResponse)
 }
 
@@ -453,6 +459,7 @@ func HttpJoinGame(w http.ResponseWriter, r *http.Request) {
 
 	TRACE.Println("http-api->JoinGame: Answer", response)
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Write(jsonResponse)
 
 }
@@ -521,7 +528,8 @@ func HttpNewGame(w http.ResponseWriter, r *http.Request) {
 			}
 		} else {
 			// read coins
-			coins, err := getCoins("/home/morriswinkler/gameserver/static/maps/Level_1.csv")
+			mapdir := path.Join(cfg.Game.MapDir, "Level_1.csv")
+			coins, err := getCoins(mapdir)
 			if err != nil {
 				ERROR.Println("http-api->StartGame: getCSV error: ", err)
 			}
@@ -541,7 +549,8 @@ func HttpNewGame(w http.ResponseWriter, r *http.Request) {
 					Number:     1,
 					CoinsCount: 0,
 					Map: Map{
-						Coins: coins,
+						Coins:  coins,
+						MapURL: path.Join(cfg.Game.MapURL, "Level_1.csv"),
 					},
 				},
 			}
@@ -574,6 +583,7 @@ func HttpNewGame(w http.ResponseWriter, r *http.Request) {
 
 	TRACE.Println("http-api->NewGame: Answer", response)
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Write(jsonResponse)
 
 }
@@ -690,13 +700,16 @@ func HttpNewUser(w http.ResponseWriter, r *http.Request) {
 
 	TRACE.Println("http-api->NewUser: Answer", response)
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Write(jsonResponse)
 }
 
 func HttpGetSpace(w http.ResponseWriter, r *http.Request) {
 
+	var space Space
 	var response interface{}
 	var jsonResponse []byte
+	var jsonSpace []byte
 
 	spaceIp := strings.Split(r.RemoteAddr, ":")[0]
 	helpers.TRACE.Println("http-api->GetSpace: IP", spaceIp)
@@ -704,7 +717,7 @@ func HttpGetSpace(w http.ResponseWriter, r *http.Request) {
 	redisDB := RedisPool.Get()
 	defer redisDB.Close()
 
-	response, err := redis.Bytes(redisDB.Do("GET", spaceIp))
+	jsonSpace, err := redis.Bytes(redisDB.Do("GET", spaceIp))
 	if err != nil {
 		// error no space found under spaceIp
 		response = JsonError{Error: "no space found, use /newUser?userName=youDude"}
@@ -714,14 +727,19 @@ func HttpGetSpace(w http.ResponseWriter, r *http.Request) {
 		}
 	} else {
 		// return the space with all the users
-		jsonResponse = response.([]byte)
+		jsonResponse = jsonSpace
+
+		// unmarshal for log
+		err = json.Unmarshal(jsonSpace, &space)
 		if err != nil {
-			ERROR.Println("socket.io->GetSpace json.Marshal error: ", err)
+			ERROR.Println("http-api->GetSpace: json.Unmarshal error: ", err)
 		}
+		response = space
 	}
 
 	TRACE.Println("http-api->GetSpace Answer", response)
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Write(jsonResponse)
 }
 
