@@ -19,6 +19,11 @@
 			preloadimages(['media/game-over-view-ninja.svg'], function(images) {
 				that.onWindowResize();
 			});
+
+			// Play again button
+			this.container.find('.btn-main').click(function(){
+				ROOT.restartGame();
+			});
 		} else {
 			console.log('No container object specified');
 		}
@@ -36,7 +41,7 @@
 	GameOverView.prototype.calcNinjaTopMargin = function() {
 		var ninja = this.container.find('.ninja');
 		var ninjaMarginTop = String(ninja.find('img').width() / 1.8) + 'px';
-		console.log(ninjaMarginTop);
+		//console.log(ninjaMarginTop);
 		ninja.css('margin-top', ninjaMarginTop);
 	};
 
