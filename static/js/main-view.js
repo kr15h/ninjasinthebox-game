@@ -6,6 +6,44 @@
 		this.ninjaMarginTop = 0;
 		this.ninjaMarginLeft = -30;
 	}
+	
+	function load(container) {
+                $.get("http://morriswinkler.koding.io/getSpace", function(data){
+                    //alert(data.Channel);
+                    container.find('.mission').hide();
+                    container.find('.team-up').show();
+                            var string = "";
+                            var games = data.Games;
+                            for(var i = 0; i < data.Space.length; i++){
+                                string += "<li id="+data.Space[i].UserId+">"+data.Space[i].UserName+"</li>";
+                            }
+                            $("#all-online-users ul").empty();
+                            $("#all-online-users ul").append(string);
+                            string = "";
+                            for(var i = 0; i < games.length; i++){
+                                string += "<li class='game'>Game " + (i+1) + "</li><ul class='room-user-list'>";
+                                for(var j = 0; j < games[i].Player.length; j++){
+                                    string += "<li id='" + games[i].Player[j].UserId + "'>" + games[i].Player[j].UserName + "</li>";
+                                }
+                                string += '</ul><button id="btn-join-room-'+games[i].GameId+'" class="btn btn-primary btn-sm btn-join-room">Join</button>';
+                            }
+                            $("#available-games ul").empty();
+                            $("#available-games ul").append(string);
+                            $("[id^=btn-join-room-]").on('click', function() {
+                                container.find('.team-up').hide();
+                                container.find('.room-master').show();
+                                var game_id = $(this).attr('id').replace('btn-join-room-', '');
+                                $.get("http://morriswinkler.koding.io/joinGame?userId="+ROOT.user_id+"&gameId="+game_id, function(data) {
+                                    string = "";
+                                    for(var i = 0; i < data.Player.length; i++) {
+                                        string += "<li>"+data.Player[i].UserName+"</li>";
+                                    }
+                                    $("#room-users ul").empty();
+                                    $("#room-users ul").append(string);
+                                });
+                            });
+                });
+            }
 
 	MainView.prototype.setup = function(jQueryContainerObject) {
 		if (arguments.length) {
@@ -41,7 +79,7 @@
 				that.container.find('.mission').hide();
 				that.container.find('.story').show();
 			});
-
+            
 			this.container.find('.mission .btn-forward').click(function(){
 				//alert();
 				if (ROOT.user_id === undefined){
@@ -55,26 +93,7 @@
 					});
 				}
 				else{
-				$.get("http://morriswinkler.koding.io/getSpace", function(data){
-					//alert(data.Channel);
-					that.container.find('.mission').hide();
-					that.container.find('.team-up').show();
-                            var string = "";
-							var games = data.Games;
-                            for(var i = 0; i < data.Space.length; i++){
-                                string += "<li id="+data.Space[i].UserId+">"+data.Space[i].UserName+"</li>";
-                            }
-                            $("#available-users ul").append(string);
-                            string = "";
-							for(var i = 0; i < games.length; i++){
-								string += "<li class='game' id='" + games[i].GameId + "'>Game " + (i+1) + "</li><ul class='room-user-list'>";
-								for(var j = 0; j < games[i].Player.length; j++){
-									string += "<li id='" + games[i].Player[j].UserId + "'>" + games[i].Player[j].UserName + "</li>";
-								}
-								string += '</ul><button id="btn-join-room-'+i+'" class="btn btn-primary btn-sm btn-join-room">Join</button>';
-							}
-							$("#available-games ul").append(string);
-				});
+				load(that.container);
 				}
 			});
 
@@ -89,7 +108,8 @@
 				that.container.find('.room-master').show();
                 $.get("http://morriswinkler.koding.io/newGame?userId="+ROOT.user_id, function(data){
                     //data.GameId
-                    $("#available-users ul").append("<li>"+ROOT.user_name+"</li>");
+                    $("#room-users ul").empty();
+                    $("#room-users ul").append("<li>"+ROOT.user_name+"</li>");
                 });
 			});
 
@@ -103,6 +123,7 @@
 			this.container.find('.room-master .btn-leave').click(function(){
 				that.container.find('.room-master').hide();
 				that.container.find('.team-up').show();
+                load(that.container);
 			});
 
 			// Start game in room-master
