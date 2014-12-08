@@ -143,7 +143,7 @@
                         $("#room-users ul").append(string);
 
                     });
-                }, 3000);
+                }, 1000);
 			});
 
 			// Leave room-master
@@ -156,9 +156,17 @@
 			// Start game in room-master
 			this.container.find('.room-master .btn-start-game').click(function(){
                 that.container.find('#main-view-modal').modal('hide');
-                $.get("http://morriswinkler.koding.io/startGame?gameId="+ROOT.game_id+"&userId="+ROOT.user_id, function(data){
-                });
-                ROOT.startGame();
+                setInterval(function() {
+                    $.get("http://morriswinkler.koding.io/getGame?gameId="+ROOT.game_id, function(data){
+                        if (data.Leader === ROOT.user_id) {
+                            $.get("http://morriswinkler.koding.io/startGame?gameId="+ROOT.game_id+"&userId="+ROOT.user_id, function(data){
+                            });
+                            ROOT.startGame();
+                        } else if (data.Running) {
+                            ROOT.startGame();
+                        }
+                    });
+                }, 1000);
 			});
 
 			// Leave room-client
