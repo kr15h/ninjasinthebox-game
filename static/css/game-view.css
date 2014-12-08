@@ -325,17 +325,17 @@ img {
 }
 
 #game-view .btn-back {
-    background-image: linear-gradient(180deg, #ff0000 0%, #880000 100%);
+    background-image: linear-gradient(0deg, #7C0417 0%, #B20A31 100%) !important;
 }
 
 #game-view .btn-back:hover {
-    background-image: linear-gradient(0deg, #ff0000 0%, #880000 100%);
+    background-image: linear-gradient(180deg, #7C0417 0%, #B20A31 100%) !important;
 }
 
 #game-view .btn-pay {
-    background-image: linear-gradient(180deg, #55ff33 0%, #338833 100%);
+    background-image: linear-gradient(0deg, #2E5C03 0%, #579207 100%) !important;
 }
 
 #game-view .btn-pay:hover {
-    background-image: linear-gradient(0deg, #55ff33 0%, #338833 100%);
+    background-image: linear-gradient(180deg, #2E5C03 0%, #579207 100%) !important;
 }
