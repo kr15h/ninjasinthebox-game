@@ -12,6 +12,7 @@ import (
 	"path"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type JsonError struct {
@@ -60,6 +61,58 @@ type Game struct {
 	Player   []Player
 	Level    []Level
 	LevelNow int
+}
+
+func doTickEvery(sec int16, gameId string) {
+
+	var game Game
+	var jsonGame []byte
+	var jsonResponse []byte
+
+	redisDB := RedisPool.Get()
+	defer redisDB.Close()
+
+	// get the game we have to modify
+	jsonGame, err := redis.Bytes(redisDB.Do("GET", gameId))
+	err = json.Unmarshal(jsonGame, &game)
+	if err != nil {
+		ERROR.Println("http-api->StartBribe: json.Unmarshal error: ", err)
+	}
+
+	ticker := time.NewTicker(time.Second * 1)
+
+	// this is necessary to find the []Level that is game.LevelNow
+	// slices are unordered so we have to force the index
+
+	var levelNumber int
+	for levelindex, level := range game.Level {
+		if level.Number == game.LevelNow {
+			levelNumber = levelindex
+		}
+	}
+
+	go func() {
+		counter := sec - 1
+		for t := range ticker.C {
+			TRACE.Println("http-api->Timer tick", t)
+			game.Level[levelNumber].Timeleft = counter
+			counter--
+
+			jsonResponse, err = json.Marshal(game)
+			if err != nil {
+				ERROR.Println("http-api->Ticker: json.Marshal error: ", err)
+			}
+			_, err = redisDB.Do("SET", gameId, jsonResponse)
+			if err != nil {
+				ERROR.Println("http-api->Ticker: RedisDB SET error: ", err)
+			}
+
+		}
+	}()
+
+	time.Sleep(time.Duration(sec) * time.Second)
+	ticker.Stop()
+	TRACE.Println("http-api->Timer stopped")
 }
 
 func getCoins(file string) ([]PosVector, error) {
@@ -347,6 +400,13 @@ func HttpStartGame(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				ERROR.Println("socket.io->StartGame: json.Marshal error: ", err)
 			}
+		} else if game.Running {
+			// game allready running
+			response = JsonError{Error: "game allready running"}
+			jsonResponse, err = json.Marshal(response)
+			if err != nil {
+				ERROR.Println("socket.io->StartGame: json.Marshal error: ", err)
+			}
 		} else {
 			// ok lets play marshall the game and write it to the database
 			game.Running = true
@@ -359,6 +419,8 @@ func HttpStartGame(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				ERROR.Println("http-api->StartGame: RedisDB SET error: ", err)
 			}
+			// start the timer
+			go doTickEvery(cfg.Game.Duration, gameId)
 		}
 	}
 
@@ -715,9 +777,11 @@ func HttpNewUser(w http.ResponseWriter, r *http.Request) {
 func HttpGetSpace(w http.ResponseWriter, r *http.Request) {
 
 	var space Space
+	var game Game
 	var response interface{}
 	var jsonResponse []byte
 	var jsonSpace []byte
+	var jsonGame []byte
 
 	spaceIp := strings.Split(r.RemoteAddr, ":")[0]
 	helpers.TRACE.Println("http-api->GetSpace: IP", spaceIp)
@@ -734,15 +798,31 @@ func HttpGetSpace(w http.ResponseWriter, r *http.Request) {
 			ERROR.Println("socket.io->GetSpace json.Marshal error: ", err)
 		}
 	} else {
-		// return the space with all the users
-		jsonResponse = jsonSpace
-
-		// unmarshal for log
+		// unmarshal
 		err = json.Unmarshal(jsonSpace, &space)
 		if err != nil {
 			ERROR.Println("http-api->GetSpace: json.Unmarshal error: ", err)
 		}
+
+		for index, games := range space.Games {
+			jsonGame, err = redis.Bytes(redisDB.Do("GET", games.GameId))
+			err = json.Unmarshal(jsonGame, &game)
+			if err != nil {
+				ERROR.Println("http-api->GetSpace: json.Unmarshal error: ", err)
+			}
+			space.Games[index] = game
+		}
+
+		// return the space with all the users
 		response = space
+		jsonResponse, err = json.Marshal(response)
+		if err != nil {
+			ERROR.Println("http-api->UserMoved: json.Marshal error: ", err)
+		}
+		_, err = redisDB.Do("SET", space.SpaceIp, jsonResponse)
+		if err != nil {
+			ERROR.Println("http-api->UserMoved: RedisDB SET error: ", err)
+		}
 	}
 
 	TRACE.Println("http-api->GetSpace Answer", response)
