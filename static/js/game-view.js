@@ -239,7 +239,7 @@
             $('td').eq((this.cols * y) + x).empty();
         } else if (obj.type === "wall") {
             this.emitWall();
-            $('#bribe-modal').modal('show');
+            //$('#bribe-modal').modal('show');
             return;
         } else {
             this.emitBoss();
@@ -468,10 +468,11 @@
         this.container.find('.btn-pay').click(function(){
             alert('Pay the bribe');
         });
+        this.container.find('.btn-pay').hide();
 
         // Back button
         this.container.find('.btn-back').click(function() {
-            alert('Back');
+            $('#bribe-modal').modal('hide');
         });
 
         this.container.find('#bribe-modal').modal({
@@ -479,8 +480,6 @@
             backdrop: 'static',
             show: false
         });
-
-        //this.container.find('#bribe-modal').modal('show');
     };
 
     GameView.prototype.show = function() {
