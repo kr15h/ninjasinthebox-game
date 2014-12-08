@@ -1,3 +1,13 @@
+#Ninjas in the Box
+
+A game about fighting evil with coding.
+
+This is a project that was made during the koding.io [Global Hackaton](https://koding.com/Hackathon) challenge from Dec 06 to Dec 07 2014.
+
+Our team page can be found [here](https://github.com/silps/global.hackathon/tree/master/Teams/ninjasinthebox).
+
+We also made a video. Click [here](https://www.youtube.com/watch?v=wmLlQKutHAo) to watch it.
+
 ## Gameserver documentation
 
 
