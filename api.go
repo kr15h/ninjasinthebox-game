@@ -9,6 +9,7 @@ import (
 	"github.com/googollee/go-socket.io"
 	"net/http"
 	"os"
+	"path"
 	"strconv"
 	"strings"
 )
@@ -37,8 +38,9 @@ type Player struct {
 }
 
 type Map struct {
-	Coins []PosVector
-	Boss  [4]PosVector
+	Coins  []PosVector
+	Boss   [4]PosVector
+	MapURL string
 }
 
 type Level struct {
@@ -526,7 +528,8 @@ func HttpNewGame(w http.ResponseWriter, r *http.Request) {
 			}
 		} else {
 			// read coins
-			coins, err := getCoins("/home/morriswinkler/gameserver/static/maps/Level_1.csv")
+			mapdir := path.Join(cfg.Game.MapDir, "Level_1.csv")
+			coins, err := getCoins(mapdir)
 			if err != nil {
 				ERROR.Println("http-api->StartGame: getCSV error: ", err)
 			}
@@ -546,7 +549,8 @@ func HttpNewGame(w http.ResponseWriter, r *http.Request) {
 					Number:     1,
 					CoinsCount: 0,
 					Map: Map{
-						Coins: coins,
+						Coins:  coins,
+						MapURL: path.Join(cfg.Game.MapURL, "Level_1.csv"),
 					},
 				},
 			}
