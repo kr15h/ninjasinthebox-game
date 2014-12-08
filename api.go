@@ -256,6 +256,8 @@ func HttpUserMoved(w http.ResponseWriter, r *http.Request) {
 		lx, _ := strconv.Atoi(x)
 		ly, _ := strconv.Atoi(y)
 
+		// this is necessary to find the []Level that is game.LevelNow
+		// slices are unordered so we have to force the index
 		for levelindex, level := range game.Level {
 			if level.Number == game.LevelNow {
 				for index, coin := range game.Level[levelindex].Map.Coins {
