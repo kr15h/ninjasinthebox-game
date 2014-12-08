@@ -777,11 +777,11 @@ func HttpNewUser(w http.ResponseWriter, r *http.Request) {
 func HttpGetSpace(w http.ResponseWriter, r *http.Request) {
 
 	var space Space
-	//	var game Game
+	var game Game
 	var response interface{}
 	var jsonResponse []byte
 	var jsonSpace []byte
-	//	var jsonGame []byte
+	var jsonGame []byte
 
 	spaceIp := strings.Split(r.RemoteAddr, ":")[0]
 	helpers.TRACE.Println("http-api->GetSpace: IP", spaceIp)
@@ -803,27 +803,27 @@ func HttpGetSpace(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			ERROR.Println("http-api->GetSpace: json.Unmarshal error: ", err)
 		}
-		response = space
-		jsonResponse = jsonSpace
-		// for index, games := range space.Games {
-		// 	jsonGame, err = redis.Bytes(redisDB.Do("GET", games.GameId))
-		// 	err = json.Unmarshal(jsonGame, &game)
-		// 	if err != nil {
-		// 		ERROR.Println("http-api->GetSpace: json.Unmarshal error: ", err)
-		// 	}
-		// 	space.Games[index] = game
-		// }
 
-		// // return the space with all the users
-		// response = space
-		// jsonResponse, err = json.Marshal(response)
-		// if err != nil {
-		// 	ERROR.Println("http-api->UserMoved: json.Marshal error: ", err)
-		// }
-		// _, err = redisDB.Do("SET", space.SpaceIp, jsonResponse)
-		// if err != nil {
-		// 	ERROR.Println("http-api->UserMoved: RedisDB SET error: ", err)
-		// }
+		space.Games = space.Games[0:0]
+		for index, games := range space.Games {
+			jsonGame, err = redis.Bytes(redisDB.Do("GET", games.GameId))
+			err = json.Unmarshal(jsonGame, &game)
+			if err != nil {
+				ERROR.Println("http-api->GetSpace: json.Unmarshal error: ", err)
+			}
+			space.Games[index] = game
+		}
+
+		// return the space with all the users
+		response = space
+		jsonResponse, err = json.Marshal(response)
+		if err != nil {
+			ERROR.Println("http-api->UserMoved: json.Marshal error: ", err)
+		}
+		_, err = redisDB.Do("SET", space.SpaceIp, jsonResponse)
+		if err != nil {
+			ERROR.Println("http-api->UserMoved: RedisDB SET error: ", err)
+		}
 
 	}
 
