@@ -43,8 +43,12 @@
 			});
 
 			this.container.find('.mission .btn-forward').click(function(){
+				//alert();
+				$.get("http://morriswinkler.koding.io/getSpace", function(data){
+					//alert(data.Channel);
 				that.container.find('.mission').hide();
 				that.container.find('.team-up').show();
+			});
 			});
 
 			this.container.find('.team-up .btn-forward').click(function(){
