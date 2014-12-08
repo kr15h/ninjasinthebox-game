@@ -27,7 +27,7 @@
 
 			// Play again button
 			this.container.find('.btn-play').click(function(){
-				alert('play again');
+				ROOT.restartGame();
 			});
 
 

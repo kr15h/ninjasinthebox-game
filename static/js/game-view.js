@@ -243,7 +243,7 @@
             $('td').eq((this.cols * y) + x).empty();
         } else if (obj.type === "wall") {
             this.emitWall();
-            $('#bribe-modal').modal('show');
+            //$('#bribe-modal').modal('show');
             return;
         } else {
             this.emitBoss();
@@ -321,10 +321,53 @@
 
   GameView.prototype.destroy = function() {
     this.map.destroy();
-    this.map = null;
   };
 
     GameView.prototype.setup = function(container, blockly) {
+        
+        var player = null;
+        var map = new Map();
+        this.map = map;
+        map.setup($('#map-container'));
+
+        // TODO: show loader
+
+        // Async map loading... Provide anonymous callback func
+        map.loadMap('maps/Level_1.csv', function() {
+            map.createHtml();
+
+            var boss_tl = new Object("boss-tl");
+            boss_tl.createHtml();
+            map.addObject(boss_tl, 9, 9);
+
+            var boss_tr = new Object("boss-tr");
+            boss_tr.createHtml();
+            map.addObject(boss_tr, 10, 9);
+
+            var boss_bl = new Object("boss-bl");
+            boss_bl.createHtml();
+            map.addObject(boss_bl, 9, 10);
+
+            var boss_br = new Object("boss-br");
+            boss_br.createHtml();
+            map.addObject(boss_br, 10, 10);
+
+            player = new Object("player");
+            player.createHtml();
+            map.addObject(player, 0, 0);
+        });
+        
+        /* Blockly stuff */
+        map.emitWall = emitWallAhead;
+        map.emitBoss = emitBossReached;
+        map.emitEscape = emitEscapeMaze;
+        map.emitCoin = emitCoinCollected;
+
+
+        if (Blockly !== null) {
+            return;
+        }
+
         Blockly = blockly;
         this.container = container;
         /* Blockly stuff */
@@ -377,43 +420,7 @@
                 '<block type="maze_turn"><title name="DIR">turnRight</title></block></xml>',
         });
 
-        var player = null;
-        var map = new Map();
-        this.map = map;
-        map.setup($('#map-container'));
-
-        // TODO: show loader
-
-        // Async map loading... Provide anonymous callback func
-        map.loadMap('maps/Level_1.csv', function() {
-            map.createHtml();
-
-            var boss_tl = new Object("boss-tl");
-            boss_tl.createHtml();
-            map.addObject(boss_tl, 9, 9);
-
-            var boss_tr = new Object("boss-tr");
-            boss_tr.createHtml();
-            map.addObject(boss_tr, 10, 9);
-
-            var boss_bl = new Object("boss-bl");
-            boss_bl.createHtml();
-            map.addObject(boss_bl, 9, 10);
-
-            var boss_br = new Object("boss-br");
-            boss_br.createHtml();
-            map.addObject(boss_br, 10, 10);
-
-            player = new Object("player");
-            player.createHtml();
-            map.addObject(player, 0, 0);
-        });
         
-        /* Blockly stuff */
-        map.emitWall = emitWallAhead;
-        map.emitBoss = emitBossReached;
-        map.emitEscape = emitEscapeMaze;
-        map.emitCoin = emitCoinCollected;
         Blockly.loadAudio_([Blockly.assetUrl("media/wall.ogg")], "wall");
         Blockly.loadAudio_([Blockly.assetUrl("media/Boss.wav")], "boss");
         Blockly.loadAudio_([Blockly.assetUrl("media/escape.ogg")], "escape");

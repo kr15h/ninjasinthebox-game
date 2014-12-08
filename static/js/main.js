@@ -26,6 +26,13 @@ $(document).ready(function() {
 		gameOverView.onWindowResize();
 	});
 
+		ROOT.restartGame = function() {
+			winView.hide();
+			gameOverView.hide();
+			mainView.show();
+			gameView.show();
+		};
+
     ROOT.startGame = function () {
         mainView.hide();
         gameView.setup($('#game-view').first(), Blockly);
