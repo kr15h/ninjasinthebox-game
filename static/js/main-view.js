@@ -128,7 +128,7 @@
 
 			// Start game in room-master
 			this.container.find('.room-master .btn-start-game').click(function(){
-                that.container.find('#main-view-modal').modal('hide')
+                that.container.find('#main-view-modal').modal('hide');
                 ROOT.startGame();
 			});
 
@@ -145,6 +145,7 @@
 
 	MainView.prototype.show = function() {
 		this.container.show();
+		this.onWindowResize();
 	};
 
 	MainView.prototype.hide = function() {

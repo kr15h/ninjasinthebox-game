@@ -29,6 +29,7 @@ type Config struct {
 
 	Game struct {
 		MapDir, MapURL string
+		Duration       int16
 	}
 }
 
