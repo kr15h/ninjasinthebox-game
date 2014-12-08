@@ -820,10 +820,10 @@ func HttpGetSpace(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			ERROR.Println("http-api->UserMoved: json.Marshal error: ", err)
 		}
-		_, err = redisDB.Do("SET", space.SpaceIp, jsonResponse)
-		if err != nil {
-			ERROR.Println("http-api->UserMoved: RedisDB SET error: ", err)
-		}
+		// _, err = redisDB.Do("SET", space.SpaceIp, jsonResponse)
+		// if err != nil {
+		// 	ERROR.Println("http-api->UserMoved: RedisDB SET error: ", err)
+		// }
 
 	}
 
