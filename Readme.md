@@ -32,6 +32,13 @@ this function returns the game status don't forget the gameId
 	getGame?gameId=2a9ef92d-56c7-416d-bdb3-d5947bc3b46e
 ```
 
+getMap
+
+download map for game ( mapUrl is listed in every getGame Game.Level[].Map)
+```
+	getMap?mapUrl=/maps/Level_1.csv
+```
+
 more to come
 
 
