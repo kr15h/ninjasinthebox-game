@@ -158,6 +158,21 @@ func vectorRemoveItem(v []PosVector, item int) []PosVector {
 	return s
 }
 
+func HttpGetMap(w http.ResponseWriter, r *http.Request) {
+
+	err := r.ParseForm()
+	if err != nil {
+		ERROR.Println("http-api->StartBribe: err", err)
+	}
+
+	mapUrl := r.FormValue("mapUrl")
+
+	fp := path.Join(cfg.Webserver.Dir, mapUrl)
+
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	http.ServeFile(w, r, fp)
+}
+
 func HttpStartBribe(w http.ResponseWriter, r *http.Request) {
 
 	var game Game
@@ -439,6 +454,7 @@ func HttpJoinGame(w http.ResponseWriter, r *http.Request) {
 	var jsonGame []byte
 	var jsonSpace []byte
 	var userIsInGame bool = false
+	var gameIsFull bool = false
 
 	err := r.ParseForm()
 	if err != nil {
@@ -473,14 +489,23 @@ func HttpJoinGame(w http.ResponseWriter, r *http.Request) {
 			ERROR.Println("http-api->JoinGame: json.Unmarshal error: ", err)
 		}
 
-		for _, element := range game.Player {
+		for index, element := range game.Player {
 			if element.UserId == userId {
 				userIsInGame = true
+			}
+			if index >= 3 {
+				gameIsFull = true
 			}
 		}
 
 		if userIsInGame {
 			response = JsonError{Error: "userId is allready registerd for this game"}
+			jsonResponse, err = json.Marshal(response)
+			if err != nil {
+				ERROR.Println("socket.io->JoinGame: json.Marshal error: ", err)
+			}
+		} else if gameIsFull {
+			response = JsonError{Error: "max 4 player allowed"}
 			jsonResponse, err = json.Marshal(response)
 			if err != nil {
 				ERROR.Println("socket.io->JoinGame: json.Marshal error: ", err)
@@ -810,6 +835,7 @@ func HttpGetSpace(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				ERROR.Println("http-api->GetSpace: json.Unmarshal error: ", err)
 			}
+			space.Games[index] = Game{}
 			space.Games[index] = game
 		}
 
@@ -819,10 +845,11 @@ func HttpGetSpace(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			ERROR.Println("http-api->UserMoved: json.Marshal error: ", err)
 		}
-		_, err = redisDB.Do("SET", space.SpaceIp, jsonResponse)
-		if err != nil {
-			ERROR.Println("http-api->UserMoved: RedisDB SET error: ", err)
-		}
+		// _, err = redisDB.Do("SET", space.SpaceIp, jsonResponse)
+		// if err != nil {
+		// 	ERROR.Println("http-api->UserMoved: RedisDB SET error: ", err)
+		// }
+
 	}
 
 	TRACE.Println("http-api->GetSpace Answer", response)
