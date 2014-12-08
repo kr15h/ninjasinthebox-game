@@ -291,6 +291,31 @@ img {
     text-align: left;
 }
 
+#game-view .bribe-price-val,
+#game-view .ninja-coins-val {
+    font-family: 'OpenSans-Bold', sans-serif;
+    font-size: 36px;
+    line-height: 36px;
+}
+
+#game-view .bribe-price-val { color: #001231; }
+#game-view .ninja-coins-val,
+#game-view .ninja-coins-val.invalid { color: #D0021B; }
+#game-view .ninja-coins-val.valid { color: green; }
+
+#game-view .bribe-price-val,
+#game-view .ninja-coins-val,
+#game-view .bribe-price-label,
+#game-view .ninja-coins-label {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#game-view .bribe-price-label,
+#game-view .ninja-coins-label {
+    line-height: 1;
+}
+
 #game-view .modal .ninja-coins {
     text-align: right;
 }

@@ -239,11 +239,10 @@
             $('td').eq((this.cols * y) + x).empty();
         } else if (obj.type === "wall") {
             this.emitWall();
+            $('#bribe-modal').modal('show');
             return;
         } else {
             this.emitBoss();
-
-            // Open bribe modal
             $('#bribe-modal').modal('show');
         }
     }
