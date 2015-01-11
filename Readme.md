@@ -1,5 +1,9 @@
 #Ninjas in the Box
 
+<img src="https://lh6.googleusercontent.com/-TSBZb_5oiAM/VLKV67LG2yI/AAAAAAAAKAk/Y5NVGLquOFk/w414-h860-no/ninjasinthebox%2Bideas.png" alt="1" width="32%">
+<img src="https://lh5.googleusercontent.com/-POE1hhEwskc/VLKV6bh_QkI/AAAAAAAAKAc/3cwwyvIknKc/w413-h861-no/ninjasinthebox%2Bideas%2B%281%29.png" alt="2" width="32%">
+<img src="https://lh3.googleusercontent.com/-_1FWbDY2Fzs/VLKV60wsW1I/AAAAAAAAKBE/HpcGFA93rAA/w414-h861-no/ninjasinthebox%2Bideas%2B%282%29.png" alt="3" width="32%">
+
 A game about fighting evil with coding.
 
 This is a project that was made during the koding.io [Global Hackaton](https://koding.com/Hackathon) challenge from Dec 06 to Dec 07 2014.
