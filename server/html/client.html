@@ -8,7 +8,7 @@
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
-    	var socket = io.connect('http://gdprabowo.koding.io:3001/');
+    	var socket = io.connect('http://localhost:3000/');
     
     	// on connection to server, ask for user's name with an anonymous callback
     	socket.on('connect', function(){
@@ -25,10 +25,9 @@
     	socket.on('updaterooms', function(rooms, current_room) {
     		$('#rooms').empty();
     		$.each(rooms, function(key, value) {
-    			if(value == current_room){
+    			if (value == current_room) {
     				$('#rooms').append('<div>' + value + '</div>');
-    			}
-    			else {
+    			} else {
     				$('#rooms').append('<div><a href="#" onclick="switchRoom(\''+value+'\')">' + value + '</a></div>');
     			}
     		});

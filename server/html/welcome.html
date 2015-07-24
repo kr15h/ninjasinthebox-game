@@ -8,34 +8,34 @@
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
-    	var socket = io.connect('http://gdprabowo.koding.io:3002/');
-    
+    	var socket = io.connect('http://localhost:3000/');
+
     	// on connection to server, ask for user's name with an anonymous callback
     	socket.on('connect', function(){
     	    socket.emit('getroom');
     	});
-    	
+
     	socket.on('initrooms', function(key) {
-    	    if(key != 1){
-        	    for(i = 1; i <= key; i++){
+    	    if(key > 0) {
+        	    for(i = 1; i <= key; i++) {
         	        $('#rooms').append('<a href=room.html?room_id='+ i +'>' + i + '</a><br>');
         	    }
     	    }
     	});
-    
+
     	socket.on('updaterooms', function(key) {
     	    $('#rooms').append('<a href=room.html?room_id='+ JSON.parse(key) +'>' + JSON.parse(key) + '</a><br>');
     	});
-    	
+
     	// on load of page
     	$(function(){
     		// when the client clicks SEND
-    		$('#btnAddRoom').click( function() {
+    		$('#btnAddRoom').click(function() {
     		    // tell server to execute 'sendchat' and send along one parameter
     			socket.emit('addroom');
     		});
     	});
-    
+
     </script>
     <div style="float:left;width:100px;border-right:1px solid black;height:300px;padding:10px;overflow:scroll-y;">
     	<b>ROOMS</b>
